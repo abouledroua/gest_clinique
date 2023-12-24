@@ -1,37 +1,38 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: unused_local_variable
 
+import 'dart:async';
+
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'core/constant/routes.dart';
-import 'core/theme/mytheme.dart';
-
-late SharedPreferences sharedPrefs;
-final bool isMobilePlatform =
-    (defaultTargetPlatform == TargetPlatform.android ||
-        defaultTargetPlatform == TargetPlatform.iOS);
-final bool isAndoidMobile =
-    (defaultTargetPlatform == TargetPlatform.android && !kIsWeb);
-const bool testMode = true;
+import 'core/constant/data.dart';
+import 'core/constant/theme.dart';
+import 'core/services/settingservice.dart';
+import 'routes.dart';
+import 'view/screen/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  sharedPrefs = await SharedPreferences.getInstance();
-  if (isMobilePlatform) {
-    if (kDebugMode || testMode) {
-      print("i'm in the Mobile Platform");
-    }
+  await initialApp();
+  runApp(const MyApp());
+}
+
+Future initialApp() async {
+  await Get.putAsync(() => SettingServices().init());
+  if (AppData.isAndroidAppMobile) {
     SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-  } else {
-    if (kDebugMode || testMode) {
-      print("i'm not in Mobile platform");
-    }
   }
-  runApp(const MyApp());
+  AppData.storageLocation = (kIsWeb)
+      ? "/assets/db"
+      : ((await getApplicationDocumentsDirectory()).path);
+  await FastCachedImageConfig.init(
+      subDir: AppData.storageLocation,
+      clearCacheAfter: const Duration(days: 15));
 }
 
 class MyApp extends StatelessWidget {
@@ -41,8 +42,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Gestion Clinique',
-      initialRoute: loginRoute,
+      title: 'Gestion Cabinet Médical',
       routes: routes,
-      theme: myTheme);
+      home: const LoginPage(),
+      theme: myTheme());
 }

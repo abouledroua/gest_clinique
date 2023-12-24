@@ -1,54 +1,50 @@
 import 'package:flutter/material.dart';
 
 class AppColor {
+  static Color primary = const Color.fromARGB(255, 57, 72, 122);
+  static Color secondary = const Color.fromARGB(255, 245, 104, 147);
   static Color amber = Colors.amber.shade700;
   static Color appBarTitle = Colors.grey.shade700;
   static const Color greyFonce = Color.fromARGB(255, 220, 220, 220);
   static Color greyShade = Colors.grey.shade500;
-  static const Color yellow = Colors.yellow;
   static const Color black = Colors.black;
-  static const Color orange = Colors.orange;
   static const Color greyblack = Colors.black87;
   static const Color grey = Colors.grey;
+  static const Color brown = Colors.brown;
+  static const Color pink = Colors.pink;
   static const Color blue1 = Colors.blue;
   static const Color blue2 = Color.fromARGB(255, 50, 64, 134);
   static Color red = Colors.red.shade400;
-  static Color redClaire = Colors.red.shade100;
   static Color greenClair = Colors.green.shade100;
   static Color green = Colors.green.shade600;
   static const Color green2 = Color.fromARGB(255, 33, 139, 39);
   static const Color white = Colors.white;
-  static const Color primary = Colors.cyan;
   static const Color purple = Colors.deepPurple;
-
-  static const Color batiment = Color.fromARGB(255, 255, 249, 232);
-  static const Color villa = Color.fromARGB(255, 222, 236, 247);
 
   static const Color previousColor = Colors.purple;
   static const Color nextColor = Colors.amber;
 
-  static const Color groupe = Colors.indigo;
-  static Color groupeClair = Colors.indigo.shade50;
+  static const Color email = Colors.purple;
 
-  static const Color abonne = Colors.green;
-  static Color abonneClair = Colors.green.shade50;
+  static const Color enfant = Colors.orange;
+  static Color enfantClair = Colors.orange.shade50;
 
-  static const Color compteAdmin = Colors.black;
+  static const Color parent = Colors.purple;
+  static Color parentClair = Colors.purple.shade100;
 
-  static const Color entreprise = Colors.purple;
-  static Color entrepriseClair = Colors.purple.shade50;
+  static const Color section = Colors.teal;
+  static Color sectionClair = Colors.teal.shade50;
 
-  static const Color abonneExterne = Color.fromARGB(255, 116, 113, 113);
-  static Color abonneExterneClair = abonneExterne.withOpacity(0.5);
+  static const Color classe = Colors.cyan;
+  static Color classeClair = Colors.cyan.shade50;
 
-  static Color reparerAbonnee = Colors.pink;
+  static const Color enseignant = Colors.brown;
 
-  static Color annulerSignale = Colors.grey;
-  static Color signale = Colors.orange;
-  static Color signaleClair = signale.withOpacity(0.5);
+  static const Color message = Color.fromARGB(255, 40, 114, 42);
 
-  static const Color export = Colors.green;
-  static Color exportClair = Colors.green.shade50;
+  static const Color annonce = Color.fromARGB(255, 50, 64, 134);
+
+  static const Color gallery = Colors.pink;
 
   static List<Color> lightColor = [
     Colors.blue.shade100,
