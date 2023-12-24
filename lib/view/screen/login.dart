@@ -16,6 +16,7 @@ class LoginPage extends StatelessWidget {
           width: AppSizes.widthScreen,
           height: AppSizes.heightScreen,
           child: Image.asset(AppImageAsset.wallLogin, fit: BoxFit.fill)),
+      Text('aaAAjch vdjwbdj '),
     ])));
   }
 }
