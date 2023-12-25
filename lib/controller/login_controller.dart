@@ -33,11 +33,11 @@ class LoginController extends GetxController {
   inscrire() {
     inscr = true;
     update();
-    Timer(const Duration(seconds: 3), _gotoLogin);
+    Timer(const Duration(seconds: 3), _gotoDashBoard);
   }
 
-  _gotoLogin() {
-    Get.toNamed(AppRoute.login);
+  _gotoDashBoard() {
+    Get.toNamed(AppRoute.dashboard);
   }
 
   _initConnect() {
