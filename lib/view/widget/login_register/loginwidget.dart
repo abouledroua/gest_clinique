@@ -28,6 +28,34 @@ class LoginWidget extends StatelessWidget {
                     color: AppColor.primary,
                     fontFamily: fontFamily))),
         const SizedBox(height: 5),
+        GetBuilder<LoginController>(
+            builder: (controller) => Visibility(
+                visible: !controller.inscr,
+                replacement: Expanded(child: succesWidget(controller)),
+                child: Expanded(child: champs())))
+      ]);
+
+  succesWidget(LoginController controller) =>
+      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        SizedBox(
+            height: 100,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(child: Lottie.asset(AppAnimationAsset.success)),
+                  Expanded(
+                      child: Text('Authentification avec succès ...',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: fontFamily,
+                              color: AppColor.black,
+                              fontWeight: FontWeight.bold)))
+                ]))
+      ]);
+
+  champs() => Column(children: [
         Expanded(child: listOfChamps()),
         const Divider(color: AppColor.black),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -113,7 +141,10 @@ class LoginWidget extends StatelessWidget {
             decoration: BoxDecoration(
                 color: AppColor.green2, borderRadius: BorderRadius.circular(5)),
             child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  LoginController controller = Get.find();
+                  controller.inscrire();
+                },
                 child: Text('Login',
                     style: TextStyle(
                         fontSize: 18,

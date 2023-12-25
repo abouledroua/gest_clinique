@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../core/constant/routes.dart';
 import '../core/constant/sizes.dart';
 import '../core/services/settingservice.dart';
 
@@ -13,6 +16,7 @@ class LoginController extends GetxController {
     'Cabinet Médical Dr Bekouche',
     'Cabinet Médical Dr Slougui'
   ];
+  bool inscr = false;
 
   updateDrop(String? value) {
     selectedItem = value;
@@ -24,6 +28,16 @@ class LoginController extends GetxController {
     WidgetsFlutterBinding.ensureInitialized();
     _initConnect();
     super.onInit();
+  }
+
+  inscrire() {
+    inscr = true;
+    update();
+    Timer(const Duration(seconds: 3), _gotoLogin);
+  }
+
+  _gotoLogin() {
+    Get.toNamed(AppRoute.login);
   }
 
   _initConnect() {

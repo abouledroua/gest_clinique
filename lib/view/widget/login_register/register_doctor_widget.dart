@@ -46,6 +46,7 @@ class RegisterDoctorWidget extends StatelessWidget {
                   Expanded(
                       child: Text(
                           'Nouveau ${controller.selectedFonction} Inscris',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 16,
                               fontFamily: fontFamily,
