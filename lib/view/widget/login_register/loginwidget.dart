@@ -21,26 +21,29 @@ class LoginWidget extends StatelessWidget {
   final double chpHeight = 35;
 
   @override
-  Widget build(BuildContext context) => Column(children: [
-        SizedBox(
-            width: AppSizes.widthScreen / 5,
-            height: AppSizes.heightScreen / 5,
-            child: Lottie.asset(AppAnimationAsset.login)),
-        Center(
-            child: Text(DateTime.now().hour > 12 ? 'Bonsoir' : 'Bonjour',
-                style: TextStyle(
-                    fontSize: 24,
-                    color: AppColor.primary,
-                    fontFamily: fontFamily))),
-        const SizedBox(height: 5),
-        GetBuilder<LoginController>(
-            builder: (controller) => Visibility(
-                visible: !controller.inscr,
-                replacement: const Expanded(
-                    child: SuccessWidget(
-                        text: 'Authentification avec succès ...')),
-                child: Expanded(child: champs())))
-      ]);
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child: Column(children: [
+          SizedBox(
+              width: AppSizes.widthScreen / 5,
+              height: AppSizes.heightScreen / 5,
+              child: Lottie.asset(AppAnimationAsset.login)),
+          Center(
+              child: Text(DateTime.now().hour > 12 ? 'Bonsoir' : 'Bonjour',
+                  style: TextStyle(
+                      fontSize: 24,
+                      color: AppColor.primary,
+                      fontFamily: fontFamily))),
+          const SizedBox(height: 5),
+          GetBuilder<LoginController>(
+              builder: (controller) => Visibility(
+                  visible: !controller.inscr,
+                  replacement: const Expanded(
+                      child: SuccessWidget(
+                          text: 'Authentification avec succès ...')),
+                  child: Expanded(child: champs())))
+        ]),
+      );
 
   champs() => Column(children: [
         Expanded(child: listOfChamps()),
