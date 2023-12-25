@@ -26,6 +26,8 @@ dependencies:
   image: any
   path_provider: any
   package_info_plus: any
+  awesome_dialog: any
+  easy_date_timeline: any
 
   #photo_view: any
   #jiffy: any
@@ -37,7 +39,7 @@ dependencies:
   #step_progress_indicator: any
   #grouped_list: any
   #file_picker: any
-  #awesome_dialog: any
+  #
   #crop_your_image: any
   #blinking_text: any
   #scrollable_list_tabview: any

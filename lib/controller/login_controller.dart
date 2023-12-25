@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:math';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,17 +11,13 @@ import '../core/services/settingservice.dart';
 
 class LoginController extends GetxController {
   late TextEditingController emailController, passController;
-  String? selectedItem = 'Cabinet Médical Dr Loucif';
-  List<String> items = [
-    'Cabinet Médical Dr Loucif',
-    'Cabinet Médical Dr Diabi',
-    'Cabinet Médical Dr Bekouche',
-    'Cabinet Médical Dr Slougui'
-  ];
+  String defaultOrg = 'Choisir votre Organisme';
+  String? selectedOrg;
+  List<String> orgs = [];
   bool inscr = false;
 
   updateDrop(String? value) {
-    selectedItem = value;
+    selectedOrg = value;
     update();
   }
 
@@ -31,9 +29,22 @@ class LoginController extends GetxController {
   }
 
   inscrire() {
-    inscr = true;
-    update();
-    Timer(const Duration(seconds: 3), _gotoDashBoard);
+    if (selectedOrg == defaultOrg) {
+      AwesomeDialog(
+              context: Get.context!,
+              dialogType: DialogType.error,
+              showCloseIcon: true,
+              title: 'Erreur',
+              btnOkText: "Ok",
+              width: min(AppSizes.widthScreen, 400),
+              btnOkOnPress: () {},
+              desc: 'Veuillez choisir un organisme !!!')
+          .show();
+    } else {
+      inscr = true;
+      update();
+      Timer(const Duration(seconds: 3), _gotoDashBoard);
+    }
   }
 
   _gotoDashBoard() {
@@ -45,6 +56,14 @@ class LoginController extends GetxController {
     passController = TextEditingController();
     emailController = TextEditingController();
     SettingServices c = Get.find();
+    selectedOrg = defaultOrg;
+    orgs = [
+      defaultOrg,
+      'Cabinet Médical Dr Loucif',
+      'Cabinet Médical Dr Diabi',
+      'Cabinet Médical Dr Bekouche',
+      'Cabinet Médical Dr Slougui'
+    ];
     String emailPref = c.sharedPrefs.getString('EMAIL') ?? "";
     String passPref = c.sharedPrefs.getString('PASSWORD') ?? "";
     String orgPref = c.sharedPrefs.getString('ORGANISATION') ?? "";
@@ -52,7 +71,7 @@ class LoginController extends GetxController {
     if (emailPref.isNotEmpty && connect) {
       emailController.text = emailPref;
       passController.text = passPref;
-      selectedItem = orgPref;
+      selectedOrg = orgPref;
     }
   }
 

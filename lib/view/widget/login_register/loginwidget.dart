@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../controller/login_controller.dart';
+import '../../../controller/register_cabinet_controller.dart';
+import '../../../controller/register_doctor_controller.dart';
 import '../../../core/constant/animation_asset.dart';
 import '../../../core/constant/color.dart';
 import '../../../core/constant/routes.dart';
@@ -65,6 +67,9 @@ class LoginWidget extends StatelessWidget {
                   style: TextStyle(fontSize: 11, fontFamily: fontFamily))),
           InkWell(
               onTap: () {
+                if (Get.isRegistered<RegisterDoctorController>()) {
+                  Get.delete<RegisterDoctorController>();
+                }
                 Get.toNamed(AppRoute.registerDocteur);
               },
               child: Ink(
@@ -108,33 +113,42 @@ class LoginWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(3)),
             child: Expanded(
                 child: GetBuilder<LoginController>(
-                    builder: (controller) => DropdownButton(
-                        padding: const EdgeInsets.all(8),
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            color: AppColor.black,
-                            fontFamily: fontFamily),
-                        underline: null,
-                        value: controller.selectedItem,
-                        items: controller.items
-                            .map((item) => DropdownMenuItem(
-                                value: item, child: Text(item)))
-                            .toList(),
-                        onChanged: (String? value) {
-                          controller.updateDrop(value);
-                        })))),
+                    builder: (controller) => DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                            padding: const EdgeInsets.all(8),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: AppColor.black,
+                                fontFamily: fontFamily),
+                            underline: null,
+                            value: controller.selectedOrg,
+                            items: controller.orgs
+                                .map((item) => DropdownMenuItem(
+                                    value: item, child: Text(item)))
+                                .toList(),
+                            onChanged: (String? value) {
+                              controller.updateDrop(value);
+                            }))))),
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Expanded(
               child: Text("Mon Cabinet n'apparaît pas dans la liste !!!, ",
                   textAlign: TextAlign.end,
                   style: TextStyle(fontSize: 9, fontFamily: fontFamily))),
-          Text(" Ajouter",
-              style: TextStyle(
-                  fontSize: 10,
-                  fontFamily: fontFamily,
-                  color: AppColor.secondary,
-                  fontWeight: FontWeight.bold))
+          InkWell(
+              onTap: () {
+                if (Get.isRegistered<RegisterCabinetController>()) {
+                  Get.delete<RegisterCabinetController>();
+                }
+                Get.toNamed(AppRoute.registerCabinet);
+              },
+              child: Ink(
+                  child: Text(" Ajouter",
+                      style: TextStyle(
+                          fontSize: 10,
+                          fontFamily: fontFamily,
+                          color: AppColor.secondary,
+                          fontWeight: FontWeight.bold))))
         ]),
         const SizedBox(height: 10),
         Container(
