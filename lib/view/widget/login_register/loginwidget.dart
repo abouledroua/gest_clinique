@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -11,6 +13,7 @@ import '../../../core/constant/routes.dart';
 import '../../../core/constant/sizes.dart';
 import '../../../core/constant/theme.dart';
 import '../my_text_field.dart';
+import 'success_widget.dart';
 
 class LoginWidget extends StatelessWidget {
   const LoginWidget({super.key});
@@ -33,28 +36,10 @@ class LoginWidget extends StatelessWidget {
         GetBuilder<LoginController>(
             builder: (controller) => Visibility(
                 visible: !controller.inscr,
-                replacement: Expanded(child: succesWidget(controller)),
+                replacement: const Expanded(
+                    child: SuccessWidget(
+                        text: 'Authentification avec succès ...')),
                 child: Expanded(child: champs())))
-      ]);
-
-  succesWidget(LoginController controller) =>
-      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        SizedBox(
-            height: 100,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(child: Lottie.asset(AppAnimationAsset.success)),
-                  Expanded(
-                      child: Text('Authentification avec succès ...',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontFamily: fontFamily,
-                              color: AppColor.black,
-                              fontWeight: FontWeight.bold)))
-                ]))
       ]);
 
   champs() => Column(children: [

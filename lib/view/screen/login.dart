@@ -18,7 +18,6 @@ class LoginPage extends StatelessWidget {
         child: Center(
             child: Container(
                 width: AppSizes.widthScreen / 3,
-                padding: const EdgeInsets.symmetric(horizontal: 30),
                 margin: EdgeInsets.symmetric(
                     vertical: AppSizes.heightScreen / 10,
                     horizontal: AppSizes.widthScreen / 8),

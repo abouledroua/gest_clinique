@@ -6,4 +6,5 @@ class AppAnimationAsset {
   static const String registerDocteur = "$rootAsset/register_doctor.json";
   static const String delete = "$rootAsset/delete.json";
   static const String success = "$rootAsset/success.json";
+  static const String backArrow = "$rootAsset/back_arrow.json";
 }

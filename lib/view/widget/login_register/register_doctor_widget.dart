@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -10,50 +12,45 @@ import '../../../core/constant/routes.dart';
 import '../../../core/constant/sizes.dart';
 import '../../../core/constant/theme.dart';
 import '../my_text_field.dart';
+import 'success_widget.dart';
 
 class RegisterDoctorWidget extends StatelessWidget {
   const RegisterDoctorWidget({super.key});
 
   final double chpHeight = 40;
   @override
-  Widget build(BuildContext context) => Column(children: [
-        SizedBox(
-            width: AppSizes.widthScreen / 5,
-            height: AppSizes.heightScreen / 5,
-            child: Lottie.asset(AppAnimationAsset.registerDocteur)),
-        Center(
-            child: Text('Inscription',
-                style: TextStyle(
-                    fontSize: 24,
-                    color: AppColor.primary,
-                    fontFamily: fontFamily))),
-        const SizedBox(height: 5),
-        GetBuilder<RegisterDoctorController>(
-            builder: (controller) => Visibility(
-                visible: !controller.inscr,
-                replacement: Expanded(child: succesWidget(controller)),
-                child: Expanded(child: champs())))
-      ]);
-
-  succesWidget(RegisterDoctorController controller) =>
-      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        SizedBox(
-            height: 100,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(child: Lottie.asset(AppAnimationAsset.success)),
-                  Expanded(
-                      child: Text(
-                          'Nouveau ${controller.selectedFonction} Inscris',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontFamily: fontFamily,
-                              color: AppColor.black,
-                              fontWeight: FontWeight.bold)))
-                ]))
+  Widget build(BuildContext context) => Stack(children: [
+        InkWell(
+            onTap: () {
+              Get.back();
+            },
+            child: Ink(
+                width: 35,
+                height: 35,
+                child: Lottie.asset(AppAnimationAsset.backArrow))),
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Column(children: [
+              SizedBox(
+                  width: AppSizes.widthScreen / 5,
+                  height: AppSizes.heightScreen / 5,
+                  child: Lottie.asset(AppAnimationAsset.registerDocteur)),
+              Center(
+                  child: Text('Inscription',
+                      style: TextStyle(
+                          fontSize: 24,
+                          color: AppColor.primary,
+                          fontFamily: fontFamily))),
+              const SizedBox(height: 5),
+              GetBuilder<RegisterDoctorController>(
+                  builder: (controller) => Visibility(
+                      visible: !controller.inscr,
+                      replacement: Expanded(
+                          child: SuccessWidget(
+                              text:
+                                  'Nouveau ${controller.selectedFonction} Inscris')),
+                      child: Expanded(child: champs())))
+            ]))
       ]);
 
   champs() => Column(children: [

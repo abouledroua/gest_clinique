@@ -8,20 +8,23 @@ import '../../../core/constant/color.dart';
 import '../../../core/constant/sizes.dart';
 import '../../../core/constant/theme.dart';
 import '../my_text_field.dart';
+import 'success_widget.dart';
 
 class RegisterCabinetWidget extends StatelessWidget {
   const RegisterCabinetWidget({super.key});
 
   final double chpHeight = 40;
   @override
-  Widget build(BuildContext context) => Stack(
-        children: [
-          IconButton(
-              onPressed: () {
-                Get.back();
-              },
-              icon: const Icon(Icons.arrow_back_rounded)),
-          Container(
+  Widget build(BuildContext context) => Stack(children: [
+        InkWell(
+            onTap: () {
+              Get.back();
+            },
+            child: Ink(
+                width: 35,
+                height: 35,
+                child: Lottie.asset(AppAnimationAsset.backArrow))),
+        Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Column(children: [
               SizedBox(
@@ -41,32 +44,12 @@ class RegisterCabinetWidget extends StatelessWidget {
               GetBuilder<RegisterCabinetController>(
                   builder: (controller) => Visibility(
                       visible: !controller.inscr,
-                      replacement: Expanded(child: succesWidget(controller)),
+                      replacement: const Expanded(
+                          child: SuccessWidget(
+                              text:
+                                  'Nouveau Organisme de santé \najouter avec succés')),
                       child: Expanded(child: listChamps())))
-            ]),
-          ),
-        ],
-      );
-
-  succesWidget(RegisterCabinetController controller) =>
-      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        SizedBox(
-            height: 100,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(child: Lottie.asset(AppAnimationAsset.success)),
-                  Expanded(
-                      child: Text(
-                          'Nouveau Organisme de santé Ajouter avec succés',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontFamily: fontFamily,
-                              color: AppColor.black,
-                              fontWeight: FontWeight.bold)))
-                ]))
+            ]))
       ]);
 
   ListView listChamps() => ListView(children: [
