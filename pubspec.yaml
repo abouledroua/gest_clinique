@@ -17,6 +17,7 @@ dependencies:
   url_launcher: any
   google_fonts: any
   shared_preferences: any
+  lottie: any
   intl: any
   mime: any
   launch_review: any
@@ -88,6 +89,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/animation/
 
   fonts:
     - family: Arabtype

@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import 'core/constant/data.dart';
+import 'core/constant/routes.dart';
 import 'core/constant/theme.dart';
 import 'core/services/settingservice.dart';
 import 'routes.dart';
@@ -44,6 +45,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Gestion Cabinet Médical',
       routes: routes,
-      home: const LoginPage(),
+      initialRoute: AppRoute.login,
       theme: myTheme());
 }
