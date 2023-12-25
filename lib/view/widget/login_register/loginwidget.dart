@@ -5,6 +5,7 @@ import 'package:lottie/lottie.dart';
 import '../../../controller/login_controller.dart';
 import '../../../core/constant/animation_asset.dart';
 import '../../../core/constant/color.dart';
+import '../../../core/constant/routes.dart';
 import '../../../core/constant/sizes.dart';
 import '../../../core/constant/theme.dart';
 import '../my_text_field.dart';
@@ -12,12 +13,14 @@ import '../my_text_field.dart';
 class LoginWidget extends StatelessWidget {
   const LoginWidget({super.key});
 
+  final double chpHeight = 35;
+
   @override
-  Widget build(BuildContext context) => ListView(children: [
+  Widget build(BuildContext context) => Column(children: [
         SizedBox(
             width: AppSizes.widthScreen / 5,
             height: AppSizes.heightScreen / 5,
-            child: Lottie.asset(AppAnimationAsset.login2)),
+            child: Lottie.asset(AppAnimationAsset.login)),
         Center(
             child: Text(DateTime.now().hour > 12 ? 'Bonsoir' : 'Bonjour',
                 style: TextStyle(
@@ -25,26 +28,52 @@ class LoginWidget extends StatelessWidget {
                     color: AppColor.primary,
                     fontFamily: fontFamily))),
         const SizedBox(height: 5),
-        const SizedBox(
-            height: 30,
-            child: MyTextField(
-                labelText: 'Votre Email',
-                hintText: 'email@gmail.com',
-                keyboardType: TextInputType.emailAddress,
-                enabled: true)),
+        Expanded(child: listOfChamps()),
+        const Divider(color: AppColor.black),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Expanded(
+              child: Text("Vous n'avez pas un compte , ",
+                  textAlign: TextAlign.end,
+                  style: TextStyle(fontSize: 11, fontFamily: fontFamily))),
+          InkWell(
+              onTap: () {
+                Get.toNamed(AppRoute.registerDocteur);
+              },
+              child: Ink(
+                  child: Text(" Inscriver",
+                      style: TextStyle(
+                          fontSize: 11,
+                          fontFamily: fontFamily,
+                          color: AppColor.primary,
+                          fontWeight: FontWeight.bold))))
+        ]),
+        const SizedBox(height: 5)
+      ]);
+
+  ListView listOfChamps() => ListView(children: [
+        SizedBox(
+            height: chpHeight,
+            child: GetBuilder<LoginController>(
+                builder: (controller) => MyTextField(
+                    labelText: 'Votre Email',
+                    hintText: 'email@gmail.com',
+                    controller: controller.emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    enabled: true))),
         const SizedBox(height: 5),
-        const SizedBox(
-            height: 30,
-            width: 30,
-            child: MyTextField(
-                labelText: 'Mot de Passe',
-                hintText: '1234',
-                obscureText: true,
-                keyboardType: TextInputType.visiblePassword,
-                enabled: true)),
+        SizedBox(
+            height: chpHeight,
+            child: GetBuilder<LoginController>(
+                builder: (controller) => MyTextField(
+                    labelText: 'Mot de Passe',
+                    hintText: '1234',
+                    obscureText: true,
+                    controller: controller.passController,
+                    keyboardType: TextInputType.visiblePassword,
+                    enabled: true))),
         const SizedBox(height: 5),
         Container(
-            height: 30,
+            height: chpHeight,
             decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 221, 240, 221),
                 border: Border.all(),
@@ -68,9 +97,11 @@ class LoginWidget extends StatelessWidget {
                           controller.updateDrop(value);
                         })))),
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          Text("Mon Cabinet n'apparaît pas dans la liste !!!, ",
-              style: TextStyle(fontSize: 9, fontFamily: fontFamily)),
-          Text("Ajouter",
+          Expanded(
+              child: Text("Mon Cabinet n'apparaît pas dans la liste !!!, ",
+                  textAlign: TextAlign.end,
+                  style: TextStyle(fontSize: 9, fontFamily: fontFamily))),
+          Text(" Ajouter",
               style: TextStyle(
                   fontSize: 10,
                   fontFamily: fontFamily,
@@ -88,9 +119,9 @@ class LoginWidget extends StatelessWidget {
                         fontSize: 18,
                         color: AppColor.white,
                         fontFamily: fontFamily)))),
-        const SizedBox(height: 10),
+        const SizedBox(height: 5),
         const Center(child: Text(' _____________  Ou  ____________ ')),
-        const SizedBox(height: 10),
+        const SizedBox(height: 5),
         Container(
             decoration: BoxDecoration(
                 color: AppColor.white, borderRadius: BorderRadius.circular(5)),
@@ -102,19 +133,6 @@ class LoginWidget extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 14,
                         color: AppColor.greyShade,
-                        fontFamily: fontFamily)))),
-        const SizedBox(height: 10),
-        const Divider(color: AppColor.black),
-        const SizedBox(height: 10),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text("Vous n'avez pas un compte , ",
-              style: TextStyle(fontSize: 11, fontFamily: fontFamily)),
-          Text("Inscriver",
-              style: TextStyle(
-                  fontSize: 11,
-                  fontFamily: fontFamily,
-                  color: AppColor.primary,
-                  fontWeight: FontWeight.bold))
-        ]),
+                        fontFamily: fontFamily))))
       ]);
 }

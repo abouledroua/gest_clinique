@@ -14,7 +14,6 @@ import 'core/constant/routes.dart';
 import 'core/constant/theme.dart';
 import 'core/services/settingservice.dart';
 import 'routes.dart';
-import 'view/screen/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

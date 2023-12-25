@@ -1,5 +1,6 @@
 class AppRoute {
   static const String login = "/Login";
+  static const String registerDocteur = "/registerDocteur";
   static const String privacy = "/Privacy";
   static const String home = "/Homepage";
   static const String expire = "/Expire";
