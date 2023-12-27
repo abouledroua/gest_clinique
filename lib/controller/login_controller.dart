@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import '../core/constant/routes.dart';
 import '../core/constant/sizes.dart';
 import '../core/services/settingservice.dart';
+import 'dashboard_controller.dart';
 
 class LoginController extends GetxController {
   late TextEditingController emailController, passController;
@@ -48,7 +49,10 @@ class LoginController extends GetxController {
   }
 
   _gotoDashBoard() {
-    Get.toNamed(AppRoute.dashboard);
+    if (Get.isRegistered<DashBoardController>()) {
+      Get.delete<DashBoardController>();
+    }
+    Get.offAllNamed(AppRoute.dashboard);
   }
 
   _initConnect() {

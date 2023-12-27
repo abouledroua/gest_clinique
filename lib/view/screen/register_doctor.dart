@@ -7,12 +7,12 @@ import '../../core/constant/sizes.dart';
 import '../widget/login_register/register_doctor_widget.dart';
 import '../widget/mywidget.dart';
 
-class RegisterDoctorPage extends StatelessWidget {
-  const RegisterDoctorPage({super.key});
+class RegisterUserPage extends StatelessWidget {
+  const RegisterUserPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Get.put(RegisterDoctorController());
+    Get.put(RegisterUserController());
     return MyWidget(
         backgroudImage: AppImageAsset.wall,
         child: Center(

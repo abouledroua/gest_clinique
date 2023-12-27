@@ -20,28 +20,28 @@ class LoginWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        child: Column(children: [
-          SizedBox(
-              width: AppSizes.widthScreen / 5,
-              height: AppSizes.heightScreen / 5,
-              child: Lottie.asset(AppAnimationAsset.login)),
-          Center(
-              child: Text(DateTime.now().hour > 12 ? 'Bonsoir' : 'Bonjour',
-                  style: TextStyle(
-                      fontSize: 24,
-                      color: AppColor.primary,
-                      fontFamily: fontFamily))),
-          const SizedBox(height: 5),
-          GetBuilder<LoginController>(
-              builder: (controller) => Visibility(
-                  visible: !controller.inscr,
-                  replacement: const Expanded(
-                      child: SuccessWidget(
-                          text: 'Authentification avec succès ...')),
-                  child: Expanded(child: champs())))
-        ]),
-      );
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: Column(children: [
+        SizedBox(
+            width: AppSizes.widthScreen / 5,
+            height: AppSizes.heightScreen / 5,
+            child: Lottie.asset(AppAnimationAsset.login)),
+        Center(
+            child: Text(DateTime.now().hour > 12 ? 'Bonsoir' : 'Bonjour',
+                style: TextStyle(
+                    fontSize: 24,
+                    color: AppColor.primary,
+                    fontFamily: fontFamily))),
+        const SizedBox(height: 5),
+        GetBuilder<LoginController>(
+            builder: (controller) => Visibility(
+                visible: !controller.inscr,
+                replacement: Expanded(
+                    child: SuccessWidget(
+                        text:
+                            'Authentification avec succès dans \n ${controller.selectedOrg}')),
+                child: Expanded(child: champs())))
+      ]));
 
   champs() => Column(children: [
         Expanded(child: listOfChamps()),
@@ -53,10 +53,10 @@ class LoginWidget extends StatelessWidget {
                   style: TextStyle(fontSize: 11, fontFamily: fontFamily))),
           InkWell(
               onTap: () {
-                if (Get.isRegistered<RegisterDoctorController>()) {
-                  Get.delete<RegisterDoctorController>();
+                if (Get.isRegistered<RegisterUserController>()) {
+                  Get.delete<RegisterUserController>();
                 }
-                Get.toNamed(AppRoute.registerDocteur);
+                Get.toNamed(AppRoute.registerUser);
               },
               child: Ink(
                   child: Text(" Inscriver",
@@ -97,25 +97,24 @@ class LoginWidget extends StatelessWidget {
                 color: const Color.fromARGB(255, 221, 240, 221),
                 border: Border.all(),
                 borderRadius: BorderRadius.circular(3)),
-            child: Expanded(
-                child: GetBuilder<LoginController>(
-                    builder: (controller) => DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                            padding: const EdgeInsets.all(8),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                color: AppColor.black,
-                                fontFamily: fontFamily),
-                            underline: null,
-                            value: controller.selectedOrg,
-                            items: controller.orgs
-                                .map((item) => DropdownMenuItem(
-                                    value: item, child: Text(item)))
-                                .toList(),
-                            onChanged: (String? value) {
-                              controller.updateDrop(value);
-                            }))))),
+            child: GetBuilder<LoginController>(
+                builder: (controller) => DropdownButtonHideUnderline(
+                    child: DropdownButton(
+                        padding: const EdgeInsets.all(8),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                            color: AppColor.black,
+                            fontFamily: fontFamily),
+                        underline: null,
+                        value: controller.selectedOrg,
+                        items: controller.orgs
+                            .map((item) => DropdownMenuItem(
+                                value: item, child: Text(item)))
+                            .toList(),
+                        onChanged: (String? value) {
+                          controller.updateDrop(value);
+                        })))),
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Expanded(
               child: Text("Mon Cabinet n'apparaît pas dans la liste !!!, ",
@@ -151,19 +150,19 @@ class LoginWidget extends StatelessWidget {
                         color: AppColor.white,
                         fontFamily: fontFamily)))),
         const SizedBox(height: 5),
-        const Center(child: Text(' _____________  Ou  ____________ ')),
-        const SizedBox(height: 5),
-        Container(
-            decoration: BoxDecoration(
-                color: AppColor.white, borderRadius: BorderRadius.circular(5)),
-            child: TextButton.icon(
-                icon: const Icon(Icons.g_mobiledata_rounded,
-                    color: AppColor.green2),
-                onPressed: () {},
-                label: Text('Continuer avec Google',
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: AppColor.greyShade,
-                        fontFamily: fontFamily))))
+        // const Center(child: Text(' _____________  Ou  ____________ ')),
+        // const SizedBox(height: 5),
+        // Container(
+        //     decoration: BoxDecoration(
+        //         color: AppColor.white, borderRadius: BorderRadius.circular(5)),
+        //     child: TextButton.icon(
+        //         icon: const Icon(Icons.g_mobiledata_rounded,
+        //             color: AppColor.green2),
+        //         onPressed: () {},
+        //         label: Text('Continuer avec Google',
+        //             style: TextStyle(
+        //                 fontSize: 14,
+        //                 color: AppColor.greyShade,
+        // fontFamily: fontFamily))))
       ]);
 }

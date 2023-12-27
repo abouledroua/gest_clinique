@@ -32,14 +32,13 @@ class RegisterCabinetWidget extends StatelessWidget {
                   height: AppSizes.heightScreen / 5,
                   child: Lottie.asset(AppAnimationAsset.hospital)),
               Center(
-                  child: Expanded(
-                      child: Text(
-                          'Cabinet Médical / Clinique \n Centre de Santé / Hopital',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: AppColor.primary,
-                              fontFamily: fontFamily)))),
+                  child: Text(
+                      'Cabinet Médical / Clinique \n Centre de Santé / Hopital',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: AppColor.primary,
+                          fontFamily: fontFamily))),
               const SizedBox(height: 5),
               GetBuilder<RegisterCabinetController>(
                   builder: (controller) => Visibility(
@@ -52,7 +51,8 @@ class RegisterCabinetWidget extends StatelessWidget {
             ]))
       ]);
 
-  ListView listChamps() => ListView(children: [
+  ListView listChamps() =>
+      ListView(primary: false, shrinkWrap: true, children: [
         SizedBox(
             height: chpHeight,
             child: GetBuilder<RegisterCabinetController>(
@@ -79,26 +79,24 @@ class RegisterCabinetWidget extends StatelessWidget {
                 color: const Color.fromARGB(255, 221, 240, 221),
                 border: Border.all(),
                 borderRadius: BorderRadius.circular(3)),
-            child: Expanded(
-                child: GetBuilder<RegisterCabinetController>(
-                    builder: (controller) => DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                              padding: const EdgeInsets.all(8),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                  color: AppColor.black,
-                                  fontFamily: fontFamily),
-                              underline: null,
-                              value: controller.selectedWilaya,
-                              items: controller.wilayas
-                                  .map((item) => DropdownMenuItem(
-                                      value: item, child: Text(item)))
-                                  .toList(),
-                              onChanged: (String? value) {
-                                controller.updateDropWilaya(value);
-                              }),
-                        )))),
+            child: GetBuilder<RegisterCabinetController>(
+                builder: (controller) => DropdownButtonHideUnderline(
+                    child: DropdownButton(
+                        padding: const EdgeInsets.all(8),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                            color: AppColor.black,
+                            fontFamily: fontFamily),
+                        underline: null,
+                        value: controller.selectedWilaya,
+                        items: controller.wilayas
+                            .map((item) => DropdownMenuItem(
+                                value: item, child: Text(item)))
+                            .toList(),
+                        onChanged: (String? value) {
+                          controller.updateDropWilaya(value);
+                        })))),
         const SizedBox(height: 5),
         SizedBox(
             height: chpHeight,

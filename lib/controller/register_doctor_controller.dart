@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import '../core/constant/routes.dart';
 import '../core/constant/sizes.dart';
 
-class RegisterDoctorController extends GetxController {
+class RegisterUserController extends GetxController {
   late TextEditingController emailController, passController, nameController;
   String defaultOrg = 'Choisir votre Organisme', defaultFct = 'Votre Fonction';
   List<String> orgs = [], fonctions = [];

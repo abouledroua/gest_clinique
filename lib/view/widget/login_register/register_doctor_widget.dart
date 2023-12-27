@@ -40,7 +40,7 @@ class RegisterDoctorWidget extends StatelessWidget {
                           color: AppColor.primary,
                           fontFamily: fontFamily))),
               const SizedBox(height: 5),
-              GetBuilder<RegisterDoctorController>(
+              GetBuilder<RegisterUserController>(
                   builder: (controller) => Visibility(
                       visible: !controller.inscr,
                       replacement: Expanded(
@@ -75,7 +75,7 @@ class RegisterDoctorWidget extends StatelessWidget {
   ListView listChamps() => ListView(children: [
         SizedBox(
             height: chpHeight,
-            child: GetBuilder<RegisterDoctorController>(
+            child: GetBuilder<RegisterUserController>(
                 builder: (controller) => MyTextField(
                     labelText: 'Votre Nom',
                     hintText: 'Nom et Prénom de la personne',
@@ -86,7 +86,7 @@ class RegisterDoctorWidget extends StatelessWidget {
         const SizedBox(height: 5),
         SizedBox(
             height: chpHeight,
-            child: GetBuilder<RegisterDoctorController>(
+            child: GetBuilder<RegisterUserController>(
                 builder: (controller) => MyTextField(
                     labelText: 'Votre Email',
                     hintText: 'email@gmail.com',
@@ -96,7 +96,7 @@ class RegisterDoctorWidget extends StatelessWidget {
         const SizedBox(height: 5),
         SizedBox(
             height: chpHeight,
-            child: GetBuilder<RegisterDoctorController>(
+            child: GetBuilder<RegisterUserController>(
                 builder: (controller) => MyTextField(
                     labelText: 'Mot de Passe',
                     hintText: '1234',
@@ -111,25 +111,24 @@ class RegisterDoctorWidget extends StatelessWidget {
                 color: const Color.fromARGB(255, 221, 240, 221),
                 border: Border.all(),
                 borderRadius: BorderRadius.circular(3)),
-            child: Expanded(
-                child: GetBuilder<RegisterDoctorController>(
-                    builder: (controller) => DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                            padding: const EdgeInsets.all(8),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                color: AppColor.black,
-                                fontFamily: fontFamily),
-                            underline: null,
-                            value: controller.selectedOrg,
-                            items: controller.orgs
-                                .map((item) => DropdownMenuItem(
-                                    value: item, child: Text(item)))
-                                .toList(),
-                            onChanged: (String? value) {
-                              controller.updateDropOrg(value);
-                            }))))),
+            child: GetBuilder<RegisterUserController>(
+                builder: (controller) => DropdownButtonHideUnderline(
+                    child: DropdownButton(
+                        padding: const EdgeInsets.all(8),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                            color: AppColor.black,
+                            fontFamily: fontFamily),
+                        underline: null,
+                        value: controller.selectedOrg,
+                        items: controller.orgs
+                            .map((item) => DropdownMenuItem(
+                                value: item, child: Text(item)))
+                            .toList(),
+                        onChanged: (String? value) {
+                          controller.updateDropOrg(value);
+                        })))),
         const SizedBox(height: 5),
         Container(
             height: chpHeight,
@@ -137,44 +136,41 @@ class RegisterDoctorWidget extends StatelessWidget {
                 color: const Color.fromARGB(255, 221, 240, 221),
                 border: Border.all(),
                 borderRadius: BorderRadius.circular(3)),
-            child: Expanded(
-                child: GetBuilder<RegisterDoctorController>(
-                    builder: (controller) => DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                            padding: const EdgeInsets.all(8),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                color: AppColor.black,
-                                fontFamily: fontFamily),
-                            underline: null,
-                            value: controller.selectedFonction,
-                            items: controller.fonctions
-                                .map((item) => DropdownMenuItem(
-                                    value: item, child: Text(item)))
-                                .toList(),
-                            onChanged: (String? value) {
-                              controller.updateDropFct(value);
-                            }))))),
+            child: GetBuilder<RegisterUserController>(
+                builder: (controller) => DropdownButtonHideUnderline(
+                    child: DropdownButton(
+                        padding: const EdgeInsets.all(8),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                            color: AppColor.black,
+                            fontFamily: fontFamily),
+                        underline: null,
+                        value: controller.selectedFonction,
+                        items: controller.fonctions
+                            .map((item) => DropdownMenuItem(
+                                value: item, child: Text(item)))
+                            .toList(),
+                        onChanged: (String? value) {
+                          controller.updateDropFct(value);
+                        })))),
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Text("Mon Cabinet n'apparaît pas dans la liste !!!, ",
               style: TextStyle(fontSize: 9, fontFamily: fontFamily)),
           InkWell(
-            onTap: () {
-              if (Get.isRegistered<RegisterCabinetController>()) {
-                Get.delete<RegisterCabinetController>();
-              }
-              Get.toNamed(AppRoute.registerCabinet);
-            },
-            child: Ink(
-              child: Text("Ajouter",
-                  style: TextStyle(
-                      fontSize: 10,
-                      fontFamily: fontFamily,
-                      color: AppColor.secondary,
-                      fontWeight: FontWeight.bold)),
-            ),
-          )
+              onTap: () {
+                if (Get.isRegistered<RegisterCabinetController>()) {
+                  Get.delete<RegisterCabinetController>();
+                }
+                Get.toNamed(AppRoute.registerCabinet);
+              },
+              child: Ink(
+                  child: Text("Ajouter",
+                      style: TextStyle(
+                          fontSize: 10,
+                          fontFamily: fontFamily,
+                          color: AppColor.secondary,
+                          fontWeight: FontWeight.bold))))
         ]),
         const SizedBox(height: 10),
         Container(
@@ -183,7 +179,7 @@ class RegisterDoctorWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(5)),
             child: TextButton(
                 onPressed: () {
-                  RegisterDoctorController controller = Get.find();
+                  RegisterUserController controller = Get.find();
                   controller.inscrire();
                 },
                 child: Text('Inscrire',

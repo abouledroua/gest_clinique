@@ -27,7 +27,7 @@ dependencies:
   path_provider: any
   package_info_plus: any
   awesome_dialog: any
-  easy_date_timeline: any
+  table_calendar: any
 
   #photo_view: any
   #jiffy: any

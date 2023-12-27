@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gest_clinique/core/constant/image_asset.dart';
 import 'package:get/get.dart';
 
 import '../../controller/login_controller.dart';
+import '../../core/constant/image_asset.dart';
 import '../../core/constant/sizes.dart';
 import '../widget/login_register/loginwidget.dart';
 import '../widget/mywidget.dart';
