@@ -9,13 +9,14 @@ import '../core/constant/routes.dart';
 import '../core/constant/sizes.dart';
 import '../core/services/settingservice.dart';
 import 'dashboard_controller.dart';
+import 'rdv_controller.dart';
 
 class LoginController extends GetxController {
   late TextEditingController emailController, passController;
   String defaultOrg = 'Choisir votre Organisme';
   String? selectedOrg;
   List<String> orgs = [];
-  bool inscr = false;
+  bool inscr = false, conect = false;
 
   updateDrop(String? value) {
     selectedOrg = value;
@@ -42,14 +43,22 @@ class LoginController extends GetxController {
               desc: 'Veuillez choisir un organisme !!!')
           .show();
     } else {
-      inscr = true;
+      conect = true;
       update();
-      Timer(const Duration(seconds: 3), _gotoDashBoard);
+      Timer(const Duration(seconds: 4), _gotoConnect);
     }
+  }
+
+  _gotoConnect() {
+    conect = false;
+    inscr = true;
+    update();
+    Timer(const Duration(seconds: 3), _gotoDashBoard);
   }
 
   _gotoDashBoard() {
     if (Get.isRegistered<DashBoardController>()) {
+      Get.delete<RDVController>();
       Get.delete<DashBoardController>();
     }
     Get.offAllNamed(AppRoute.dashboard);
@@ -57,6 +66,8 @@ class LoginController extends GetxController {
 
   _initConnect() {
     AppSizes.setSizeScreen(Get.context);
+    conect = false;
+    inscr = false;
     passController = TextEditingController();
     emailController = TextEditingController();
     SettingServices c = Get.find();

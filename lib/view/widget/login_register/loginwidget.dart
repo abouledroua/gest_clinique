@@ -11,6 +11,7 @@ import '../../../core/constant/routes.dart';
 import '../../../core/constant/sizes.dart';
 import '../../../core/constant/theme.dart';
 import '../my_text_field.dart';
+import 'connect_widget.dart';
 import 'success_widget.dart';
 
 class LoginWidget extends StatelessWidget {
@@ -35,12 +36,15 @@ class LoginWidget extends StatelessWidget {
         const SizedBox(height: 5),
         GetBuilder<LoginController>(
             builder: (controller) => Visibility(
-                visible: !controller.inscr,
-                replacement: Expanded(
-                    child: SuccessWidget(
-                        text:
-                            'Authentification avec succès dans \n ${controller.selectedOrg}')),
-                child: Expanded(child: champs())))
+                visible: !controller.conect,
+                replacement: const ConnectWidget(),
+                child: Visibility(
+                    visible: !controller.inscr,
+                    replacement: Expanded(
+                        child: SuccessWidget(
+                            text:
+                                'Authentification avec succès dans \n ${controller.selectedOrg}')),
+                    child: Expanded(child: champs()))))
       ]));
 
   champs() => Column(children: [

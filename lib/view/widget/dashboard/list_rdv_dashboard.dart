@@ -3,8 +3,8 @@ import 'package:intl/intl.dart';
 
 import '../../../core/constant/color.dart';
 
-class CalendarDashBoard extends StatelessWidget {
-  const CalendarDashBoard({super.key});
+class ListRdvDashBoard extends StatelessWidget {
+  const ListRdvDashBoard({super.key});
 
   @override
   Widget build(BuildContext context) {
