@@ -8,20 +8,20 @@ class HeaderDashBoardWidget extends StatelessWidget {
   const HeaderDashBoardWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.all(6),
-        child: Row(children: [
-          Image.asset(AppImageAsset.logo),
-          Text('Gestion Cabinet Médical',
-              style: TextStyle(fontSize: 18, fontFamily: fontFamily)),
-          const Spacer(),
-          const SearchBar(
-              textCapitalization: TextCapitalization.characters,
-              hintText: 'Rechercher un Patient',
-              leading: Icon(Icons.search_rounded)),
-          const Spacer(),
-          const HeaderIcons(),
-        ]));
-  }
+  Widget build(BuildContext context) => Padding(
+      padding: const EdgeInsets.all(6),
+      child: Row(children: [
+        Image.asset(AppImageAsset.logo),
+        Text('Gestion Cabinet Médical',
+            style: TextStyle(fontSize: 18, fontFamily: fontFamily)),
+        const Spacer(),
+        const Expanded(
+            flex: 4,
+            child: SearchBar(
+                textCapitalization: TextCapitalization.characters,
+                hintText: 'Rechercher un Patient',
+                leading: Icon(Icons.search_rounded))),
+        const Spacer(),
+        const HeaderIcons()
+      ]));
 }

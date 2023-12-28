@@ -9,17 +9,15 @@ class HeaderIcons extends StatelessWidget {
   const HeaderIcons({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Row(children: [
-      Image.asset(AppImageAsset.noPhoto),
-      const SizedBox(width: 10),
-      Tooltip(
-          message: 'Déconnecter',
-          child: InkWell(
-              onTap: () {
-                AppData.logout();
-              },
-              child: Ink(child: Lottie.asset(AppAnimationAsset.logout))))
-    ]);
-  }
+  Widget build(BuildContext context) => Row(children: [
+        Image.asset(AppImageAsset.noPhoto),
+        const SizedBox(width: 10),
+        Tooltip(
+            message: 'Déconnecter',
+            child: InkWell(
+                onTap: () {
+                  AppData.logout();
+                },
+                child: Ink(child: Lottie.asset(AppAnimationAsset.logout))))
+      ]);
 }

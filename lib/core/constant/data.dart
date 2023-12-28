@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
@@ -313,28 +314,31 @@ class AppData {
     });
   }
 
-  static logout() {
-    AwesomeDialog(
-            context: Get.context!,
-            dialogType: DialogType.warning,
-            title: 'Alerte',
-            btnOkText: "Oui",
-            btnCancelText: "Non",
-            width: AppSizes.widthScreen,
-            btnCancelOnPress: () {},
-            btnOkOnPress: () {
-              _closeall();
-            },
-            showCloseIcon: true,
-            desc: 'Voulez-vous vraiment déconnecter ??')
-        .show();
+  static logout({question = true}) {
+    if (question) {
+      AwesomeDialog(
+              context: Get.context!,
+              dialogType: DialogType.warning,
+              title: 'Alerte',
+              btnOkText: "Oui",
+              btnCancelText: "Non",
+              width: min(AppSizes.widthScreen, 400),
+              btnCancelOnPress: () {},
+              btnOkOnPress: () {
+                _closeall();
+              },
+              showCloseIcon: true,
+              desc: 'Voulez-vous vraiment déconnecter ??')
+          .show();
+    } else {
+      _closeall();
+    }
   }
 
   static _closeall() async {
     SettingServices c = Get.find();
     c.sharedPrefs.setBool('CONNECTED', false);
-    c.sharedPrefs.setString('KEY', '');
-    c.sharedPrefs.setString('USERNAME', '');
+    c.sharedPrefs.setString('ORGANISATION', '');
     c.sharedPrefs.setString('PASSWORD', '');
     c.sharedPrefs.setString('EMAIL', '');
 
@@ -345,6 +349,12 @@ class AppData {
     Get.delete<LoginController>();
 
     Get.offAllNamed(AppRoute.login);
+  }
+
+  static isConnected() {
+    SettingServices c = Get.find();
+    bool isCon = c.sharedPrefs.getBool('CONNECTED') ?? false;
+    return isCon;
   }
 
   static versionOutDated() {

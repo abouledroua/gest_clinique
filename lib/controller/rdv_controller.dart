@@ -38,15 +38,17 @@ class RDVController extends GetxController {
     var rng = Random();
     Patient p;
     RDV r;
-    int l, j, k, e;
+    int l, j, k, e, id = 0;
     int nbRdvs = rng.nextInt(10) + 3;
     DateTime date = DateTime.now();
     for (var i = 0; i < nbRdvs; i++) {
+      id++;
       l = rng.nextInt(names.length);
       j = rng.nextInt(names.length);
       k = rng.nextInt(3849594848);
       e = rng.nextInt(3);
       p = Patient(
+          id: id,
           nom: names[l],
           prenom: names[j],
           codeBarre: k.toString(),

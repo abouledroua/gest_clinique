@@ -9,12 +9,13 @@ class Patient {
       adresse,
       tel2,
       email;
-  int age, typeAge, sexe, gs;
+  int id, age, typeAge, sexe, gs;
   bool convention;
   double prcConvention;
 
   Patient(
-      {required this.nom,
+      {required this.id,
+      required this.nom,
       required this.prenom,
       required this.codeBarre,
       required this.email,

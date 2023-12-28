@@ -66,6 +66,13 @@ class LoginController extends GetxController {
     User.isNurse = (User.type == 2);
     User.organisation = selectedOrg!;
     User.idUser = 1;
+
+    SettingServices c = Get.find();
+    c.sharedPrefs.setString('EMAIL', emailController.text);
+    c.sharedPrefs.setString('PASSWORD', passController.text);
+    c.sharedPrefs.setString('ORGANISATION', selectedOrg!);
+    c.sharedPrefs.setBool('CONNECTED', true);
+
     if (Get.isRegistered<DashBoardController>()) {
       Get.delete<RDVController>();
       Get.delete<DashBoardController>();

@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 
 import '../../controller/dashboard_controller.dart';
 import '../../controller/rdv_controller.dart';
+import '../../core/class/user.dart';
+import '../../core/constant/data.dart';
 import '../../core/constant/image_asset.dart';
 import '../widget/dashboard/header_dashboard_widget.dart';
 import '../widget/dashboard/list_rdv_dashboard.dart';
@@ -14,6 +16,9 @@ class DashBoardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!AppData.isConnected()) {
+      AppData.logout(question: false);
+    }
     Get.put(RDVController());
     Get.put(DashBoardController());
     return MyWidget(

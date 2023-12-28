@@ -9,18 +9,24 @@ class FooterDashBoardWidget extends StatelessWidget {
   const FooterDashBoardWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.all(6),
-        child: Row(children: [
+  Widget build(BuildContext context) => Padding(
+      padding: const EdgeInsets.all(6),
+      child: Row(children: [
+        Row(mainAxisSize: MainAxisSize.min, children: [
           Lottie.asset(AppAnimationAsset.hospital),
           Text(User.organisation,
-              style: TextStyle(fontSize: 18, fontFamily: fontFamily)),
-          const Spacer(),
+              overflow: TextOverflow.clip,
+              softWrap: true,
+              style: TextStyle(fontSize: 18, fontFamily: fontFamily))
+        ]),
+        const Spacer(),
+        Row(children: [
           Lottie.asset(AppAnimationAsset.nurse),
           Text('${User.name} (${User.email})',
-              style: TextStyle(fontSize: 18, fontFamily: fontFamily)),
-          const Spacer(),
-        ]));
-  }
+              overflow: TextOverflow.clip,
+              softWrap: true,
+              style: TextStyle(fontSize: 18, fontFamily: fontFamily))
+        ]),
+        const Spacer(),
+      ]));
 }
