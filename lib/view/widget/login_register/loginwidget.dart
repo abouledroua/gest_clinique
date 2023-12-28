@@ -148,7 +148,7 @@ class LoginWidget extends StatelessWidget {
                   LoginController controller = Get.find();
                   controller.inscrire();
                 },
-                child: Text('Login',
+                child: Text('Connecter',
                     style: TextStyle(
                         fontSize: 18,
                         color: AppColor.white,

@@ -19,7 +19,7 @@ class ConnectWidget extends StatelessWidget {
             SizedBox(
                 width: min(100, AppSizes.widthScreen / 3),
                 height: min(100, AppSizes.heightScreen / 3),
-                child: Lottie.asset(AppAnimationAsset.connexion)),
+                child: Lottie.asset(AppAnimationAsset.connect)),
             Text('Traitement en cours ...',
                 textAlign: TextAlign.center,
                 style: TextStyle(

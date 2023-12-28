@@ -5,6 +5,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../core/class/user.dart';
 import '../core/constant/routes.dart';
 import '../core/constant/sizes.dart';
 import '../core/services/settingservice.dart';
@@ -57,6 +58,14 @@ class LoginController extends GetxController {
   }
 
   _gotoDashBoard() {
+    User.email = emailController.text;
+    User.name = emailController.text;
+    User.password = passController.text;
+    User.type = 1;
+    User.isDoctor = (User.type == 1);
+    User.isNurse = (User.type == 2);
+    User.organisation = selectedOrg!;
+    User.idUser = 1;
     if (Get.isRegistered<DashBoardController>()) {
       Get.delete<RDVController>();
       Get.delete<DashBoardController>();

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as img;
@@ -10,6 +11,10 @@ import 'package:intl/intl.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
+import '../../controller/dashboard_controller.dart';
+import '../../controller/login_controller.dart';
+import '../../controller/rdv_controller.dart';
+import '../class/user.dart';
 import '../services/settingservice.dart';
 import 'color.dart';
 import 'routes.dart';
@@ -18,8 +23,9 @@ import 'sizes.dart';
 class AppData {
   static const bool testMode = false;
   static double webVersion = 7.1, padBottom = 30;
-  static const String _www = "ATLAS", localDdbName = 'datlas';
-  static String _serverIP = testMode ? "192.168.1.161/ATLAS" : "atlasschool.dz";
+  static const String _www = "CLINIQUE";
+  static String _serverIP =
+      testMode ? "192.168.1.161/CLINIQUE" : "atlasschool.dz";
   static const int widthSmallImage = 100,
       heightSmallImage = 100,
       bddVersion = 1;
@@ -307,67 +313,38 @@ class AppData {
     });
   }
 
-  static logout({question = true}) {
-    // String alert = '';
-    // (User.isAdmin) //&& GestGalleryImages.myImages.isNotEmpty)
-    //     ? alert =
-    //         '\n Attention tous les chargement des images seront arrêter ....'
-    //     : alert = '';
-    // if (question) {
-    //   AwesomeDialog(
-    //           context: Get.context!,
-    //           dialogType: DialogType.warning,
-    //           title: 'Alerte',
-    //           btnOkText: "Oui",
-    //           btnCancelText: "Non",
-    //           width: AppSizes.widthScreen,
-    //           btnCancelOnPress: () {
-    //             HomePageController hc = Get.find();
-    //             if (hc.pageIndex == 7) {
-    //               hc.changePage(hc.oldPage);
-    //             }
-    //           },
-    //           onDismissCallback: (type) {
-    //             HomePageController hc = Get.find();
-    //             if (hc.pageIndex == 7) {
-    //               hc.changePage(hc.oldPage);
-    //             }
-    //           },
-    //           btnOkOnPress: () {
-    //             _closeall(true);
-    //           },
-    //           showCloseIcon: true,
-    //           desc: 'Voulez-vous vraiment déconnecter ??$alert')
-    //       .show();
-    // } else {
-    //   _closeall(true);
-    // }
+  static logout() {
+    AwesomeDialog(
+            context: Get.context!,
+            dialogType: DialogType.warning,
+            title: 'Alerte',
+            btnOkText: "Oui",
+            btnCancelText: "Non",
+            width: AppSizes.widthScreen,
+            btnCancelOnPress: () {},
+            btnOkOnPress: () {
+              _closeall();
+            },
+            showCloseIcon: true,
+            desc: 'Voulez-vous vraiment déconnecter ??')
+        .show();
   }
 
-  static _closeall(bool erase) async {
-    // if (erase) {
-    //   SettingServices c = Get.find();
-    //   c.sharedPrefs.setBool('CONNECTED', false);
-    //   c.sharedPrefs.setString('KEY', '');
-    //   c.sharedPrefs.setString('USERNAME', '');
-    //   c.sharedPrefs.setString('PASSWORD', '');
-    //   c.sharedPrefs.setString('EMAIL', '');
-    // }
-    // User.idUser = 0;
-    // UserController userController = Get.find();
-    // userController.enfants = [];
+  static _closeall() async {
+    SettingServices c = Get.find();
+    c.sharedPrefs.setBool('CONNECTED', false);
+    c.sharedPrefs.setString('KEY', '');
+    c.sharedPrefs.setString('USERNAME', '');
+    c.sharedPrefs.setString('PASSWORD', '');
+    c.sharedPrefs.setString('EMAIL', '');
 
-    // Get.delete<HomePageController>();
-    // Get.delete<ListAnnonceController>();
-    // Get.delete<ListEnfantsController>();
-    // Get.delete<ListParentsController>();
-    // Get.delete<ListEnseignantsController>();
-    // Get.delete<ListAlbumsController>();
-    // Get.delete<ListSectionsController>();
-    // Get.delete<ListMessagesController>();
-    // Get.delete<LoginController>();
+    User.idUser = 0;
 
-    // Get.offAllNamed(AppRoute.login);
+    Get.delete<DashBoardController>();
+    Get.delete<RDVController>();
+    Get.delete<LoginController>();
+
+    Get.offAllNamed(AppRoute.login);
   }
 
   static versionOutDated() {
@@ -544,7 +521,7 @@ class AppData {
         .timeout(getTimeOut())
         .then((response) async {
           if (response.statusCode == 200) {
-            _closeall(false);
+            _closeall();
           } else {
             Timer(const Duration(seconds: 5), connecter);
           }
