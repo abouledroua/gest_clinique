@@ -118,25 +118,41 @@ class ListRdvDashBoard extends StatelessWidget {
                 return Container(
                     margin: const EdgeInsets.only(bottom: 4),
                     child: ListTile(
-                        dense: true,
-                        visualDensity:
-                            const VisualDensity(horizontal: 0, vertical: -4),
-                        horizontalTitleGap: 0,
-                        contentPadding: const EdgeInsets.all(0),
-                        minVerticalPadding: 0,
-                        minLeadingWidth: 0,
-                        tileColor: item.etat == 1
-                            ? attentColor
-                            : item.etat == 2
-                                ? consultColor
-                                : absentColor,
-                        title: Text('${p.nom} ${p.prenom}',
-                            style: const TextStyle(
-                                color: Colors.black, fontSize: 13)),
-                        subtitle: Visibility(
-                            visible: p.tel1.isNotEmpty && p.tel2.isNotEmpty,
-                            child: Text('${p.tel1}       ${p.tel2}',
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 11)))));
+                      dense: true,
+                      visualDensity:
+                          const VisualDensity(horizontal: 0, vertical: -4),
+                      horizontalTitleGap: 0,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 3),
+                      minVerticalPadding: 0,
+                      minLeadingWidth: 0,
+                      tileColor: item.etat == 1
+                          ? attentColor
+                          : item.etat == 2
+                              ? consultColor
+                              : absentColor,
+                      title: Text('${p.nom} ${p.prenom}',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 12)),
+                      subtitle: Visibility(
+                          visible: item.dateDernConsult.isNotEmpty,
+                          child: Text(
+                              'Dern. Cons. :${DateFormat("yyyy-MM-dd").format(DateTime.parse(item.dateDernConsult))}',
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 11))),
+                      // trailing: (p.tel1.isEmpty && p.tel2.isEmpty)
+                      //     ? null
+                      //     : Column(mainAxisSize: MainAxisSize.min, children: [
+                      //         if (p.tel1.isNotEmpty)
+                      //           Text(p.tel1,
+                      //               style: const TextStyle(
+                      //                   color: Colors.black, fontSize: 11)),
+                      //         if (p.tel2.isNotEmpty)
+                      //           Text(p.tel2,
+                      //               style: const TextStyle(
+                      //                   color: Colors.black, fontSize: 11)),
+                      //       ])
+                    ));
               })));
 }

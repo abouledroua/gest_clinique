@@ -3,9 +3,11 @@ import 'package:gest_clinique/core/class/user.dart';
 import 'package:get/get.dart';
 
 import '../core/constant/sizes.dart';
+import '../core/services/settingservice.dart';
 
 class DashBoardController extends GetxController {
-  bool showListRdv = true;
+  bool showListRdv = true, showMenu = false;
+  int indexPage = 1;
 
   @override
   void onInit() {
@@ -14,21 +16,38 @@ class DashBoardController extends GetxController {
     super.onInit();
   }
 
+  updateIndexPage({required int index}) {
+    indexPage = index;
+    update();
+  }
+
   updateShowListeRDv() {
     showListRdv = !showListRdv;
+    update();
+  }
+
+  updateShowMenu() {
+    showMenu = !showMenu;
     update();
   }
 
   _init() {
     AppSizes.setSizeScreen(Get.context);
     showListRdv = true;
-    User.email = 'email@gmail.com';
-    User.name = 'the full name';
-    User.password = 'password';
+    showMenu = true;
+    _loadUserData();
+  }
+
+  _loadUserData() {
     User.type = 1;
     User.isDoctor = (User.type == 1);
     User.isNurse = (User.type == 2);
-    User.organisation = 'Nom du cabinet medical';
+
+    SettingServices c = Get.find();
+    User.email = c.sharedPrefs.getString('EMAIL') ?? "";
+    User.name = (User.type == 1) ? 'Dr Nom Medecin' : "Nom de l'assistante";
+    User.password = c.sharedPrefs.getString('PASSWORD') ?? "";
+    User.organisation = c.sharedPrefs.getString('ORGANISATION') ?? "";
     User.idUser = 1;
   }
 }

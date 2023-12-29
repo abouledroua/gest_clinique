@@ -86,7 +86,6 @@ class LoginController extends GetxController {
     inscr = false;
     passController = TextEditingController();
     emailController = TextEditingController();
-    SettingServices c = Get.find();
     selectedOrg = defaultOrg;
     orgs = [
       defaultOrg,
@@ -95,6 +94,7 @@ class LoginController extends GetxController {
       'Cabinet Médical Dr Bekouche',
       'Cabinet Médical Dr Slougui'
     ];
+    SettingServices c = Get.find();
     String emailPref = c.sharedPrefs.getString('EMAIL') ?? "";
     String passPref = c.sharedPrefs.getString('PASSWORD') ?? "";
     String orgPref = c.sharedPrefs.getString('ORGANISATION') ?? "";

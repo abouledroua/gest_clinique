@@ -9,6 +9,7 @@ class MyWidget extends StatelessWidget {
   final Widget child;
   final bool blurBackground;
   final String title;
+  final Gradient? gradient;
   final List<Widget>? actions;
   final String? backgroudImage;
   final Color? color;
@@ -20,6 +21,7 @@ class MyWidget extends StatelessWidget {
       this.backgroudImage,
       this.blurBackground = false,
       this.color,
+      this.gradient,
       this.title = "",
       this.drawer,
       this.actions,
@@ -63,6 +65,10 @@ class MyWidget extends StatelessWidget {
                 ? BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
                     child: child)
-                : child)
+                : gradient != null
+                    ? Container(
+                        decoration: BoxDecoration(gradient: gradient),
+                        child: child)
+                    : child)
       ]));
 }

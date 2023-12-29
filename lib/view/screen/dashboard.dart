@@ -3,11 +3,9 @@ import 'package:get/get.dart';
 
 import '../../controller/dashboard_controller.dart';
 import '../../controller/rdv_controller.dart';
-import '../../core/class/user.dart';
 import '../../core/constant/data.dart';
-import '../../core/constant/image_asset.dart';
-import '../widget/dashboard/header_dashboard_widget.dart';
-import '../widget/dashboard/list_rdv_dashboard.dart';
+import '../../core/constant/sizes.dart';
+import '../widget/dashboard/menu_dashboard.dart';
 import '../widget/dashboard/workspace_dashboard.dart';
 import '../widget/mywidget.dart';
 
@@ -22,33 +20,28 @@ class DashBoardPage extends StatelessWidget {
     Get.put(RDVController());
     Get.put(DashBoardController());
     return MyWidget(
-        blurBackground: true,
-        backgroudImage: AppImageAsset.wall,
-        child: Column(children: [
-          const SizedBox(height: 45, child: HeaderDashBoardWidget()),
-          Expanded(
-              child: Row(children: [
-            const Expanded(child: WorkSpaceDashBoard()),
-            GetBuilder<DashBoardController>(
-                builder: (controller) => AnimatedCrossFade(
-                    duration: const Duration(milliseconds: 1700),
-                    firstChild:
-                        const SizedBox(width: 200, child: ListRdvDashBoard()),
-                    secondChild: SizedBox(
-                        width: 20,
-                        child: Column(children: [
-                          InkWell(
-                              onTap: () {
-                                DashBoardController controller = Get.find();
-                                controller.updateShowListeRDv();
-                              },
-                              child: Ink(
-                                  child: const Icon(Icons.arrow_back_rounded)))
-                        ])),
-                    crossFadeState: controller.showListRdv
-                        ? CrossFadeState.showFirst
-                        : CrossFadeState.showSecond))
-          ]))
-        ]));
+        gradient: const LinearGradient(
+            begin: Alignment.bottomRight,
+            end: Alignment.topLeft,
+            colors: [
+              Color.fromARGB(255, 22, 175, 101),
+              Color.fromARGB(255, 154, 206, 182)
+            ]),
+        child: Container(
+            margin: EdgeInsets.symmetric(
+                horizontal: AppSizes.widthScreen / 50,
+                vertical: AppSizes.heightScreen / 30),
+            decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(8))),
+            child: Row(children: [
+              Container(
+                  decoration: const BoxDecoration(color: Colors.white70),
+                  child:
+                      const SizedBox(width: 200, child: MenuDashBoardWidget())),
+              Expanded(
+                  child: Container(
+                      decoration: const BoxDecoration(color: Colors.white),
+                      child: const WorkSpaceDashBoard()))
+            ])));
   }
 }

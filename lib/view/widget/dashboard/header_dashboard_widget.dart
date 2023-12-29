@@ -8,12 +8,10 @@ class HeaderDashBoardWidget extends StatelessWidget {
   const HeaderDashBoardWidget({super.key});
 
   @override
-  Widget build(BuildContext context) => Padding(
+  Widget build(BuildContext context) => Container(
+      height: 45,
       padding: const EdgeInsets.all(6),
       child: Row(children: [
-        Image.asset(AppImageAsset.logo),
-        Text('Gestion Cabinet Médical',
-            style: TextStyle(fontSize: 18, fontFamily: fontFamily)),
         const Spacer(),
         const Expanded(
             flex: 4,

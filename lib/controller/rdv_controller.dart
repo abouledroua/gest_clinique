@@ -16,7 +16,8 @@ class RDVController extends GetxController {
     'Bilel',
     'Amor',
     'Mohamed',
-    'Kader',
+    'Mohammed Amine',
+    'AbdelKader',
     'Ali',
     'Rabeh',
     "Said",
@@ -66,7 +67,10 @@ class RDVController extends GetxController {
           tel1: '0555 555 555',
           tel2: '0777 777 777');
       r = RDV(
-          patient: p, dateRdv: '${date.year}${date.month}${date.day}', etat: e);
+          patient: p,
+          dateRdv: '${date.year}${date.month}${date.day}',
+          etat: e,
+          dateDernConsult: '20230212');
       rdvs.add(r);
     }
     loading = false;
