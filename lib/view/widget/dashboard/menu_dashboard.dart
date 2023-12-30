@@ -3,6 +3,7 @@ import 'package:gest_clinique/core/constant/sizes.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../../controller/acceuil_controller.dart';
 import '../../../controller/dashboard_controller.dart';
 import '../../../core/class/user.dart';
 import '../../../core/constant/animation_asset.dart';
@@ -16,6 +17,7 @@ class MenuDashBoardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppSizes.setSizeScreen(context);
+    // debugPrint(AppSizes.widthScreen.toString());
     return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
@@ -42,6 +44,9 @@ class MenuDashBoardWidget extends StatelessWidget {
                 text: "Acceuil",
                 myIndex: 1,
                 onTap: () {
+                  if (Get.isRegistered<AcceuilController>()) {
+                    Get.delete<AcceuilController>();
+                  }
                   DashBoardController controller = Get.find();
                   controller.updateIndexPage(index: 1);
                 }),

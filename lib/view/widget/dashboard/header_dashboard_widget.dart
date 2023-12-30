@@ -7,35 +7,39 @@ import '../../../core/constant/animation_asset.dart';
 import '../../../core/constant/color.dart';
 import '../../../core/constant/data.dart';
 import '../../../core/constant/image_asset.dart';
+import '../../../core/constant/sizes.dart';
 import '../../../core/constant/theme.dart';
 
 class HeaderDashBoardWidget extends StatelessWidget {
   const HeaderDashBoardWidget({super.key});
 
   @override
-  Widget build(BuildContext context) => Row(children: [
-        const SizedBox(width: 10),
-        GetBuilder<DashBoardController>(
-            builder: (controller) => Text(
-                controller.indexPage == 1
-                    ? 'Acceuil'
-                    : controller.indexPage == 2
-                        ? 'Consultation'
-                        : controller.indexPage == 3
-                            ? 'Rendez-vous'
-                            : controller.indexPage == 4
-                                ? 'Patient'
-                                : 'Parametres',
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: fontFamily,
-                    color: AppColor.black))),
-        const Spacer(),
-        searchBar(),
-        const SizedBox(width: 30),
-        headerIcons()
-      ]);
+  Widget build(BuildContext context) {
+    AppSizes.setSizeScreen(context);
+    return Row(children: [
+      const SizedBox(width: 10),
+      GetBuilder<DashBoardController>(
+          builder: (controller) => Text(
+              controller.indexPage == 1
+                  ? 'Acceuil'
+                  : controller.indexPage == 2
+                      ? 'Consultation'
+                      : controller.indexPage == 3
+                          ? 'Rendez-vous'
+                          : controller.indexPage == 4
+                              ? 'Patient'
+                              : 'Parametres',
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily,
+                  color: AppColor.black))),
+      const Spacer(),
+      if (AppSizes.widthScreen > 650) searchBar(),
+      const SizedBox(width: 30),
+      headerIcons()
+    ]);
+  }
 
   headerIcons() => Row(children: [
         Image.asset(AppImageAsset.noPhoto),

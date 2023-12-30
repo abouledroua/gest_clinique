@@ -3,6 +3,7 @@ class AppAnimationAsset {
 
   static const String backArrow = "$rootAsset/back_arrow.json";
   static const String connect = "$rootAsset/connect.json";
+  static const String consult = "$rootAsset/consult.json";
   static const String delete = "$rootAsset/delete.json";
   static const String doctor = "$rootAsset/doctor.json";
   static const String doctor2 = "$rootAsset/doctor2.json";

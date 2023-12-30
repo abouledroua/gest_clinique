@@ -39,15 +39,20 @@ class RDVController extends GetxController {
     var rng = Random();
     Patient p;
     RDV r;
-    int l, j, k, e, id = 0;
-    int nbRdvs = rng.nextInt(10) + 3;
+    int l, j, k, e, id = 0, s, nbRdvs = rng.nextInt(150) + 3;
     DateTime date = DateTime.now();
     for (var i = 0; i < nbRdvs; i++) {
       id++;
+      rng = Random();
       l = rng.nextInt(names.length);
+      rng = Random();
       j = rng.nextInt(names.length);
+      rng = Random();
       k = rng.nextInt(3849594848);
+      rng = Random();
       e = rng.nextInt(3);
+      rng = Random();
+      s = rng.nextInt(2) + 1;
       p = Patient(
           id: id,
           nom: names[l],
@@ -62,7 +67,7 @@ class RDVController extends GetxController {
           typeAge: 1,
           convention: false,
           prcConvention: 0,
-          sexe: 1,
+          sexe: s,
           gs: 0,
           tel1: '0555 555 555',
           tel2: '0777 777 777');
@@ -77,10 +82,14 @@ class RDVController extends GetxController {
     update();
   }
 
-  getNbRdvs({required int etat}) {
+  getNbRdvs({int etat = -1, int sexe = -1}) {
     int nb = 0;
     for (var item in rdvs) {
-      if (item.etat == etat) nb++;
+      if (etat != -1) {
+        if (item.etat == etat) nb++;
+      } else {
+        if (item.patient.sexe == sexe) nb++;
+      }
     }
     return nb;
   }

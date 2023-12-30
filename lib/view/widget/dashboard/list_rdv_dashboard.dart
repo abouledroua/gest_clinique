@@ -10,11 +10,20 @@ import '../../../core/constant/color.dart';
 import '../login_register/connect_widget.dart';
 
 class ListRdvDashBoard extends StatelessWidget {
-  const ListRdvDashBoard({super.key});
+  ListRdvDashBoard({super.key});
 
-  final Color absentColor = const Color.fromARGB(255, 240, 185, 185);
-  final Color attentColor = const Color.fromARGB(255, 242, 239, 149);
-  final Color consultColor = const Color.fromARGB(255, 164, 239, 168);
+  final List<Color> absentGradColor = [
+    const Color.fromARGB(255, 233, 128, 128).withOpacity(0.6),
+    const Color.fromARGB(255, 223, 199, 199).withOpacity(0.4),
+  ];
+  final List<Color> attentGradColor = [
+    const Color.fromARGB(255, 250, 245, 96).withOpacity(0.6),
+    const Color.fromARGB(255, 237, 235, 193).withOpacity(0.4),
+  ];
+  final List<Color> consultGradColor = [
+    const Color.fromARGB(255, 96, 242, 103).withOpacity(0.6),
+    const Color.fromARGB(255, 177, 222, 179).withOpacity(0.4),
+  ];
 
   @override
   Widget build(BuildContext context) => Card(
@@ -70,7 +79,11 @@ class ListRdvDashBoard extends StatelessWidget {
         const SizedBox(height: 3),
         Container(
             padding: const EdgeInsets.symmetric(vertical: 2),
-            color: absentColor,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: absentGradColor)),
             width: double.infinity,
             child: GetBuilder<RDVController>(
                 builder: (controller) => Text(
@@ -80,7 +93,11 @@ class ListRdvDashBoard extends StatelessWidget {
                         const TextStyle(color: Colors.black, fontSize: 13)))),
         Container(
             padding: const EdgeInsets.symmetric(vertical: 2),
-            color: attentColor,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: attentGradColor)),
             width: double.infinity,
             child: GetBuilder<RDVController>(
                 builder: (controller) => Text(
@@ -90,14 +107,17 @@ class ListRdvDashBoard extends StatelessWidget {
                         const TextStyle(color: Colors.black, fontSize: 13)))),
         Container(
             padding: const EdgeInsets.symmetric(vertical: 2),
-            color: consultColor,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: consultGradColor)),
             width: double.infinity,
             child: GetBuilder<RDVController>(
                 builder: (controller) => Text(
                     'Nombre de Consultations : ${controller.getNbRdvs(etat: 2)}',
                     textAlign: TextAlign.start,
-                    style:
-                        const TextStyle(color: Colors.black, fontSize: 13)))),
+                    style: const TextStyle(color: Colors.black, fontSize: 13))))
       ]));
 
   listOfRdvs() => GetBuilder<RDVController>(
@@ -117,42 +137,35 @@ class ListRdvDashBoard extends StatelessWidget {
 
                 return Container(
                     margin: const EdgeInsets.only(bottom: 4),
-                    child: ListTile(
-                      dense: true,
-                      visualDensity:
-                          const VisualDensity(horizontal: 0, vertical: -4),
-                      horizontalTitleGap: 0,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 3),
-                      minVerticalPadding: 0,
-                      minLeadingWidth: 0,
-                      tileColor: item.etat == 1
-                          ? attentColor
-                          : item.etat == 2
-                              ? consultColor
-                              : absentColor,
-                      title: Text('${p.nom} ${p.prenom}',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              fontSize: 12)),
-                      subtitle: Visibility(
-                          visible: item.dateDernConsult.isNotEmpty,
-                          child: Text(
-                              'Dern. Cons. :${DateFormat("yyyy-MM-dd").format(DateTime.parse(item.dateDernConsult))}',
-                              style: const TextStyle(
-                                  color: Colors.black, fontSize: 11))),
-                      // trailing: (p.tel1.isEmpty && p.tel2.isEmpty)
-                      //     ? null
-                      //     : Column(mainAxisSize: MainAxisSize.min, children: [
-                      //         if (p.tel1.isNotEmpty)
-                      //           Text(p.tel1,
-                      //               style: const TextStyle(
-                      //                   color: Colors.black, fontSize: 11)),
-                      //         if (p.tel2.isNotEmpty)
-                      //           Text(p.tel2,
-                      //               style: const TextStyle(
-                      //                   color: Colors.black, fontSize: 11)),
-                      //       ])
-                    ));
+                    child: Container(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomLeft,
+                                colors: item.etat == 1
+                                    ? absentGradColor
+                                    : item.etat == 2
+                                        ? attentGradColor
+                                        : consultGradColor)),
+                        child: ListTile(
+                            dense: true,
+                            visualDensity: const VisualDensity(
+                                horizontal: 0, vertical: -4),
+                            horizontalTitleGap: 0,
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 3),
+                            minVerticalPadding: 0,
+                            minLeadingWidth: 0,
+                            title: Text('${p.nom} ${p.prenom}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontSize: 12)),
+                            subtitle: Visibility(
+                                visible: item.dateDernConsult.isNotEmpty,
+                                child: Text(
+                                    'Dern. Cons. :${DateFormat("yyyy-MM-dd").format(DateTime.parse(item.dateDernConsult))}',
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 11))))));
               })));
 }

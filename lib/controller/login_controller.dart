@@ -77,8 +77,10 @@ class LoginController extends GetxController {
     c.sharedPrefs.setBool('CONNECTED', true);
 
     if (Get.isRegistered<DashBoardController>()) {
-      Get.delete<RDVController>();
       Get.delete<DashBoardController>();
+    }
+    if (Get.isRegistered<RDVController>()) {
+      Get.delete<RDVController>();
     }
     Get.offAllNamed(AppRoute.dashboard);
   }

@@ -28,6 +28,7 @@ dependencies:
   package_info_plus: any
   awesome_dialog: any
   table_calendar: any
+  fl_chart: any
 
   #photo_view: any
   #jiffy: any
