@@ -64,6 +64,9 @@ class LoginController extends GetxController {
     User.type = 1;
     User.isDoctor = (User.type == 1);
     User.isNurse = (User.type == 2);
+    User.sexe = 1;
+    User.isFemme = (User.sexe == 2);
+    User.isHomme = (User.type == 1);
     User.organisation = selectedOrg!;
     User.idUser = 1;
 

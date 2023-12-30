@@ -314,9 +314,9 @@ class AppData {
     });
   }
 
-  static logout({question = true}) {
+  static Future logout({question = true}) async {
     if (question) {
-      AwesomeDialog(
+      await AwesomeDialog(
               context: Get.context!,
               dialogType: DialogType.warning,
               title: 'Alerte',
@@ -333,6 +333,7 @@ class AppData {
     } else {
       _closeall();
     }
+    return '1';
   }
 
   static _closeall() async {

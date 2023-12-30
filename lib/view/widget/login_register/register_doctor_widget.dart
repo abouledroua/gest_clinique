@@ -73,6 +73,7 @@ class RegisterDoctorWidget extends StatelessWidget {
       ]);
 
   ListView listChamps() => ListView(children: [
+        const SizedBox(height: 5),
         SizedBox(
             height: chpHeight,
             child: GetBuilder<RegisterUserController>(
@@ -105,57 +106,23 @@ class RegisterDoctorWidget extends StatelessWidget {
                     keyboardType: TextInputType.visiblePassword,
                     enabled: true))),
         const SizedBox(height: 5),
-        Container(
-            height: chpHeight,
-            decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 221, 240, 221),
-                border: Border.all(),
-                borderRadius: BorderRadius.circular(3)),
-            child: GetBuilder<RegisterUserController>(
-                builder: (controller) => DropdownButtonHideUnderline(
-                    child: DropdownButton(
-                        padding: const EdgeInsets.all(8),
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            color: AppColor.black,
-                            fontFamily: fontFamily),
-                        underline: null,
-                        value: controller.selectedOrg,
-                        items: controller.orgs
-                            .map((item) => DropdownMenuItem(
-                                value: item, child: Text(item)))
-                            .toList(),
-                        onChanged: (String? value) {
-                          controller.updateDropOrg(value);
-                        })))),
+        GetBuilder<RegisterUserController>(
+            builder: (controller) => myDropDown(
+                items: controller.sexes,
+                value: controller.selectedSexe,
+                onChanged: (String? value) {
+                  controller.updateDropSexe(value);
+                })),
         const SizedBox(height: 5),
-        Container(
-            height: chpHeight,
-            decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 221, 240, 221),
-                border: Border.all(),
-                borderRadius: BorderRadius.circular(3)),
-            child: GetBuilder<RegisterUserController>(
-                builder: (controller) => DropdownButtonHideUnderline(
-                    child: DropdownButton(
-                        padding: const EdgeInsets.all(8),
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            color: AppColor.black,
-                            fontFamily: fontFamily),
-                        underline: null,
-                        value: controller.selectedFonction,
-                        items: controller.fonctions
-                            .map((item) => DropdownMenuItem(
-                                value: item, child: Text(item)))
-                            .toList(),
-                        onChanged: (String? value) {
-                          controller.updateDropFct(value);
-                        })))),
+        GetBuilder<RegisterUserController>(
+            builder: (controller) => myDropDown(
+                items: controller.orgs,
+                value: controller.selectedOrg,
+                onChanged: (String? value) {
+                  controller.updateDropOrg(value);
+                })),
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          Text("Mon Cabinet n'apparaît pas dans la liste !!!, ",
+          Text("Mon Organisme n'apparaît pas dans la liste !!!, ",
               style: TextStyle(fontSize: 9, fontFamily: fontFamily)),
           InkWell(
               onTap: () {
@@ -172,6 +139,14 @@ class RegisterDoctorWidget extends StatelessWidget {
                           color: AppColor.secondary,
                           fontWeight: FontWeight.bold))))
         ]),
+        const SizedBox(height: 5),
+        GetBuilder<RegisterUserController>(
+            builder: (controller) => myDropDown(
+                items: controller.fonctions,
+                value: controller.selectedFonction,
+                onChanged: (String? value) {
+                  controller.updateDropFct(value);
+                })),
         const SizedBox(height: 10),
         Container(
             decoration: BoxDecoration(
@@ -188,4 +163,30 @@ class RegisterDoctorWidget extends StatelessWidget {
                         color: AppColor.white,
                         fontFamily: fontFamily))))
       ]);
+
+  myDropDown(
+          {required String? value,
+          required List<String> items,
+          required Function(String?)? onChanged}) =>
+      Container(
+          height: chpHeight,
+          decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 221, 240, 221),
+              border: Border.all(),
+              borderRadius: BorderRadius.circular(3)),
+          child: DropdownButtonHideUnderline(
+              child: DropdownButton(
+                  padding: const EdgeInsets.all(8),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      color: AppColor.black,
+                      fontFamily: fontFamily),
+                  underline: null,
+                  value: value,
+                  items: items
+                      .map((item) =>
+                          DropdownMenuItem(value: item, child: Text(item)))
+                      .toList(),
+                  onChanged: onChanged)));
 }

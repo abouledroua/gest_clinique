@@ -10,14 +10,21 @@ import '../core/constant/sizes.dart';
 
 class RegisterUserController extends GetxController {
   late TextEditingController emailController, passController, nameController;
-  String defaultOrg = 'Choisir votre Organisme', defaultFct = 'Votre Fonction';
-  List<String> orgs = [], fonctions = [];
+  String defaultOrg = 'Choisir votre Organisme',
+      defaultFct = 'Votre Fonction',
+      defaultSexe = 'Votre Sexe';
+  List<String> orgs = [], fonctions = [], sexes = [];
 
-  String? selectedOrg, selectedFonction;
+  String? selectedOrg, selectedFonction, selectedSexe;
   bool inscr = false;
 
   updateDropOrg(String? value) {
     selectedOrg = value;
+    update();
+  }
+
+  updateDropSexe(String? value) {
+    selectedSexe = value;
     update();
   }
 
@@ -66,15 +73,16 @@ class RegisterUserController extends GetxController {
   @override
   void onInit() {
     WidgetsFlutterBinding.ensureInitialized();
-    _initConnect();
+    _init();
     super.onInit();
   }
 
-  _initConnect() {
+  _init() {
     AppSizes.setSizeScreen(Get.context);
     inscr = false;
     selectedOrg = defaultOrg;
     selectedFonction = defaultFct;
+    selectedSexe = defaultSexe;
     fonctions = [defaultFct, 'Docteur', 'Réception'];
     orgs = [
       defaultOrg,
@@ -83,6 +91,7 @@ class RegisterUserController extends GetxController {
       'Cabinet Médical Dr Bekouche',
       'Cabinet Médical Dr Slougui'
     ];
+    sexes = [defaultSexe, 'Homme', 'Femme'];
 
     nameController = TextEditingController();
     passController = TextEditingController();

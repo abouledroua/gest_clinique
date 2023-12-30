@@ -42,6 +42,9 @@ class DashBoardController extends GetxController {
     User.type = 1;
     User.isDoctor = (User.type == 1);
     User.isNurse = (User.type == 2);
+    User.sexe = 1;
+    User.isFemme = (User.sexe == 2);
+    User.isHomme = (User.type == 1);
 
     SettingServices c = Get.find();
     User.email = c.sharedPrefs.getString('EMAIL') ?? "";
