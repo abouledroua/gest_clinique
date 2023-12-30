@@ -6,7 +6,7 @@ import '../core/constant/sizes.dart';
 import '../core/services/settingservice.dart';
 
 class DashBoardController extends GetxController {
-  bool showListRdv = true, showMenu = false;
+  bool showListRdv = true, showMenu = false, logout = false;
   int indexPage = 1;
 
   @override
@@ -18,6 +18,11 @@ class DashBoardController extends GetxController {
 
   updateIndexPage({required int index}) {
     indexPage = index;
+    update();
+  }
+
+  updateLogout({required bool value}) {
+    logout = value;
     update();
   }
 

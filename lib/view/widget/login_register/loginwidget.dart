@@ -26,7 +26,7 @@ class LoginWidget extends StatelessWidget {
         SizedBox(
             width: AppSizes.widthScreen / 5,
             height: AppSizes.heightScreen / 5,
-            child: Lottie.asset(AppAnimationAsset.login)),
+            child: Lottie.asset(AppAnimationAsset.heart)),
         Center(
             child: Text(DateTime.now().hour > 12 ? 'Bonsoir' : 'Bonjour',
                 style: TextStyle(

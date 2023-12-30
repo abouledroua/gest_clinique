@@ -5,6 +5,7 @@ import '../../controller/dashboard_controller.dart';
 import '../../controller/rdv_controller.dart';
 import '../../core/constant/data.dart';
 import '../../core/constant/sizes.dart';
+import '../widget/dashboard/header_dashboard_widget.dart';
 import '../widget/dashboard/menu_dashboard.dart';
 import '../widget/dashboard/workspace_dashboard.dart';
 import '../widget/mywidget.dart';
@@ -37,11 +38,15 @@ class DashBoardPage extends StatelessWidget {
               Container(
                   decoration: const BoxDecoration(color: Colors.white70),
                   child:
-                      const SizedBox(width: 200, child: MenuDashBoardWidget())),
+                      const SizedBox(width: 160, child: MenuDashBoardWidget())),
               Expanded(
                   child: Container(
+                      padding: const EdgeInsets.all(6),
                       decoration: const BoxDecoration(color: Colors.white),
-                      child: const WorkSpaceDashBoard()))
+                      child: const Column(children: [
+                        SizedBox(height: 45, child: HeaderDashBoardWidget()),
+                        Expanded(child: WorkSpaceDashBoard())
+                      ])))
             ])));
   }
 }

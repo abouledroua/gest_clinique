@@ -17,12 +17,21 @@ class MenuDashBoardWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            SizedBox(
-                height: 100, child: Lottie.asset(AppAnimationAsset.hospital)),
+            SizedBox(height: 100, child: Lottie.asset(AppAnimationAsset.heart)),
             FittedBox(
-                child: Text(User.organisation,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18, fontFamily: fontFamily))),
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(User.organisation,
+                        textAlign: TextAlign.center,
+                        style:
+                            TextStyle(fontSize: 18, fontFamily: fontFamily)))),
+            FittedBox(
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(User.name,
+                        textAlign: TextAlign.center,
+                        style:
+                            TextStyle(fontSize: 18, fontFamily: fontFamily)))),
             const SizedBox(height: 5),
             const Divider(endIndent: 50, indent: 50),
             const SizedBox(height: 5),
@@ -71,28 +80,40 @@ class MenuDashBoardWidget extends StatelessWidget {
                 icon: Icons.logout,
                 text: "Déconnecter",
                 myIndex: 6,
+                logout: true,
                 onTap: () async {
                   DashBoardController controller = Get.find();
-                  int old = controller.indexPage;
-                  controller.updateIndexPage(index: 6);
+                  controller.updateLogout(value: true);
                   await AppData.logout()
-                      .then((value) => controller.updateIndexPage(index: old));
-                }),
+                      .then((value) => controller.updateLogout(value: false));
+                })
           ]);
 
   myButton(
           {required String text,
           required IconData icon,
+          bool logout = false,
           required int myIndex,
           Function()? onTap}) =>
       GetBuilder<DashBoardController>(
           builder: (controller) => Container(
               width: double.infinity,
-              color: controller.indexPage == myIndex
-                  ? myIndex == 6
-                      ? AppColor.red
-                      : const Color.fromARGB(255, 12, 151, 17)
-                  : Colors.transparent,
+              decoration: BoxDecoration(
+                  color: controller.indexPage == myIndex
+                      ? const Color.fromARGB(255, 12, 151, 17)
+                      : logout && controller.logout
+                          ? AppColor.red
+                          : Colors.transparent,
+                  border: Border(
+                      left: BorderSide(
+                          width: 5,
+                          color: controller.indexPage == myIndex
+                              ? AppColor.primary
+                              : logout
+                                  ? (controller.logout
+                                      ? AppColor.primary
+                                      : AppColor.red)
+                                  : AppColor.grey))),
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
               margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
               child: InkWell(
@@ -100,15 +121,20 @@ class MenuDashBoardWidget extends StatelessWidget {
                   child: Ink(
                       child: Row(children: [
                     Icon(icon,
-                        color: controller.indexPage == myIndex
+                        color: controller.indexPage == myIndex ||
+                                (controller.logout && logout)
                             ? AppColor.white
                             : AppColor.black),
                     const SizedBox(width: 15),
                     Text(text,
                         style: TextStyle(
-                            fontSize: controller.indexPage == myIndex ? 20 : 18,
+                            fontSize: controller.indexPage == myIndex ||
+                                    (controller.logout && logout)
+                                ? 16
+                                : 14,
                             fontFamily: fontFamily,
-                            color: controller.indexPage == myIndex
+                            color: controller.indexPage == myIndex ||
+                                    (controller.logout && logout)
                                 ? AppColor.white
                                 : AppColor.black))
                   ])))));

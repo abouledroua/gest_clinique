@@ -5,6 +5,8 @@ class AppAnimationAsset {
   static const String connect = "$rootAsset/connect.json";
   static const String delete = "$rootAsset/delete.json";
   static const String doctor = "$rootAsset/doctor.json";
+  static const String doctor2 = "$rootAsset/doctor2.json";
+  static const String heart = "$rootAsset/heart.json";
   static const String hospital = "$rootAsset/hospital.json";
   static const String login = "$rootAsset/login.json";
   static const String logout = "$rootAsset/logout.json";
