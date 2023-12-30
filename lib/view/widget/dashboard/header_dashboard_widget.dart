@@ -69,7 +69,7 @@ class HeaderDashBoardWidget extends StatelessWidget {
                               border: Border.all(
                                   color: const Color.fromARGB(
                                       255, 142, 137, 137))),
-                          width: 250,
+                          width: 200,
                           child: Row(children: [
                             const Icon(Icons.search_rounded,
                                 size: 22,

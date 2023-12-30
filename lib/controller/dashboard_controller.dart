@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gest_clinique/core/class/user.dart';
 import 'package:get/get.dart';
 
+import '../core/class/user.dart';
 import '../core/constant/sizes.dart';
 import '../core/services/settingservice.dart';
 

@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable
-
 import 'dart:async';
 
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';

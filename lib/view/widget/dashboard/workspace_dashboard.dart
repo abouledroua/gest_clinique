@@ -21,22 +21,4 @@ class WorkSpaceDashBoard extends StatelessWidget {
                       : controller.indexPage == 4
                           ? const Text('Patient')
                           : const Text('Parametres')));
-
-  // listRdvWidget() => GetBuilder<DashBoardController>(
-  //     builder: (controller) => AnimatedCrossFade(
-  //         duration: const Duration(milliseconds: 1700),
-  //         firstChild: const SizedBox(width: 200, child: ListRdvDashBoard()),
-  //         secondChild: SizedBox(
-  //             width: 20,
-  //             child: Column(children: [
-  //               InkWell(
-  //                   onTap: () {
-  //                     DashBoardController controller = Get.find();
-  //                     controller.updateShowListeRDv();
-  //                   },
-  //                   child: Ink(child: const Icon(Icons.arrow_back_rounded)))
-  //             ])),
-  //         crossFadeState: controller.showListRdv
-  //             ? CrossFadeState.showFirst
-  // : CrossFadeState.showSecond));
 }

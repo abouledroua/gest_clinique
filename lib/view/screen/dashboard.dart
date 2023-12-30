@@ -15,6 +15,7 @@ class DashBoardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppSizes.setSizeScreen(context);
     if (!AppData.isConnected()) {
       AppData.logout(question: false);
     }
@@ -30,8 +31,8 @@ class DashBoardPage extends StatelessWidget {
             ]),
         child: Container(
             margin: EdgeInsets.symmetric(
-                horizontal: AppSizes.widthScreen / 50,
-                vertical: AppSizes.heightScreen / 30),
+                horizontal: AppSizes.widthScreen / 70,
+                vertical: AppSizes.heightScreen / 50),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(8))),
             child: Row(children: [

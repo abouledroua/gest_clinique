@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gest_clinique/core/constant/sizes.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
@@ -13,28 +14,29 @@ class MenuDashBoardWidget extends StatelessWidget {
   const MenuDashBoardWidget({super.key});
 
   @override
-  Widget build(BuildContext context) => Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            SizedBox(height: 100, child: Lottie.asset(AppAnimationAsset.heart)),
-            FittedBox(
-                child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text(User.organisation,
-                        textAlign: TextAlign.center,
-                        style:
-                            TextStyle(fontSize: 18, fontFamily: fontFamily)))),
-            FittedBox(
-                child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text(User.name,
-                        textAlign: TextAlign.center,
-                        style:
-                            TextStyle(fontSize: 18, fontFamily: fontFamily)))),
-            const SizedBox(height: 5),
-            const Divider(endIndent: 50, indent: 50),
-            const SizedBox(height: 5),
+  Widget build(BuildContext context) {
+    AppSizes.setSizeScreen(context);
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          SizedBox(height: 100, child: Lottie.asset(AppAnimationAsset.heart)),
+          FittedBox(
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(User.organisation,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 18, fontFamily: fontFamily)))),
+          FittedBox(
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(User.name,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 18, fontFamily: fontFamily)))),
+          const SizedBox(height: 5),
+          const Divider(endIndent: 50, indent: 50),
+          const SizedBox(height: 5),
+          if (AppSizes.heightScreen > 283)
             myButton(
                 icon: Icons.space_dashboard_outlined,
                 text: "Acceuil",
@@ -43,6 +45,7 @@ class MenuDashBoardWidget extends StatelessWidget {
                   DashBoardController controller = Get.find();
                   controller.updateIndexPage(index: 1);
                 }),
+          if (AppSizes.heightScreen > 333)
             myButton(
                 icon: Icons.content_paste_search_rounded,
                 text: "Consultation",
@@ -51,6 +54,7 @@ class MenuDashBoardWidget extends StatelessWidget {
                   DashBoardController controller = Get.find();
                   controller.updateIndexPage(index: 2);
                 }),
+          if (AppSizes.heightScreen > 383)
             myButton(
                 icon: Icons.date_range_outlined,
                 text: "Rendez-vous",
@@ -59,6 +63,7 @@ class MenuDashBoardWidget extends StatelessWidget {
                   DashBoardController controller = Get.find();
                   controller.updateIndexPage(index: 3);
                 }),
+          if (AppSizes.heightScreen > 433)
             myButton(
                 icon: Icons.person_pin_outlined,
                 text: "Patients",
@@ -67,6 +72,7 @@ class MenuDashBoardWidget extends StatelessWidget {
                   DashBoardController controller = Get.find();
                   controller.updateIndexPage(index: 4);
                 }),
+          if (AppSizes.heightScreen > 483)
             myButton(
                 icon: Icons.settings_applications_outlined,
                 text: "Parametres",
@@ -75,19 +81,20 @@ class MenuDashBoardWidget extends StatelessWidget {
                   DashBoardController controller = Get.find();
                   controller.updateIndexPage(index: 5);
                 }),
-            const Spacer(),
-            myButton(
-                icon: Icons.logout,
-                text: "Déconnecter",
-                myIndex: 6,
-                logout: true,
-                onTap: () async {
-                  DashBoardController controller = Get.find();
-                  controller.updateLogout(value: true);
-                  await AppData.logout()
-                      .then((value) => controller.updateLogout(value: false));
-                })
-          ]);
+          const Spacer(),
+          myButton(
+              icon: Icons.logout,
+              text: "Déconnecter",
+              myIndex: 6,
+              logout: true,
+              onTap: () async {
+                DashBoardController controller = Get.find();
+                controller.updateLogout(value: true);
+                await AppData.logout()
+                    .then((value) => controller.updateLogout(value: false));
+              })
+        ]);
+  }
 
   myButton(
           {required String text,
