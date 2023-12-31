@@ -8,11 +8,13 @@ import '../widget/login_register/register_cabinet_widget.dart';
 import '../widget/mywidget.dart';
 
 class RegisterCabinetPage extends StatelessWidget {
-  const RegisterCabinetPage({super.key});
+  final int idCabinet;
+  const RegisterCabinetPage({super.key, this.idCabinet = 0});
 
   @override
   Widget build(BuildContext context) {
-    Get.put(RegisterCabinetController());
+    AppSizes.setSizeScreen(context);
+    Get.put(RegisterCabinetController(idCabinet: idCabinet));
     return MyWidget(
         backgroudImage: AppImageAsset.wall,
         child: Center(

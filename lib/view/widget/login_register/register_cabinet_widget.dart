@@ -33,7 +33,7 @@ class RegisterCabinetWidget extends StatelessWidget {
                   child: Lottie.asset(AppAnimationAsset.hospital)),
               Center(
                   child: Text(
-                      'Cabinet Médical / Clinique \n Centre de Santé / Hopital',
+                      'Cabinet Médical / Clinique\nCentre de Santé / Hopital',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 20,
@@ -42,17 +42,24 @@ class RegisterCabinetWidget extends StatelessWidget {
               const SizedBox(height: 5),
               GetBuilder<RegisterCabinetController>(
                   builder: (controller) => Visibility(
-                      visible: !controller.inscr,
-                      replacement: const Expanded(
-                          child: SuccessWidget(
-                              text:
-                                  'Nouveau Organisme de santé \najouter avec succés')),
-                      child: Expanded(child: listChamps())))
+                        visible: !controller.valider,
+                        replacement: const Row(children: [
+                          CircularProgressIndicator.adaptive(),
+                          SizedBox(width: 10),
+                          Text('Sauvegarde en cours ...')
+                        ]),
+                        child: Visibility(
+                            visible: !controller.inscr,
+                            replacement: const Expanded(
+                                child: SuccessWidget(
+                                    text:
+                                        'Nouveau Organisme de santé \najouter avec succés')),
+                            child: Expanded(child: listChamps())),
+                      ))
             ]))
       ]);
 
-  ListView listChamps() =>
-      ListView(primary: false, shrinkWrap: true, children: [
+  listChamps() => ListView(primary: false, shrinkWrap: true, children: [
         SizedBox(
             height: chpHeight,
             child: GetBuilder<RegisterCabinetController>(
@@ -95,7 +102,7 @@ class RegisterCabinetWidget extends StatelessWidget {
                                 value: item, child: Text(item)))
                             .toList(),
                         onChanged: (String? value) {
-                          controller.updateDropWilaya(value);
+                          controller.updateDropWilaya(value ?? "");
                         })))),
         const SizedBox(height: 5),
         SizedBox(
@@ -125,7 +132,7 @@ class RegisterCabinetWidget extends StatelessWidget {
             child: TextButton(
                 onPressed: () {
                   RegisterCabinetController controller = Get.find();
-                  controller.inscrire();
+                  controller.saveClasse();
                 },
                 child: Text('Ajouter',
                     style: TextStyle(

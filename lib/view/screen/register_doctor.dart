@@ -12,6 +12,7 @@ class RegisterUserPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppSizes.setSizeScreen(context);
     Get.put(RegisterUserController());
     return MyWidget(
         backgroudImage: AppImageAsset.wall,

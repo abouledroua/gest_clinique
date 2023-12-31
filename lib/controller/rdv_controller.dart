@@ -39,7 +39,7 @@ class RDVController extends GetxController {
     var rng = Random();
     Patient p;
     RDV r;
-    int l, j, k, e, id = 0, s, nbRdvs = rng.nextInt(150) + 3;
+    int l, j, k, e, id = 0, s, nbRdvs = rng.nextInt(250) + 3;
     DateTime date = DateTime.now();
     for (var i = 0; i < nbRdvs; i++) {
       id++;

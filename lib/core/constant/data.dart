@@ -22,11 +22,10 @@ import 'routes.dart';
 import 'sizes.dart';
 
 class AppData {
-  static const bool testMode = false;
+  static const bool testMode = true;
   static double webVersion = 7.1, padBottom = 30;
   static const String _www = "CLINIQUE";
-  static String _serverIP =
-      testMode ? "192.168.1.161/CLINIQUE" : "atlasschool.dz";
+  static String _serverIP = testMode ? "localhost" : "atlasschool.dz";
   static const int widthSmallImage = 100,
       heightSmallImage = 100,
       bddVersion = 1;

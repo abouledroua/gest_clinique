@@ -102,23 +102,31 @@ class LoginWidget extends StatelessWidget {
                 border: Border.all(),
                 borderRadius: BorderRadius.circular(3)),
             child: GetBuilder<LoginController>(
-                builder: (controller) => DropdownButtonHideUnderline(
-                    child: DropdownButton(
-                        padding: const EdgeInsets.all(8),
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            color: AppColor.black,
-                            fontFamily: fontFamily),
-                        underline: null,
-                        value: controller.selectedOrg,
-                        items: controller.orgs
-                            .map((item) => DropdownMenuItem(
-                                value: item, child: Text(item)))
-                            .toList(),
-                        onChanged: (String? value) {
-                          controller.updateDrop(value);
-                        })))),
+                builder: (controller) => Visibility(
+                      visible: !controller.loading,
+                      replacement: const Row(children: [
+                        CircularProgressIndicator.adaptive(),
+                        SizedBox(width: 10),
+                        Text('Chargement ...')
+                      ]),
+                      child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                              padding: const EdgeInsets.all(8),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                  color: AppColor.black,
+                                  fontFamily: fontFamily),
+                              underline: null,
+                              value: controller.selectedOrg,
+                              items: controller.orgs
+                                  .map((item) => DropdownMenuItem(
+                                      value: item, child: Text(item)))
+                                  .toList(),
+                              onChanged: (String? value) {
+                                controller.updateDrop(value);
+                              })),
+                    ))),
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Expanded(
               child: Text("Mon Cabinet n'apparaît pas dans la liste !!!, ",

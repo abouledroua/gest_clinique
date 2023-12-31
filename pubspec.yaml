@@ -32,15 +32,13 @@ dependencies:
 
   #photo_view: any
   #jiffy: any
-  #lottie: any
   #font_awesome_flutter: any
   #awesome_notifications: any
   #progress_indicators: any
   #quiver: any
-  #step_progress_indicator: any
+  ##step_progress_indicator: any
   #grouped_list: any
   #file_picker: any
-  #
   #crop_your_image: any
   #blinking_text: any
   #scrollable_list_tabview: any

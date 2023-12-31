@@ -12,6 +12,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppSizes.setSizeScreen(context);
     Get.put(LoginController());
     return MyWidget(
         backgroudImage: AppImageAsset.wall,

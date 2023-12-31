@@ -4,8 +4,11 @@ import 'dart:math';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import '../core/class/user.dart';
+import '../core/constant/data.dart';
 import '../core/constant/routes.dart';
 import '../core/constant/sizes.dart';
 import '../core/services/settingservice.dart';
@@ -17,7 +20,7 @@ class LoginController extends GetxController {
   String defaultOrg = 'Choisir votre Organisme';
   String? selectedOrg;
   List<String> orgs = [];
-  bool inscr = false, conect = false;
+  bool inscr = false, conect = false, loading = false, error = false;
 
   updateDrop(String? value) {
     selectedOrg = value;
@@ -27,7 +30,7 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     WidgetsFlutterBinding.ensureInitialized();
-    _initConnect();
+    _init();
     super.onInit();
   }
 
@@ -85,20 +88,48 @@ class LoginController extends GetxController {
     Get.offAllNamed(AppRoute.dashboard);
   }
 
-  _initConnect() {
+  _updateBooleans({required newloading, required newerror}) {
+    loading = newloading;
+    error = newerror;
+    update();
+  }
+
+  Future getOrganismes() async {
+    _updateBooleans(newloading: true, newerror: false);
+    String serverDir = AppData.getServerDirectory();
+    var url = "$serverDir/GET_CABINETS.php";
+    debugPrint("url=$url");
+    Uri myUri = Uri.parse(url);
+    http
+        .post(myUri, body: {"WHERE": ""})
+        .timeout(AppData.getTimeOut())
+        .then((response) async {
+          if (response.statusCode == 200) {
+            orgs = [defaultOrg];
+            var responsebody = jsonDecode(response.body);
+            for (var m in responsebody) {
+              orgs.add(m['DESIGNATION']);
+            }
+            _updateBooleans(newloading: false, newerror: false);
+          } else {
+            _updateBooleans(newloading: false, newerror: true);
+          }
+        })
+        .catchError((error) async {
+          debugPrint("erreur getClasses: $error");
+          _updateBooleans(newloading: false, newerror: true);
+        });
+  }
+
+  _init() {
     AppSizes.setSizeScreen(Get.context);
+    getOrganismes();
     conect = false;
     inscr = false;
     passController = TextEditingController();
     emailController = TextEditingController();
     selectedOrg = defaultOrg;
-    orgs = [
-      defaultOrg,
-      'Cabinet Médical Dr Loucif',
-      'Cabinet Médical Dr Diabi',
-      'Cabinet Médical Dr Bekouche',
-      'Cabinet Médical Dr Slougui'
-    ];
+
     SettingServices c = Get.find();
     String emailPref = c.sharedPrefs.getString('EMAIL') ?? "";
     String passPref = c.sharedPrefs.getString('PASSWORD') ?? "";

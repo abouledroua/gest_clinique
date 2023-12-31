@@ -19,7 +19,7 @@ class PageAcceuil extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppSizes.setSizeScreen(context);
-    debugPrint(AppSizes.widthScreen.toString());
+    // debugPrint(AppSizes.widthScreen.toString());
     Get.put(AcceuilController());
     return Row(children: [
       Expanded(
@@ -48,7 +48,7 @@ class PageAcceuil extends StatelessWidget {
                     ]),
                 nbRdvWidget(),
                 Row(children: [
-                  Expanded(child: patientRapport()),
+                  Expanded(flex: 2, child: patientRapport()),
                   Expanded(child: sexeRapport())
                 ]),
               ]))),
@@ -166,7 +166,7 @@ class PageAcceuil extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       child: ListView(primary: false, shrinkWrap: true, children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text('Patient',
+          Text('Patients',
               style: TextStyle(
                   color: AppColor.black,
                   fontWeight: FontWeight.bold,
@@ -270,11 +270,12 @@ class PageAcceuil extends StatelessWidget {
           {required String? value,
           required List<String> items,
           required Function(String?)? onChanged}) =>
-      SizedBox(
+      Container(
           height: 40,
+          decoration: BoxDecoration(border: Border.all(color: AppColor.grey)),
           child: DropdownButtonHideUnderline(
               child: DropdownButton(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(4),
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
