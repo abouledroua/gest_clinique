@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:math';
 
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -13,6 +11,7 @@ import '../core/constant/routes.dart';
 import '../core/constant/sizes.dart';
 
 class RegisterUserController extends GetxController {
+  late int idUser;
   late TextEditingController emailController, passController, nameController;
   String defaultOrg = 'Choisir votre Organisme',
       defaultFct = 'Votre Fonction',
@@ -25,6 +24,8 @@ class RegisterUserController extends GetxController {
       valider = false,
       error = false,
       inscr = false;
+
+  RegisterUserController({required this.idUser});
 
   _updateValider({required bool newValue}) {
     valider = newValue;
@@ -41,19 +42,19 @@ class RegisterUserController extends GetxController {
       _updateValider(newValue: false);
       AppData.mySnackBar(
           color: AppColor.red,
-          title: 'Fiche Docteur / Assistante',
+          title: 'Fiche Utilisateur',
           message: "Veuillez remplir les champs oligatoire !!!!");
     } else {
       if (selectedOrg == defaultOrg) {
         AppData.mySnackBar(
             color: AppColor.red,
-            title: 'Fiche Docteur / Assistante',
+            title: 'Fiche Utilisateur',
             message: "Veuillez choisir un organisme !!!");
       } else {
         if (selectedFonction == defaultFct) {
           AppData.mySnackBar(
               color: AppColor.red,
-              title: 'Fiche Docteur / Assistante',
+              title: 'Fiche Utilisateur',
               message:
                   "Veuillez choisir votre fonction aux sein de cet organisme !!!");
         } else {
@@ -65,25 +66,23 @@ class RegisterUserController extends GetxController {
 
   _existClasse() async {
     String serverDir = AppData.getServerDirectory();
-    var url = "$serverDir/EXIST_CABINET.php";
+    var url = "$serverDir/EXIST_USER.php";
     debugPrint(url);
     Uri myUri = Uri.parse(url);
     http
-        .post(myUri, body: {
-          "DESIGNATION": nameController.text,
-          "ID_CABINET": idCabinet.toString()
-        })
+        .post(myUri,
+            body: {"EMAIL": emailController.text, "ID_USER": idUser.toString()})
         .timeout(AppData.getTimeOut())
         .then((response) async {
           if (response.statusCode == 200) {
             var responsebody = jsonDecode(response.body);
             int result = 0;
             for (var m in responsebody) {
-              result = int.parse(m['ID_CABINET']);
+              result = int.parse(m['ID_USER']);
             }
             if (result == 0) {
-              debugPrint("Docteur / Assistante n'existe pas ...");
-              if (idCabinet == 0) {
+              debugPrint("Utilisateur n'existe pas ...");
+              if (idUser == 0) {
                 _insertClasse();
               } else {
                 _updateClasse();
@@ -91,14 +90,14 @@ class RegisterUserController extends GetxController {
             } else {
               _updateValider(newValue: false);
               AppData.mySnackBar(
-                  title: 'Fiche Docteur / Assistante',
-                  message: "Ce Docteur / Assistante existe déjà !!!",
+                  title: 'Fiche Utilisateur',
+                  message: "Ce Utilisateur existe déjà !!!",
                   color: AppColor.red);
             }
           } else {
             _updateValider(newValue: false);
             AppData.mySnackBar(
-                title: 'Fiche Docteur / Assistante',
+                title: 'Fiche Utilisateur',
                 message: "Probleme de Connexion avec le serveur !!!",
                 color: AppColor.red);
           }
@@ -107,7 +106,7 @@ class RegisterUserController extends GetxController {
           debugPrint("erreur _existClasse: $error");
           _updateValider(newValue: false);
           AppData.mySnackBar(
-              title: 'Fiche Docteur / Assistante',
+              title: 'Fiche Utilisateur',
               message: "Probleme de Connexion avec le serveur !!!",
               color: AppColor.red);
         });
@@ -115,20 +114,23 @@ class RegisterUserController extends GetxController {
 
   _insertClasse() async {
     String serverDir = AppData.getServerDirectory();
-    var url = "$serverDir/INSERT_CABINET.php";
+    var url = "$serverDir/INSERT_USER.php";
     debugPrint(url);
     Uri myUri = Uri.parse(url);
-    int wilaya = (wilayas.indexOf(selectedWilaya) + 1);
+    int sexe = (sexes.indexOf(selectedSexe) - 1);
+    int fct = (fonctions.indexOf(selectedFonction) - 1);
     http.post(myUri, body: {
-      "DESIGNATION": nameController.text,
+      "PASSWORD": passController.text,
+      "NAME": nameController.text,
       "EMAIL": emailController.text,
-      "TEL": telController.text,
-      "WILAYA": wilaya.toString(),
-      "ADRESSE": adrController.text
+      "SEXE": sexe.toString(),
+      "TYPE": fct.toString(),
+      "ID_CABINET": fct.toString(),
+      "FONCTION": "1"
     }).then((response) async {
       if (response.statusCode == 200) {
         var responsebody = response.body;
-        debugPrint("Docteur / Assistante Response=$responsebody");
+        debugPrint("Utilisateur Response=$responsebody");
         if (responsebody != "0") {
           // Get.back(result: "success");
           _updateValider(newValue: false);
@@ -138,14 +140,14 @@ class RegisterUserController extends GetxController {
         } else {
           _updateValider(newValue: false);
           AppData.mySnackBar(
-              title: 'Fiche Docteur / Assistante',
+              title: 'Fiche Utilisateur',
               message: "Probleme lors de l'ajout !!!",
               color: AppColor.red);
         }
       } else {
         _updateValider(newValue: false);
         AppData.mySnackBar(
-            title: 'Fiche Docteur / Assistante',
+            title: 'Fiche Utilisateur',
             message: "Probleme de Connexion avec le serveur !!!",
             color: AppColor.red);
       }
@@ -153,7 +155,7 @@ class RegisterUserController extends GetxController {
       debugPrint("erreur insertClasse: $error");
       _updateValider(newValue: false);
       AppData.mySnackBar(
-          title: 'Fiche Docteur / Assistante',
+          title: 'Fiche Utilisateur',
           message: "Probleme de Connexion avec le serveur !!!",
           color: AppColor.red);
     });
@@ -161,20 +163,24 @@ class RegisterUserController extends GetxController {
 
   _updateClasse() async {
     String serverDir = AppData.getServerDirectory();
-    var url = "$serverDir/UPDATE_CABINET.php";
+    var url = "$serverDir/UPDATE_USER.php";
     debugPrint(url);
     Uri myUri = Uri.parse(url);
+    int sexe = (sexes.indexOf(selectedSexe) - 1);
+    int fct = (fonctions.indexOf(selectedFonction) - 1);
     http.post(myUri, body: {
-      "ID_CABINET": idCabinet.toString(),
-      "DESIGNATION": nameController.text,
+      "ID_USER": idUser.toString(),
+      "PASSWORD": passController.text,
+      "NAME": nameController.text,
       "EMAIL": emailController.text,
-      "TEL": telController.text,
-      "WILAYA": wilayas.indexOf(selectedWilaya) + 1,
-      "ADRESSE": adrController.text
+      "SEXE": sexe.toString(),
+      "TYPE": fct.toString(),
+      "ID_CABINET": fct.toString(),
+      "FONCTION": "1"
     }).then((response) async {
       if (response.statusCode == 200) {
         var responsebody = response.body;
-        debugPrint("Docteur / Assistante Response = $responsebody");
+        debugPrint("Utilisateur Response = $responsebody");
         if (responsebody != "0") {
           // Get.back(result: "success");
           _updateValider(newValue: false);
@@ -184,14 +190,14 @@ class RegisterUserController extends GetxController {
         } else {
           _updateValider(newValue: false);
           AppData.mySnackBar(
-              title: 'Fiche Docteur / Assistante',
+              title: 'Fiche Utilisateur',
               message: "Probleme lors de la mise a jour des informations !!!",
               color: AppColor.red);
         }
       } else {
         _updateValider(newValue: false);
         AppData.mySnackBar(
-            title: 'Fiche Docteur / Assistante',
+            title: 'Fiche Utilisateur',
             message: "Probleme de Connexion avec le serveur !!!",
             color: AppColor.red);
       }
@@ -199,7 +205,7 @@ class RegisterUserController extends GetxController {
       debugPrint("erreur updateClasse: $error");
       _updateValider(newValue: false);
       AppData.mySnackBar(
-          title: 'Fiche Docteur / Assistante',
+          title: 'Fiche Utilisateur',
           message: "Probleme de Connexion avec le serveur !!!",
           color: AppColor.red);
     });
@@ -240,10 +246,10 @@ class RegisterUserController extends GetxController {
     fonctions = [defaultFct, 'Docteur', 'Réception'];
     orgs = [
       defaultOrg,
-      'Docteur / Assistante Médical Dr Loucif',
-      'Docteur / Assistante Médical Dr Diabi',
-      'Docteur / Assistante Médical Dr Bekouche',
-      'Docteur / Assistante Médical Dr Slougui'
+      'Utilisateur Médical Dr Loucif',
+      'Utilisateur Médical Dr Diabi',
+      'Utilisateur Médical Dr Bekouche',
+      'Utilisateur Médical Dr Slougui'
     ];
     sexes = [defaultSexe, 'Homme', 'Femme'];
 

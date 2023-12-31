@@ -156,12 +156,13 @@ class RegisterCabinetController extends GetxController {
     var url = "$serverDir/UPDATE_CABINET.php";
     debugPrint(url);
     Uri myUri = Uri.parse(url);
+    int wilaya = (wilayas.indexOf(selectedWilaya) + 1);
     http.post(myUri, body: {
       "ID_CABINET": idCabinet.toString(),
       "DESIGNATION": nameController.text,
       "EMAIL": emailController.text,
       "TEL": telController.text,
-      "WILAYA": wilayas.indexOf(selectedWilaya) + 1,
+      "WILAYA": wilaya.toString(),
       "ADRESSE": adrController.text
     }).then((response) async {
       if (response.statusCode == 200) {

@@ -4,7 +4,7 @@ import 'package:lottie/lottie.dart';
 
 import '../../../controller/login_controller.dart';
 import '../../../controller/register_cabinet_controller.dart';
-import '../../../controller/register_doctor_controller.dart';
+import '../../../controller/register_user_controller.dart';
 import '../../../core/constant/animation_asset.dart';
 import '../../../core/constant/color.dart';
 import '../../../core/constant/routes.dart';

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../controller/register_cabinet_controller.dart';
-import '../../../controller/register_doctor_controller.dart';
+import '../../../controller/register_user_controller.dart';
 import '../../../core/constant/animation_asset.dart';
 import '../../../core/constant/color.dart';
 import '../../../core/constant/routes.dart';
@@ -12,8 +12,8 @@ import '../../../core/constant/theme.dart';
 import '../my_text_field.dart';
 import 'success_widget.dart';
 
-class RegisterDoctorWidget extends StatelessWidget {
-  const RegisterDoctorWidget({super.key});
+class RegisterUserWidget extends StatelessWidget {
+  const RegisterUserWidget({super.key});
 
   final double chpHeight = 40;
   @override
@@ -111,7 +111,7 @@ class RegisterDoctorWidget extends StatelessWidget {
                 items: controller.sexes,
                 value: controller.selectedSexe,
                 onChanged: (String? value) {
-                  controller.updateDropSexe(value);
+                  controller.updateDropSexe(value ?? "");
                 })),
         const SizedBox(height: 5),
         GetBuilder<RegisterUserController>(
@@ -119,7 +119,7 @@ class RegisterDoctorWidget extends StatelessWidget {
                 items: controller.orgs,
                 value: controller.selectedOrg,
                 onChanged: (String? value) {
-                  controller.updateDropOrg(value);
+                  controller.updateDropOrg(value ?? "");
                 })),
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Text("Mon Organisme n'apparaît pas dans la liste !!!, ",
@@ -145,7 +145,7 @@ class RegisterDoctorWidget extends StatelessWidget {
                 items: controller.fonctions,
                 value: controller.selectedFonction,
                 onChanged: (String? value) {
-                  controller.updateDropFct(value);
+                  controller.updateDropFct(value ?? "");
                 })),
         const SizedBox(height: 10),
         Container(
@@ -155,7 +155,7 @@ class RegisterDoctorWidget extends StatelessWidget {
             child: TextButton(
                 onPressed: () {
                   RegisterUserController controller = Get.find();
-                  controller.inscrire();
+                  controller.saveClasse();
                 },
                 child: Text('Inscrire',
                     style: TextStyle(

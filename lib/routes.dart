@@ -4,7 +4,7 @@ import 'core/constant/routes.dart';
 import 'view/screen/dashboard.dart';
 import 'view/screen/login.dart';
 import 'view/screen/register_cabinet.dart';
-import 'view/screen/register_doctor.dart';
+import 'view/screen/register_user.dart';
 
 Map<String, Widget Function(BuildContext)> routes = {
   AppRoute.login: (context) => const LoginPage(),

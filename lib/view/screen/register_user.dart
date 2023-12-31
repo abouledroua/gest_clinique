@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controller/register_doctor_controller.dart';
+import '../../controller/register_user_controller.dart';
 import '../../core/constant/image_asset.dart';
 import '../../core/constant/sizes.dart';
-import '../widget/login_register/register_doctor_widget.dart';
+import '../widget/login_register/register_user_widget.dart';
 import '../widget/mywidget.dart';
 
 class RegisterUserPage extends StatelessWidget {
-  const RegisterUserPage({super.key});
+  final int idUser;
+  const RegisterUserPage({super.key, this.idUser = 0});
 
   @override
   Widget build(BuildContext context) {
     AppSizes.setSizeScreen(context);
-    Get.put(RegisterUserController());
+    Get.put(RegisterUserController(idUser: idUser));
     return MyWidget(
         backgroudImage: AppImageAsset.wall,
         child: Center(
@@ -25,6 +26,6 @@ class RegisterUserPage extends StatelessWidget {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.white.withOpacity(0.4)),
-                child: const RegisterDoctorWidget())));
+                child: const RegisterUserWidget())));
   }
 }
