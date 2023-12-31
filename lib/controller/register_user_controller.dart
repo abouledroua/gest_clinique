@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:get/get.dart';
 
 import '../core/constant/color.dart';
 import '../core/constant/data.dart';
 import '../core/constant/routes.dart';
 import '../core/constant/sizes.dart';
+import '../core/data/data_controller.dart';
 
 class RegisterUserController extends GetxController {
   late int idUser;
@@ -17,6 +16,7 @@ class RegisterUserController extends GetxController {
       defaultFct = 'Votre Fonction',
       defaultSexe = 'Votre Sexe';
   List<String> orgs = [], fonctions = [], sexes = [];
+  List<int> orgsId = [];
   late String selectedOrg, selectedFonction, selectedSexe;
   bool loading = false,
       valDes = false,
@@ -27,31 +27,32 @@ class RegisterUserController extends GetxController {
 
   RegisterUserController({required this.idUser});
 
-  _updateValider({required bool newValue}) {
-    valider = newValue;
+  _updateValider({required bool newValider, newInscr = false}) {
+    valider = newValider;
+    inscr = newInscr;
     update();
   }
 
   saveClasse() {
-    inscr = false;
-    _updateValider(newValue: true);
+    _updateValider(newValider: true, newInscr: false);
     valDes = nameController.text.isEmpty;
     valEmail = emailController.text.isEmpty;
     if (valDes || valEmail) {
-      debugPrint("Veuillez saisir les champs obligatoires !!!!");
-      _updateValider(newValue: false);
+      _updateValider(newValider: false, newInscr: false);
       AppData.mySnackBar(
           color: AppColor.red,
           title: 'Fiche Utilisateur',
           message: "Veuillez remplir les champs oligatoire !!!!");
     } else {
       if (selectedOrg == defaultOrg) {
+        _updateValider(newValider: false, newInscr: false);
         AppData.mySnackBar(
             color: AppColor.red,
             title: 'Fiche Utilisateur',
             message: "Veuillez choisir un organisme !!!");
       } else {
         if (selectedFonction == defaultFct) {
+          _updateValider(newValider: false, newInscr: false);
           AppData.mySnackBar(
               color: AppColor.red,
               title: 'Fiche Utilisateur',
@@ -65,110 +66,38 @@ class RegisterUserController extends GetxController {
   }
 
   _existClasse() async {
-    String serverDir = AppData.getServerDirectory();
-    var url = "$serverDir/EXIST_USER.php";
-    debugPrint(url);
-    Uri myUri = Uri.parse(url);
-    http
-        .post(myUri,
+    await existData(
+            urlFile: "EXIST_USER.php",
+            idField: 'ID_USER',
+            nomFiche: 'Utilisateur',
             body: {"EMAIL": emailController.text, "ID_USER": idUser.toString()})
-        .timeout(AppData.getTimeOut())
-        .then((response) async {
-          if (response.statusCode == 200) {
-            var responsebody = jsonDecode(response.body);
-            int result = 0;
-            for (var m in responsebody) {
-              result = int.parse(m['ID_USER']);
-            }
-            if (result == 0) {
-              debugPrint("Utilisateur n'existe pas ...");
-              if (idUser == 0) {
-                _insertClasse();
-              } else {
-                _updateClasse();
-              }
-            } else {
-              _updateValider(newValue: false);
-              AppData.mySnackBar(
-                  title: 'Fiche Utilisateur',
-                  message: "Ce Utilisateur existe déjà !!!",
-                  color: AppColor.red);
-            }
+        .then((value) {
+      if (value.success) {
+        int result = value.data;
+        if (result == 0) {
+          debugPrint("Utilisateur n'existe pas ...");
+          if (idUser == 0) {
+            _insertClasse();
           } else {
-            _updateValider(newValue: false);
-            AppData.mySnackBar(
-                title: 'Fiche Utilisateur',
-                message: "Probleme de Connexion avec le serveur !!!",
-                color: AppColor.red);
+            _updateClasse();
           }
-        })
-        .catchError((error) {
-          debugPrint("erreur _existClasse: $error");
-          _updateValider(newValue: false);
-          AppData.mySnackBar(
-              title: 'Fiche Utilisateur',
-              message: "Probleme de Connexion avec le serveur !!!",
-              color: AppColor.red);
-        });
-  }
-
-  _insertClasse() async {
-    String serverDir = AppData.getServerDirectory();
-    var url = "$serverDir/INSERT_USER.php";
-    debugPrint(url);
-    Uri myUri = Uri.parse(url);
-    int sexe = (sexes.indexOf(selectedSexe) - 1);
-    int fct = (fonctions.indexOf(selectedFonction) - 1);
-    http.post(myUri, body: {
-      "PASSWORD": passController.text,
-      "NAME": nameController.text,
-      "EMAIL": emailController.text,
-      "SEXE": sexe.toString(),
-      "TYPE": fct.toString(),
-      "ID_CABINET": fct.toString(),
-      "FONCTION": "1"
-    }).then((response) async {
-      if (response.statusCode == 200) {
-        var responsebody = response.body;
-        debugPrint("Utilisateur Response=$responsebody");
-        if (responsebody != "0") {
-          // Get.back(result: "success");
-          _updateValider(newValue: false);
-          inscr = true;
-          update();
-          Timer(const Duration(seconds: 3), _gotoLogin);
         } else {
-          _updateValider(newValue: false);
+          _updateValider(newValider: false);
           AppData.mySnackBar(
               title: 'Fiche Utilisateur',
-              message: "Probleme lors de l'ajout !!!",
+              message: "Ce Utilisateur existe déjà !!!",
               color: AppColor.red);
         }
       } else {
-        _updateValider(newValue: false);
-        AppData.mySnackBar(
-            title: 'Fiche Utilisateur',
-            message: "Probleme de Connexion avec le serveur !!!",
-            color: AppColor.red);
+        _updateValider(newValider: false);
       }
-    }).catchError((error) {
-      debugPrint("erreur insertClasse: $error");
-      _updateValider(newValue: false);
-      AppData.mySnackBar(
-          title: 'Fiche Utilisateur',
-          message: "Probleme de Connexion avec le serveur !!!",
-          color: AppColor.red);
     });
   }
 
-  _updateClasse() async {
-    String serverDir = AppData.getServerDirectory();
-    var url = "$serverDir/UPDATE_USER.php";
-    debugPrint(url);
-    Uri myUri = Uri.parse(url);
+  getBody() {
     int sexe = (sexes.indexOf(selectedSexe) - 1);
     int fct = (fonctions.indexOf(selectedFonction) - 1);
-    http.post(myUri, body: {
+    var body = {
       "ID_USER": idUser.toString(),
       "PASSWORD": passController.text,
       "NAME": nameController.text,
@@ -177,37 +106,39 @@ class RegisterUserController extends GetxController {
       "TYPE": fct.toString(),
       "ID_CABINET": fct.toString(),
       "FONCTION": "1"
-    }).then((response) async {
-      if (response.statusCode == 200) {
-        var responsebody = response.body;
-        debugPrint("Utilisateur Response = $responsebody");
-        if (responsebody != "0") {
-          // Get.back(result: "success");
-          _updateValider(newValue: false);
-          inscr = true;
-          update();
-          Timer(const Duration(seconds: 3), _gotoLogin);
-        } else {
-          _updateValider(newValue: false);
-          AppData.mySnackBar(
-              title: 'Fiche Utilisateur',
-              message: "Probleme lors de la mise a jour des informations !!!",
-              color: AppColor.red);
-        }
+    };
+    return body;
+  }
+
+  _insertClasse() async {
+    await insertData(
+            urlFile: "INSERT_USER.php",
+            nomFiche: "Utilisateur",
+            body: getBody())
+        .then((value) {
+      if (value) {
+        _updateValider(newValider: false, newInscr: true);
+        Timer(const Duration(seconds: 3), _gotoLogin);
       } else {
-        _updateValider(newValue: false);
-        AppData.mySnackBar(
-            title: 'Fiche Utilisateur',
-            message: "Probleme de Connexion avec le serveur !!!",
-            color: AppColor.red);
+        _updateValider(newValider: false);
       }
-    }).catchError((error) {
-      debugPrint("erreur updateClasse: $error");
-      _updateValider(newValue: false);
-      AppData.mySnackBar(
-          title: 'Fiche Utilisateur',
-          message: "Probleme de Connexion avec le serveur !!!",
-          color: AppColor.red);
+    });
+  }
+
+  _updateClasse() async {
+    await updateData(
+            urlFile: "UPDATE_USER.php",
+            nomFiche: "Utilisateur",
+            body: getBody())
+        .then((value) {
+      if (value) {
+        _updateValider(newValider: false, newInscr: true);
+        inscr = true;
+        update();
+        Timer(const Duration(seconds: 3), _gotoLogin);
+      } else {
+        _updateValider(newValider: false);
+      }
     });
   }
 
@@ -237,20 +168,41 @@ class RegisterUserController extends GetxController {
     super.onInit();
   }
 
+  _updateBooleans({required newloading, required newerror}) {
+    loading = newloading;
+    error = newerror;
+    update();
+  }
+
+  getOrganismes() async {
+    await getDataList(urlFile: "GET_CABINETS.php", nomFiche: "Organisation")
+        .then((value) {
+      if (value.success) {
+        var responsebody = value.data;
+        orgs = [defaultOrg];
+        orgsId = [0];
+        for (var m in responsebody) {
+          orgs.add(m['DESIGNATION']);
+          orgsId.add(int.parse(m['ID_CABINET']));
+        }
+        _updateBooleans(newloading: false, newerror: false);
+      } else {
+        _updateBooleans(newloading: false, newerror: true);
+      }
+    });
+  }
+
   _init() {
     AppSizes.setSizeScreen(Get.context);
+    getOrganismes();
     inscr = false;
+
     selectedOrg = defaultOrg;
+
     selectedFonction = defaultFct;
-    selectedSexe = defaultSexe;
     fonctions = [defaultFct, 'Docteur', 'Réception'];
-    orgs = [
-      defaultOrg,
-      'Utilisateur Médical Dr Loucif',
-      'Utilisateur Médical Dr Diabi',
-      'Utilisateur Médical Dr Bekouche',
-      'Utilisateur Médical Dr Slougui'
-    ];
+
+    selectedSexe = defaultSexe;
     sexes = [defaultSexe, 'Homme', 'Femme'];
 
     nameController = TextEditingController();

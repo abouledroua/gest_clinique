@@ -4,13 +4,12 @@ import 'dart:math';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 import '../core/class/user.dart';
 import '../core/constant/data.dart';
 import '../core/constant/routes.dart';
 import '../core/constant/sizes.dart';
+import '../core/data/data_controller.dart';
 import '../core/services/settingservice.dart';
 import 'dashboard_controller.dart';
 import 'rdv_controller.dart';
@@ -20,6 +19,7 @@ class LoginController extends GetxController {
   String defaultOrg = 'Choisir votre Organisme';
   String? selectedOrg;
   List<String> orgs = [];
+  List<int> orgsId = [];
   bool inscr = false, conect = false, loading = false, error = false;
 
   updateDrop(String? value) {
@@ -94,31 +94,27 @@ class LoginController extends GetxController {
     update();
   }
 
-  Future getOrganismes() async {
-    _updateBooleans(newloading: true, newerror: false);
-    String serverDir = AppData.getServerDirectory();
-    var url = "$serverDir/GET_CABINETS.php";
-    debugPrint("url=$url");
-    Uri myUri = Uri.parse(url);
-    http
-        .post(myUri, body: {"WHERE": ""})
-        .timeout(AppData.getTimeOut())
-        .then((response) async {
-          if (response.statusCode == 200) {
-            orgs = [defaultOrg];
-            var responsebody = jsonDecode(response.body);
-            for (var m in responsebody) {
-              orgs.add(m['DESIGNATION']);
-            }
-            _updateBooleans(newloading: false, newerror: false);
-          } else {
-            _updateBooleans(newloading: false, newerror: true);
-          }
-        })
-        .catchError((error) async {
-          debugPrint("erreur getClasses: $error");
-          _updateBooleans(newloading: false, newerror: true);
-        });
+  getOrganismes() async {
+    await getDataList(urlFile: "GET_CABINETS.php", nomFiche: "Organisation")
+        .then((data) {
+      if (data.success) {
+        orgs = [defaultOrg];
+        orgsId = [0];
+        String s;
+        var responsebody = data.data;
+        for (var m in responsebody) {
+          s = m['DESIGNATION'] +
+              ' (' +
+              AppData.getWilayaName(indexWilaya: int.parse(m['WILAYA']) - 1) +
+              ')';
+          orgs.add(s);
+          orgsId.add(int.parse(m['ID_CABINET']));
+        }
+        _updateBooleans(newloading: false, newerror: false);
+      } else {
+        _updateBooleans(newloading: false, newerror: true);
+      }
+    });
   }
 
   _init() {

@@ -104,11 +104,15 @@ class LoginWidget extends StatelessWidget {
             child: GetBuilder<LoginController>(
                 builder: (controller) => Visibility(
                       visible: !controller.loading,
-                      replacement: const Row(children: [
-                        CircularProgressIndicator.adaptive(),
-                        SizedBox(width: 10),
-                        Text('Chargement ...')
-                      ]),
+                      replacement: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const CircularProgressIndicator.adaptive(),
+                            const SizedBox(width: 10),
+                            Text('Chargement en cours ...',
+                                style: TextStyle(
+                                    fontSize: 11, fontFamily: fontFamily))
+                          ]),
                       child: DropdownButtonHideUnderline(
                           child: DropdownButton(
                               padding: const EdgeInsets.all(8),

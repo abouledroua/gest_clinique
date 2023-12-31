@@ -10,6 +10,7 @@ import '../../../core/constant/routes.dart';
 import '../../../core/constant/sizes.dart';
 import '../../../core/constant/theme.dart';
 import '../my_text_field.dart';
+import 'connect_widget.dart';
 import 'success_widget.dart';
 
 class RegisterUserWidget extends StatelessWidget {
@@ -42,12 +43,15 @@ class RegisterUserWidget extends StatelessWidget {
               const SizedBox(height: 5),
               GetBuilder<RegisterUserController>(
                   builder: (controller) => Visibility(
-                      visible: !controller.inscr,
-                      replacement: Expanded(
-                          child: SuccessWidget(
-                              text:
-                                  'Nouveau ${controller.selectedFonction} Inscris')),
-                      child: Expanded(child: champs())))
+                      visible: !controller.valider,
+                      replacement: const ConnectWidget(),
+                      child: Visibility(
+                          visible: !controller.inscr,
+                          replacement: Expanded(
+                              child: SuccessWidget(
+                                  text:
+                                      'Nouveau ${controller.selectedFonction} Inscris')),
+                          child: Expanded(child: champs()))))
             ]))
       ]);
 
@@ -72,7 +76,7 @@ class RegisterUserWidget extends StatelessWidget {
         ])
       ]);
 
-  ListView listChamps() => ListView(children: [
+  listChamps() => ListView(children: [
         const SizedBox(height: 5),
         SizedBox(
             height: chpHeight,
@@ -115,12 +119,21 @@ class RegisterUserWidget extends StatelessWidget {
                 })),
         const SizedBox(height: 5),
         GetBuilder<RegisterUserController>(
-            builder: (controller) => myDropDown(
-                items: controller.orgs,
-                value: controller.selectedOrg,
-                onChanged: (String? value) {
-                  controller.updateDropOrg(value ?? "");
-                })),
+            builder: (controller) => Visibility(
+                visible: !controller.loading,
+                replacement:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  const CircularProgressIndicator.adaptive(),
+                  const SizedBox(width: 10),
+                  Text('Chargement en cours...',
+                      style: TextStyle(fontSize: 11, fontFamily: fontFamily))
+                ]),
+                child: myDropDown(
+                    items: controller.orgs,
+                    value: controller.selectedOrg,
+                    onChanged: (String? value) {
+                      controller.updateDropOrg(value ?? "");
+                    }))),
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Text("Mon Organisme n'apparaît pas dans la liste !!!, ",
               style: TextStyle(fontSize: 9, fontFamily: fontFamily)),
