@@ -44,18 +44,20 @@ class DashBoardController extends GetxController {
   }
 
   _loadUserData() {
-    User.type = 1;
-    User.isDoctor = (User.type == 1);
-    User.isNurse = (User.type == 2);
-    User.sexe = 1;
-    User.isFemme = (User.sexe == 2);
-    User.isHomme = (User.type == 1);
-
     SettingServices c = Get.find();
     User.email = c.sharedPrefs.getString('EMAIL') ?? "";
-    User.name = (User.type == 1) ? 'Dr Nom Medecin' : "Nom de l'assistante";
+    User.username = c.sharedPrefs.getString('USERNAME') ?? "";
+    User.name = c.sharedPrefs.getString('NAME') ?? "";
     User.password = c.sharedPrefs.getString('PASSWORD') ?? "";
-    User.organisation = c.sharedPrefs.getString('ORGANISATION') ?? "";
-    User.idUser = 1;
+    User.cabinet = c.sharedPrefs.getString('CABINET') ?? "";
+    User.idCabinet = c.sharedPrefs.getInt('ID_CABINET') ?? 0;
+    User.idUser = c.sharedPrefs.getInt('ID_USER') ?? 0;
+
+    User.type = c.sharedPrefs.getInt('TYPE') ?? 0;
+    User.isDoctor = (User.type == 1);
+    User.isNurse = (User.type == 2);
+    User.sexe = c.sharedPrefs.getInt('SEXE') ?? 0;
+    User.isFemme = (User.sexe == 2);
+    User.isHomme = (User.type == 1);
   }
 }

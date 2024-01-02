@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controller/dashboard_controller.dart';
+import '../../controller/patient_controller.dart';
 import '../../controller/rdv_controller.dart';
 import '../../core/constant/data.dart';
 import '../../core/constant/sizes.dart';
@@ -19,6 +20,7 @@ class DashBoardPage extends StatelessWidget {
     if (!AppData.isConnected()) {
       AppData.logout(question: false);
     }
+    Get.put(PatientController());
     Get.put(RDVController());
     Get.put(DashBoardController());
     return MyWidget(

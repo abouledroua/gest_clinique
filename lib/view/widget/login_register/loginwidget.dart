@@ -36,10 +36,10 @@ class LoginWidget extends StatelessWidget {
         const SizedBox(height: 5),
         GetBuilder<LoginController>(
             builder: (controller) => Visibility(
-                visible: !controller.conect,
+                visible: !controller.valider,
                 replacement: const ConnectWidget(),
                 child: Visibility(
-                    visible: !controller.inscr,
+                    visible: !controller.conect,
                     replacement: Expanded(
                         child: SuccessWidget(
                             text:
@@ -73,16 +73,44 @@ class LoginWidget extends StatelessWidget {
         const SizedBox(height: 5)
       ]);
 
-  ListView listOfChamps() => ListView(children: [
+  listOfChamps() => ListView(children: [
         SizedBox(
             height: chpHeight,
-            child: GetBuilder<LoginController>(
-                builder: (controller) => MyTextField(
-                    labelText: 'Votre Email',
-                    hintText: 'email@gmail.com',
-                    controller: controller.emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    enabled: true))),
+            child: Row(children: [
+              Expanded(
+                  child: GetBuilder<LoginController>(
+                      builder: (controller) => AnimatedCrossFade(
+                          duration: const Duration(seconds: 2),
+                          firstChild: MyTextField(
+                              labelText: 'Votre Email',
+                              hintText: 'email@gmail.com',
+                              controller: controller.emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              enabled: true),
+                          secondChild: MyTextField(
+                              labelText: "Nom d'utilisateur",
+                              hintText: 'Username',
+                              controller: controller.usernameController,
+                              keyboardType: TextInputType.text,
+                              enabled: true),
+                          crossFadeState: controller.connectEmail
+                              ? CrossFadeState.showFirst
+                              : CrossFadeState.showSecond))),
+              const SizedBox(width: 10),
+              InkWell(
+                  onTap: () {
+                    LoginController controller = Get.find();
+                    controller.updateConnctEmail();
+                  },
+                  child: Ink(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      height: chpHeight,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: AppColor.black),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10))),
+                      child: const Icon(Icons.swap_horizontal_circle_rounded)))
+            ])),
         const SizedBox(height: 5),
         SizedBox(
             height: chpHeight,
@@ -103,34 +131,33 @@ class LoginWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(3)),
             child: GetBuilder<LoginController>(
                 builder: (controller) => Visibility(
-                      visible: !controller.loading,
-                      replacement: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const CircularProgressIndicator.adaptive(),
-                            const SizedBox(width: 10),
-                            Text('Chargement en cours ...',
-                                style: TextStyle(
-                                    fontSize: 11, fontFamily: fontFamily))
-                          ]),
-                      child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                              padding: const EdgeInsets.all(8),
+                    visible: !controller.loading,
+                    replacement: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const CircularProgressIndicator.adaptive(),
+                          const SizedBox(width: 10),
+                          Text('Chargement en cours ...',
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                  color: AppColor.black,
-                                  fontFamily: fontFamily),
-                              underline: null,
-                              value: controller.selectedOrg,
-                              items: controller.orgs
-                                  .map((item) => DropdownMenuItem(
-                                      value: item, child: Text(item)))
-                                  .toList(),
-                              onChanged: (String? value) {
-                                controller.updateDrop(value);
-                              })),
-                    ))),
+                                  fontSize: 11, fontFamily: fontFamily))
+                        ]),
+                    child: DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                            padding: const EdgeInsets.all(8),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: AppColor.black,
+                                fontFamily: fontFamily),
+                            underline: null,
+                            value: controller.selectedOrg,
+                            items: controller.orgs
+                                .map((item) => DropdownMenuItem(
+                                    value: item, child: Text(item)))
+                                .toList(),
+                            onChanged: (String? value) {
+                              controller.updateDrop(value ?? "");
+                            }))))),
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Expanded(
               child: Text("Mon Cabinet n'apparaît pas dans la liste !!!, ",
@@ -158,27 +185,13 @@ class LoginWidget extends StatelessWidget {
             child: TextButton(
                 onPressed: () {
                   LoginController controller = Get.find();
-                  controller.inscrire();
+                  controller.login();
                 },
                 child: Text('Connecter',
                     style: TextStyle(
                         fontSize: 18,
                         color: AppColor.white,
                         fontFamily: fontFamily)))),
-        const SizedBox(height: 5),
-        // const Center(child: Text(' _____________  Ou  ____________ ')),
-        // const SizedBox(height: 5),
-        // Container(
-        //     decoration: BoxDecoration(
-        //         color: AppColor.white, borderRadius: BorderRadius.circular(5)),
-        //     child: TextButton.icon(
-        //         icon: const Icon(Icons.g_mobiledata_rounded,
-        //             color: AppColor.green2),
-        //         onPressed: () {},
-        //         label: Text('Continuer avec Google',
-        //             style: TextStyle(
-        //                 fontSize: 14,
-        //                 color: AppColor.greyShade,
-        // fontFamily: fontFamily))))
+        const SizedBox(height: 5)
       ]);
 }

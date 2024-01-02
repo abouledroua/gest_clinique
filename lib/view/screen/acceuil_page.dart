@@ -201,6 +201,7 @@ class PageAcceuil extends StatelessWidget {
       builder: (controller) => Wrap(children: [
             itemNbRdv(
                 label: 'Total Patient(s)',
+                controller: controller,
                 icon: Icons.person_2_outlined,
                 nb: controller.rdvs.length,
                 colors: [
@@ -209,6 +210,7 @@ class PageAcceuil extends StatelessWidget {
                 ]),
             itemNbRdv(
                 label: 'Patient Absent(s)',
+                controller: controller,
                 icon: Icons.call_missed_outgoing_outlined,
                 nb: controller.getNbRdvs(etat: 0),
                 colors: [
@@ -217,6 +219,7 @@ class PageAcceuil extends StatelessWidget {
                 ]),
             itemNbRdv(
                 label: 'Patient en Attente(s)',
+                controller: controller,
                 icon: Icons.watch_later_outlined,
                 nb: controller.getNbRdvs(etat: 1),
                 colors: [
@@ -225,6 +228,7 @@ class PageAcceuil extends StatelessWidget {
                 ]),
             itemNbRdv(
                 label: 'Patient Consulté(s)',
+                controller: controller,
                 icon: Icons.content_paste_rounded,
                 nb: controller.getNbRdvs(etat: 2),
                 colors: [
@@ -235,6 +239,7 @@ class PageAcceuil extends StatelessWidget {
 
   itemNbRdv(
           {required int nb,
+          required RDVController controller,
           required String label,
           required IconData icon,
           required List<Color> colors}) =>
@@ -258,12 +263,16 @@ class PageAcceuil extends StatelessWidget {
                           style:
                               TextStyle(fontSize: 14, fontFamily: fontFamily))))
             ]),
-            Text(nb.toString(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 48,
-                    fontFamily: fontFamily,
-                    fontWeight: FontWeight.bold))
+            Visibility(
+                visible: !controller.loading,
+                replacement: const CircularProgressIndicator.adaptive(),
+                child: Text(controller.error ? "x" : nb.toString(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 48,
+                        color: controller.error ? AppColor.red : AppColor.black,
+                        fontFamily: fontFamily,
+                        fontWeight: FontWeight.bold)))
           ]));
 
   myDropDown(

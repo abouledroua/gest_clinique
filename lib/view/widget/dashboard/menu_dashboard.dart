@@ -26,7 +26,7 @@ class MenuDashBoardWidget extends StatelessWidget {
           FittedBox(
               child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(User.organisation,
+                  child: Text(User.cabinet,
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 18, fontFamily: fontFamily)))),
           FittedBox(

@@ -17,7 +17,7 @@ class RegisterUserController extends GetxController {
       defaultSexe = 'Votre Sexe';
   List<String> orgs = [], fonctions = [], sexes = [];
   List<int> orgsId = [];
-  late String selectedOrg, selectedFonction, selectedSexe;
+  late String selectedOrg, selectedFonction, selectedSexe, username;
   bool loading = false,
       valDes = false,
       valEmail = false,
@@ -34,31 +34,28 @@ class RegisterUserController extends GetxController {
   }
 
   saveClasse() {
-    _updateValider(newValider: true, newInscr: false);
     valDes = nameController.text.isEmpty;
     valEmail = emailController.text.isEmpty;
     if (valDes || valEmail) {
-      _updateValider(newValider: false, newInscr: false);
       AppData.mySnackBar(
           color: AppColor.red,
           title: 'Fiche Utilisateur',
           message: "Veuillez remplir les champs oligatoire !!!!");
     } else {
       if (selectedOrg == defaultOrg) {
-        _updateValider(newValider: false, newInscr: false);
         AppData.mySnackBar(
             color: AppColor.red,
             title: 'Fiche Utilisateur',
             message: "Veuillez choisir un organisme !!!");
       } else {
         if (selectedFonction == defaultFct) {
-          _updateValider(newValider: false, newInscr: false);
           AppData.mySnackBar(
               color: AppColor.red,
               title: 'Fiche Utilisateur',
               message:
                   "Veuillez choisir votre fonction aux sein de cet organisme !!!");
         } else {
+          _updateValider(newValider: true, newInscr: false);
           _existClasse();
         }
       }
@@ -68,12 +65,14 @@ class RegisterUserController extends GetxController {
   _existClasse() async {
     await existData(
             urlFile: "EXIST_USER.php",
-            idField: 'ID_USER',
             nomFiche: 'Utilisateur',
             body: {"EMAIL": emailController.text, "ID_USER": idUser.toString()})
         .then((value) {
       if (value.success) {
-        int result = value.data;
+        int result = 0;
+        for (var m in value.data) {
+          result = int.parse(m['ID_USER']);
+        }
         if (result == 0) {
           debugPrint("Utilisateur n'existe pas ...");
           if (idUser == 0) {
@@ -95,8 +94,8 @@ class RegisterUserController extends GetxController {
   }
 
   getBody() {
-    int sexe = (sexes.indexOf(selectedSexe) - 1);
-    int fct = (fonctions.indexOf(selectedFonction) - 1);
+    int sexe = sexes.indexOf(selectedSexe);
+    int fct = fonctions.indexOf(selectedFonction);
     var body = {
       "ID_USER": idUser.toString(),
       "PASSWORD": passController.text,
@@ -116,9 +115,11 @@ class RegisterUserController extends GetxController {
             nomFiche: "Utilisateur",
             body: getBody())
         .then((value) {
-      if (value) {
+      if (value.success) {
+        debugPrint("value.data=${value.data}");
+        username = value.data;
         _updateValider(newValider: false, newInscr: true);
-        Timer(const Duration(seconds: 3), _gotoLogin);
+        // Timer(const Duration(seconds: 3), _gotoLogin);
       } else {
         _updateValider(newValider: false);
       }
@@ -135,7 +136,7 @@ class RegisterUserController extends GetxController {
         _updateValider(newValider: false, newInscr: true);
         inscr = true;
         update();
-        Timer(const Duration(seconds: 3), _gotoLogin);
+        Timer(const Duration(seconds: 3), gotoLogin);
       } else {
         _updateValider(newValider: false);
       }
@@ -157,7 +158,7 @@ class RegisterUserController extends GetxController {
     update();
   }
 
-  _gotoLogin() {
+  gotoLogin() {
     Get.toNamed(AppRoute.login);
   }
 
@@ -175,14 +176,20 @@ class RegisterUserController extends GetxController {
   }
 
   getOrganismes() async {
+    _updateBooleans(newloading: true, newerror: false);
     await getDataList(urlFile: "GET_CABINETS.php", nomFiche: "Organisation")
-        .then((value) {
-      if (value.success) {
-        var responsebody = value.data;
+        .then((data) {
+      if (data.success) {
         orgs = [defaultOrg];
         orgsId = [0];
+        String s;
+        var responsebody = data.data;
         for (var m in responsebody) {
-          orgs.add(m['DESIGNATION']);
+          s = m['DESIGNATION'] +
+              ' (' +
+              AppData.getWilayaName(indexWilaya: int.parse(m['WILAYA']) - 1) +
+              ')';
+          orgs.add(s);
           orgsId.add(int.parse(m['ID_CABINET']));
         }
         _updateBooleans(newloading: false, newerror: false);
@@ -205,6 +212,7 @@ class RegisterUserController extends GetxController {
     selectedSexe = defaultSexe;
     sexes = [defaultSexe, 'Homme', 'Femme'];
 
+    username = "";
     nameController = TextEditingController();
     passController = TextEditingController();
     emailController = TextEditingController();

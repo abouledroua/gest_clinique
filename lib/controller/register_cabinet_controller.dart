@@ -58,17 +58,16 @@ class RegisterCabinetController extends GetxController {
 
   _existClasse() async {
     int wilaya = (wilayas.indexOf(selectedWilaya) + 1);
-    await existData(
-        urlFile: "EXIST_CABINET.php",
-        idField: 'ID_CABINET',
-        nomFiche: 'Cabinet',
-        body: {
-          "DESIGNATION": nameController.text,
-          "WILAYA": wilaya.toString(),
-          "ID_CABINET": idCabinet.toString()
-        }).then((value) {
+    await existData(urlFile: "EXIST_CABINET.php", nomFiche: 'Cabinet', body: {
+      "DESIGNATION": nameController.text,
+      "WILAYA": wilaya.toString(),
+      "ID_CABINET": idCabinet.toString()
+    }).then((value) {
       if (value.success) {
-        int result = value.data;
+        int result = 0;
+        for (var m in value.data) {
+          result = int.parse(m['ID_CABINET']);
+        }
         if (result == 0) {
           debugPrint("Cabinet n'existe pas ...");
           if (idCabinet == 0) {
@@ -106,7 +105,7 @@ class RegisterCabinetController extends GetxController {
     await insertData(
             urlFile: "INSERT_CABINET.php", nomFiche: "Cabinet", body: getBody())
         .then((value) {
-      if (value) {
+      if (value.success) {
         _updateValider(newValue: false);
         inscr = true;
         update();

@@ -1,29 +1,52 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
-import '../core/class/patient.dart';
 import '../core/class/rdv.dart';
 import '../core/constant/sizes.dart';
+import '../core/data/data_controller.dart';
 
 class RDVController extends GetxController {
-  bool loading = false;
+  bool loading = false, error = false;
   List<RDV> rdvs = [];
-  List<String> names = [
-    'Rahim',
-    'Karim',
-    'Bilel',
-    'Amor',
-    'Mohamed',
-    'Mohammed Amine',
-    'AbdelKader',
-    'Ali',
-    'Rabeh',
-    "Said",
-    "Louai",
-    'Lakhder'
-  ];
+
+  _updateBooleans({required newloading, required newerror}) {
+    loading = newloading;
+    error = newerror;
+    update();
+  }
+
+  getRdvs() async {
+    _updateBooleans(newloading: true, newerror: false);
+    String date = DateFormat('yMMdd').format(DateTime.now());
+    var body = {"DATE": date};
+    await getDataList(
+            urlFile: "GET_RDVS.php", nomFiche: "Rendez-vous", body: body)
+        .then((data) {
+      if (data.success) {
+        rdvs = [];
+        late RDV r;
+        for (var item in data.data) {
+          r = RDV(
+              sexe: int.parse(item['SEXE']),
+              age: int.parse(item['AGE']),
+              codeBarre: item['CODE_BARRE'],
+              consult: int.parse(item['CONSULT']) == 1,
+              dette: double.parse(item['DETTE']),
+              etatRDV: int.parse(item['ETAT_RDV']),
+              motif: item['DES_MOTIF'],
+              nom: item['NOM'],
+              prenom: item['PRENOM'],
+              typeAge: int.parse(item['TYPE_AGE']),
+              versement: double.parse(item['VERSEMENT']));
+          rdvs.add(r);
+        }
+        _updateBooleans(newloading: false, newerror: false);
+      } else {
+        _updateBooleans(newloading: false, newerror: true);
+      }
+    });
+  }
 
   @override
   void onInit() {
@@ -32,63 +55,24 @@ class RDVController extends GetxController {
     super.onInit();
   }
 
-  chargerRdvs() async {
-    loading = true;
-    update();
-    rdvs = [];
-    var rng = Random();
-    Patient p;
-    RDV r;
-    int l, j, k, e, id = 0, s, nbRdvs = rng.nextInt(250) + 3;
-    DateTime date = DateTime.now();
-    for (var i = 0; i < nbRdvs; i++) {
-      id++;
-      rng = Random();
-      l = rng.nextInt(names.length);
-      rng = Random();
-      j = rng.nextInt(names.length);
-      rng = Random();
-      k = rng.nextInt(3849594848);
-      rng = Random();
-      e = rng.nextInt(3);
-      rng = Random();
-      s = rng.nextInt(2) + 1;
-      p = Patient(
-          id: id,
-          nom: names[l],
-          prenom: names[j],
-          codeBarre: k.toString(),
-          email: 'email@gmail.com',
-          dateNaissance: '22/02/2000',
-          adresse: 'adresse',
-          lieuNaissance: 'lieuNaissance',
-          profession: 'profession',
-          age: rng.nextInt(80) + 3,
-          typeAge: 1,
-          convention: false,
-          prcConvention: 0,
-          sexe: s,
-          gs: 0,
-          tel1: '0555 555 555',
-          tel2: '0777 777 777');
-      r = RDV(
-          patient: p,
-          dateRdv: '${date.year}${date.month}${date.day}',
-          etat: e,
-          dateDernConsult: '20230212');
-      rdvs.add(r);
-    }
-    loading = false;
-    update();
-  }
-
   getNbRdvs({int etat = -1, int sexe = -1}) {
     int nb = 0;
     for (var item in rdvs) {
       if (etat != -1) {
-        if (item.etat == etat) nb++;
+        switch (etat) {
+          case 0:
+            if (!item.consult && item.etatRDV == etat) nb++;
+            break;
+          case 1:
+            if (!item.consult && item.etatRDV == etat) nb++;
+            break;
+          case 2:
+            if (item.consult) nb++;
+            break;
+          default:
+        }
       } else {
-        if (item.patient.sexe == sexe) nb++;
+        if (item.sexe == sexe) nb++;
       }
     }
     return nb;
@@ -96,6 +80,7 @@ class RDVController extends GetxController {
 
   _init() {
     AppSizes.setSizeScreen(Get.context);
-    chargerRdvs();
+    getRdvs();
+    // chargerRdvs();
   }
 }

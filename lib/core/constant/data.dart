@@ -401,7 +401,7 @@ class AppData {
   static _closeall() async {
     SettingServices c = Get.find();
     c.sharedPrefs.setBool('CONNECTED', false);
-    c.sharedPrefs.setString('ORGANISATION', '');
+    c.sharedPrefs.setString('USERNAME', '');
     c.sharedPrefs.setString('PASSWORD', '');
     c.sharedPrefs.setString('EMAIL', '');
 

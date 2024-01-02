@@ -5,8 +5,9 @@ import 'package:http/http.dart' as http;
 import '../constant/color.dart';
 import '../constant/data.dart';
 
-Future<bool> insertData(
+Future<MyDataResponse> insertData(
     {required String urlFile, required String nomFiche, Object? body}) async {
+  late MyDataResponse resp;
   String serverDir = AppData.getServerDirectory();
   var url = "$serverDir/$urlFile";
   debugPrint(url);
@@ -16,20 +17,23 @@ Future<bool> insertData(
       var responsebody = response.body;
       debugPrint("Cabinet Response=$responsebody");
       if (responsebody != "0") {
-        return true;
+        resp = MyDataResponse(success: true, data: responsebody);
+        return resp;
       } else {
         AppData.mySnackBar(
             title: 'Fiche $nomFiche',
             message: "Probleme lors de l'ajout !!!",
             color: AppColor.red);
-        return false;
+        resp = MyDataResponse(success: false);
+        return resp;
       }
     } else {
       AppData.mySnackBar(
           title: 'Fiche $nomFiche',
           message: "Probleme de Connexion avec le serveur !!!",
           color: AppColor.red);
-      return false;
+      resp = MyDataResponse(success: false);
+      return resp;
     }
   }).catchError((error) {
     debugPrint("erreur insertClasse: $error");
@@ -37,7 +41,8 @@ Future<bool> insertData(
         title: 'Fiche $nomFiche',
         message: "Probleme de Connexion avec le serveur !!!",
         color: AppColor.red);
-    return false;
+    resp = MyDataResponse(success: false);
+    return resp;
   });
 }
 
@@ -78,10 +83,7 @@ Future<bool> updateData(
 }
 
 Future<MyDataResponse> existData(
-    {required String urlFile,
-    required String idField,
-    required String nomFiche,
-    Object? body}) async {
+    {required String urlFile, required String nomFiche, Object? body}) async {
   late MyDataResponse resp;
   String serverDir = AppData.getServerDirectory();
   var url = "$serverDir/$urlFile";
@@ -93,11 +95,7 @@ Future<MyDataResponse> existData(
       .then((response) async {
     if (response.statusCode == 200) {
       var responsebody = jsonDecode(response.body);
-      int result = 0;
-      for (var m in responsebody) {
-        result = int.parse(m[idField]);
-      }
-      resp = MyDataResponse(success: true, data: result);
+      resp = MyDataResponse(success: true, data: responsebody);
       return resp;
     } else {
       AppData.mySnackBar(

@@ -1,11 +1,10 @@
 import 'dart:async';
-import 'dart:math';
 
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../core/class/user.dart';
+import '../core/constant/color.dart';
 import '../core/constant/data.dart';
 import '../core/constant/routes.dart';
 import '../core/constant/sizes.dart';
@@ -15,14 +14,28 @@ import 'dashboard_controller.dart';
 import 'rdv_controller.dart';
 
 class LoginController extends GetxController {
-  late TextEditingController emailController, passController;
+  late TextEditingController emailController,
+      passController,
+      usernameController;
   String defaultOrg = 'Choisir votre Organisme';
-  String? selectedOrg;
+  late String selectedOrg;
   List<String> orgs = [];
   List<int> orgsId = [];
-  bool inscr = false, conect = false, loading = false, error = false;
+  bool valider = false,
+      connectEmail = true,
+      conect = false,
+      valUser = false,
+      valEmail = false,
+      loading = false,
+      error = false,
+      valPass = false;
 
-  updateDrop(String? value) {
+  updateConnctEmail() {
+    connectEmail = !connectEmail;
+    update();
+  }
+
+  updateDrop(String value) {
     selectedOrg = value;
     update();
   }
@@ -34,51 +47,106 @@ class LoginController extends GetxController {
     super.onInit();
   }
 
-  inscrire() {
-    if (selectedOrg == defaultOrg) {
-      AwesomeDialog(
-              context: Get.context!,
-              dialogType: DialogType.error,
-              showCloseIcon: true,
-              title: 'Erreur',
-              btnOkText: "Ok",
-              width: min(AppSizes.widthScreen, 400),
-              btnOkOnPress: () {},
-              desc: 'Veuillez choisir un organisme !!!')
-          .show();
+  _updateValider({required bool newValider, newInscr = false}) {
+    valider = newValider;
+    conect = newInscr;
+    update();
+  }
+
+  login() {
+    valUser = passController.text.isEmpty;
+    valPass = passController.text.isEmpty;
+    valEmail = emailController.text.isEmpty;
+    if (valPass || (valEmail && connectEmail) || (valUser && !connectEmail)) {
+      AppData.mySnackBar(
+          color: AppColor.red,
+          title: 'Fiche Login',
+          message: "Veuillez remplir les champs oligatoire !!!!");
     } else {
-      conect = true;
-      update();
-      Timer(const Duration(seconds: 4), _gotoConnect);
+      if (selectedOrg == defaultOrg) {
+        AppData.mySnackBar(
+            color: AppColor.red,
+            title: 'Fiche Login',
+            message: "Veuillez choisir un organisme !!!");
+      } else {
+        if (connectEmail) {
+          usernameController.text = "";
+        } else {
+          emailController.text = "";
+        }
+        _updateValider(newValider: true, newInscr: false);
+        _existUser();
+      }
     }
   }
 
-  _gotoConnect() {
-    conect = false;
-    inscr = true;
-    update();
-    Timer(const Duration(seconds: 3), _gotoDashBoard);
+  _existUser() async {
+    int idCabinet = orgsId[orgs.indexOf(selectedOrg)];
+    await existData(urlFile: "EXIST_USER_LOGIN.php", nomFiche: 'Login', body: {
+      "USERNAME": usernameController.text,
+      "EMAIL": emailController.text,
+      "PASSWORD": passController.text,
+      "ID_CABINET": idCabinet.toString(),
+    }).then((value) {
+      if (value.success) {
+        int idUser = 0, type = 0, sexe = 0;
+        String name = "", username = "", email = "";
+        for (var m in value.data) {
+          idUser = int.parse(m['ID_USER']);
+          type = int.parse(m['TYPE']);
+          sexe = int.parse(m['SEXE']);
+          name = m['NAME'];
+          email = m['EMAIL'];
+          username = m['USERNAME'];
+        }
+        if (idUser == 0) {
+          usernameController.text = "";
+          emailController.text = "";
+          passController.text = "";
+          selectedOrg = orgs[0];
+          _updateValider(newValider: false);
+          AppData.mySnackBar(
+              title: 'Fiche Utilisateur',
+              message: "Coordonées invalide !!!",
+              color: AppColor.red);
+        } else {
+          User.email = email;
+          User.username = username;
+          User.name = name;
+          User.password = passController.text;
+          User.type = type;
+          User.isDoctor = (User.type == 1);
+          User.isNurse = (User.type == 2);
+          User.sexe = sexe;
+          User.isFemme = (User.sexe == 2);
+          User.isHomme = (User.type == 1);
+          User.cabinet = selectedOrg;
+          User.idCabinet = idCabinet;
+          User.idUser = idUser;
+
+          SettingServices c = Get.find();
+          c.sharedPrefs.setString('USERNAME', usernameController.text);
+          c.sharedPrefs.setString('EMAIL', emailController.text);
+          c.sharedPrefs.setString('NAME', name);
+          c.sharedPrefs.setString('PASSWORD', passController.text);
+          c.sharedPrefs.setString('CABINET', selectedOrg);
+          c.sharedPrefs.setInt('ID_CABINET', idCabinet);
+          c.sharedPrefs.setInt('SEXE', sexe);
+          c.sharedPrefs.setInt('TYPE', type);
+          c.sharedPrefs.setInt('ID_USER', idUser);
+          c.sharedPrefs.setBool('CONNECTED', true);
+
+          _updateValider(newValider: false, newInscr: true);
+          debugPrint("Utilisateur existe ...");
+          Timer(const Duration(seconds: 3), _gotoDashBoard);
+        }
+      } else {
+        _updateValider(newValider: false);
+      }
+    });
   }
 
   _gotoDashBoard() {
-    User.email = emailController.text;
-    User.name = emailController.text;
-    User.password = passController.text;
-    User.type = 1;
-    User.isDoctor = (User.type == 1);
-    User.isNurse = (User.type == 2);
-    User.sexe = 1;
-    User.isFemme = (User.sexe == 2);
-    User.isHomme = (User.type == 1);
-    User.organisation = selectedOrg!;
-    User.idUser = 1;
-
-    SettingServices c = Get.find();
-    c.sharedPrefs.setString('EMAIL', emailController.text);
-    c.sharedPrefs.setString('PASSWORD', passController.text);
-    c.sharedPrefs.setString('ORGANISATION', selectedOrg!);
-    c.sharedPrefs.setBool('CONNECTED', true);
-
     if (Get.isRegistered<DashBoardController>()) {
       Get.delete<DashBoardController>();
     }
@@ -95,6 +163,7 @@ class LoginController extends GetxController {
   }
 
   getOrganismes() async {
+    _updateBooleans(newloading: true, newerror: false);
     await getDataList(urlFile: "GET_CABINETS.php", nomFiche: "Organisation")
         .then((data) {
       if (data.success) {
@@ -120,27 +189,17 @@ class LoginController extends GetxController {
   _init() {
     AppSizes.setSizeScreen(Get.context);
     getOrganismes();
-    conect = false;
-    inscr = false;
+
+    usernameController = TextEditingController();
     passController = TextEditingController();
     emailController = TextEditingController();
     selectedOrg = defaultOrg;
-
-    SettingServices c = Get.find();
-    String emailPref = c.sharedPrefs.getString('EMAIL') ?? "";
-    String passPref = c.sharedPrefs.getString('PASSWORD') ?? "";
-    String orgPref = c.sharedPrefs.getString('ORGANISATION') ?? "";
-    bool connect = c.sharedPrefs.getBool('CONNECTED') ?? false;
-    if (emailPref.isNotEmpty && connect) {
-      emailController.text = emailPref;
-      passController.text = passPref;
-      selectedOrg = orgPref;
-    }
   }
 
   @override
   void onClose() {
     emailController.dispose();
+    usernameController.dispose();
     passController.dispose();
     super.onClose();
   }

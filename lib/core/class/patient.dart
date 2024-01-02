@@ -7,16 +7,17 @@ class Patient {
       lieuNaissance,
       tel1,
       adresse,
+      codeMalade,
       tel2,
       email;
-  int id, age, typeAge, sexe, gs;
+  int age, typeAge, sexe, gs;
   bool convention;
   double prcConvention;
 
   Patient(
-      {required this.id,
-      required this.nom,
+      {required this.nom,
       required this.prenom,
+      required this.codeMalade,
       required this.codeBarre,
       required this.email,
       required this.dateNaissance,

@@ -48,9 +48,30 @@ class RegisterUserWidget extends StatelessWidget {
                       child: Visibility(
                           visible: !controller.inscr,
                           replacement: Expanded(
-                              child: SuccessWidget(
-                                  text:
-                                      'Nouveau ${controller.selectedFonction} Inscris')),
+                              child: Column(children: [
+                            SuccessWidget(
+                                text:
+                                    'Nouveau ${controller.selectedFonction} Inscris'),
+                            Text("Votre nom d'utilisateur est : ",
+                                style: TextStyle(
+                                    fontSize: 24,
+                                    color: AppColor.primary,
+                                    fontFamily: fontFamily)),
+                            Text(controller.username,
+                                style: TextStyle(
+                                    fontSize: 48, fontFamily: fontFamily)),
+                            const SizedBox(height: 20),
+                            Container(
+                                decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: AppColor.primary)),
+                                child: TextButton.icon(
+                                    onPressed: () {
+                                      controller.gotoLogin();
+                                    },
+                                    label: const Text('Continuer'),
+                                    icon: const Icon(Icons.arrow_back_rounded)))
+                          ])),
                           child: Expanded(child: champs()))))
             ]))
       ]);
