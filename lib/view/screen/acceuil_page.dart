@@ -397,7 +397,7 @@ class PageAcceuil extends StatelessWidget {
   listRdvWidget() => GetBuilder<DashBoardController>(
       builder: (controller) => AnimatedCrossFade(
           duration: const Duration(milliseconds: 1700),
-          firstChild: SizedBox(width: 200, child: ListRdvDashBoard()),
+          firstChild: const SizedBox(width: 200, child: ListRdvDashBoard()),
           secondChild: SizedBox(
               width: 20,
               child: Column(children: [

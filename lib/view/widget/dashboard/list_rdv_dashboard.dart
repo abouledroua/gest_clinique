@@ -6,23 +6,12 @@ import '../../../controller/dashboard_controller.dart';
 import '../../../controller/rdv_controller.dart';
 import '../../../core/class/rdv.dart';
 import '../../../core/constant/color.dart';
+import '../../../core/constant/theme.dart';
 import '../login_register/connect_widget.dart';
+import '../login_register/erreur_widget.dart';
 
 class ListRdvDashBoard extends StatelessWidget {
-  ListRdvDashBoard({super.key});
-
-  final List<Color> absentGradColor = [
-    const Color.fromARGB(255, 233, 128, 128).withOpacity(0.6),
-    const Color.fromARGB(255, 223, 199, 199).withOpacity(0.4),
-  ];
-  final List<Color> attentGradColor = [
-    const Color.fromARGB(255, 250, 245, 96).withOpacity(0.6),
-    const Color.fromARGB(255, 237, 235, 193).withOpacity(0.4),
-  ];
-  final List<Color> consultGradColor = [
-    const Color.fromARGB(255, 96, 242, 103).withOpacity(0.6),
-    const Color.fromARGB(255, 177, 222, 179).withOpacity(0.4),
-  ];
+  const ListRdvDashBoard({super.key});
 
   @override
   Widget build(BuildContext context) => Card(
@@ -39,12 +28,16 @@ class ListRdvDashBoard extends StatelessWidget {
                         visible: !controller.loading,
                         replacement: const Center(child: ConnectWidget()),
                         child: Visibility(
-                            visible: controller.error,
-                            replacement: const Center(child: ConnectWidget()),
+                            visible: !controller.error,
+                            replacement:
+                                Center(child: ErreurWidget(onPressed: () {
+                              controller.getRdvs();
+                            })),
                             child: listOfRdvs(controller))))),
             GetBuilder<RDVController>(
                 builder: (controller) => Visibility(
-                    visible: !controller.loading, child: nbrRdvs(context))),
+                    visible: !controller.loading && !controller.error,
+                    child: nbrRdvs(context))),
           ])));
 
   header() => Container(
@@ -129,41 +122,44 @@ class ListRdvDashBoard extends StatelessWidget {
                     style: const TextStyle(color: Colors.black, fontSize: 13))))
       ]));
 
-  listOfRdvs(RDVController controller) => ListView.builder(
-      shrinkWrap: true,
-      primary: false,
-      itemCount: controller.rdvs.length,
-      itemBuilder: (context, i) {
-        RDV item = controller.rdvs[i];
-        return Container(
-            margin: const EdgeInsets.only(bottom: 4),
-            child: Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
-                        colors: item.consult
-                            ? consultGradColor
-                            : item.etatRDV == 1
-                                ? attentGradColor
-                                : absentGradColor)),
-                child: ListTile(
-                    dense: true,
-                    visualDensity:
-                        const VisualDensity(horizontal: 0, vertical: -4),
-                    horizontalTitleGap: 0,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 3),
-                    minVerticalPadding: 0,
-                    minLeadingWidth: 0,
-                    title: Text('${item.nom} ${item.prenom}',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontSize: 12)),
-                    subtitle: Visibility(
-                        visible: item.motif.isNotEmpty,
-                        child: Text('Motif :${item.motif}',
+  listOfRdvs(RDVController controller) => RefreshIndicator(
+      onRefresh: () => controller.getRdvs(),
+      child: ListView.builder(
+          shrinkWrap: true,
+          primary: false,
+          itemCount: controller.rdvs.length,
+          itemBuilder: (context, i) {
+            RDV item = controller.rdvs[i];
+            return Container(
+                margin: const EdgeInsets.only(bottom: 4),
+                child: Container(
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: item.consult
+                                ? consultGradColor
+                                : item.etatRDV == 1
+                                    ? attentGradColor
+                                    : absentGradColor)),
+                    child: ListTile(
+                        dense: true,
+                        visualDensity:
+                            const VisualDensity(horizontal: 0, vertical: -4),
+                        horizontalTitleGap: 0,
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 3),
+                        minVerticalPadding: 0,
+                        minLeadingWidth: 0,
+                        title: Text('${item.nom} ${item.prenom}',
                             style: const TextStyle(
-                                color: Colors.black, fontSize: 11))))));
-      });
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontSize: 12)),
+                        subtitle: Visibility(
+                            visible: item.motif.isNotEmpty,
+                            child: Text('Motif :${item.motif}',
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 11))))));
+          }));
 }

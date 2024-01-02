@@ -32,3 +32,16 @@ myTheme() => ThemeData(
             color: AppColor.greyblack, fontSize: 11, fontFamily: fontFamily),
         labelLarge:
             TextStyle(fontWeight: FontWeight.bold, fontFamily: fontFamily)));
+
+final List<Color> absentGradColor = [
+  const Color.fromARGB(255, 233, 128, 128).withOpacity(0.6),
+  const Color.fromARGB(255, 223, 199, 199).withOpacity(0.4),
+];
+final List<Color> attentGradColor = [
+  const Color.fromARGB(255, 250, 245, 96).withOpacity(0.6),
+  const Color.fromARGB(255, 237, 235, 193).withOpacity(0.4),
+];
+final List<Color> consultGradColor = [
+  const Color.fromARGB(255, 96, 242, 103).withOpacity(0.6),
+  const Color.fromARGB(255, 177, 222, 179).withOpacity(0.4),
+];
