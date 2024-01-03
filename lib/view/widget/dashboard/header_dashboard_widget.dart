@@ -67,7 +67,7 @@ class HeaderDashBoardWidget extends StatelessWidget {
                       child: Container(
                           padding: const EdgeInsets.all(2),
                           decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 229, 226, 226),
+                              color: AppColor.greyFonce.withOpacity(0.1),
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(10)),
                               border: Border.all(

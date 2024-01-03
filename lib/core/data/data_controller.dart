@@ -46,7 +46,7 @@ Future<MyDataResponse> insertData(
   });
 }
 
-Future<bool> updateData(
+Future<bool> updateDeleteData(
     {required String urlFile, required String nomFiche, Object? body}) async {
   String serverDir = AppData.getServerDirectory();
   var url = "$serverDir/$urlFile";
@@ -55,7 +55,7 @@ Future<bool> updateData(
   return await http.post(myUri, body: body).then((response) async {
     if (response.statusCode == 200) {
       var responsebody = response.body;
-      debugPrint("Cabinet Response = $responsebody");
+      debugPrint("$nomFiche Response = $responsebody");
       if (responsebody != "0") {
         return true;
       } else {
@@ -73,7 +73,7 @@ Future<bool> updateData(
       return false;
     }
   }).catchError((error) {
-    debugPrint("erreur updateClasse: $error");
+    debugPrint("erreur update$nomFiche: $error");
     AppData.mySnackBar(
         title: 'Fiche $nomFiche',
         message: "Probleme de Connexion avec le serveur !!!",

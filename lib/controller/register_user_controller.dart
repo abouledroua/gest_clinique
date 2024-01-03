@@ -127,7 +127,7 @@ class RegisterUserController extends GetxController {
   }
 
   _updateClasse() async {
-    await updateData(
+    await updateDeleteData(
             urlFile: "UPDATE_USER.php",
             nomFiche: "Utilisateur",
             body: getBody())

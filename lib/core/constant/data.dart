@@ -420,17 +420,6 @@ class AppData {
     return isCon;
   }
 
-  static versionOutDated() {
-    if (!outdatedVersion) {
-      outdatedVersion = true;
-      AppData.mySnackBar(
-          title: 'Application',
-          message: "Veuillez installer la nouvelle version de l'application",
-          color: AppColor.red);
-      Get.toNamed(AppRoute.outDate);
-    }
-  }
-
   // static Drawer myDrawer(BuildContext context, {Color? color}) => Drawer(
   //     child: Container(
   //         decoration: const BoxDecoration(),

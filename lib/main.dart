@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -32,6 +33,9 @@ Future initialApp() async {
       subDir: AppData.storageLocation,
       clearCacheAfter: const Duration(days: 15));
 }
+
+NumberFormat formatter =
+    NumberFormat.decimalPatternDigits(locale: 'fr_fr', decimalDigits: 0);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

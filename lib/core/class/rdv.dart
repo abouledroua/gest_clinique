@@ -1,10 +1,12 @@
 class RDV {
-  String codeBarre, nom, prenom, motif;
+  String codeBarre, nom, prenom, motif, heureArrivee;
   double versement, dette;
   bool consult;
-  int etatRDV, age, typeAge, sexe;
+  int etatRDV, age, typeAge, sexe, id;
   RDV(
       {required this.codeBarre,
+      required this.id,
+      required this.heureArrivee,
       required this.sexe,
       required this.typeAge,
       required this.age,

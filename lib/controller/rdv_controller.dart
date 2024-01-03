@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:math';
+
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -7,7 +11,7 @@ import '../core/constant/sizes.dart';
 import '../core/data/data_controller.dart';
 
 class RDVController extends GetxController {
-  bool loading = false, error = false;
+  bool loading = false, error = false, load = false;
   List<RDV> rdvs = [];
 
   _updateBooleans({required newloading, required newerror}) {
@@ -16,34 +20,79 @@ class RDVController extends GetxController {
     update();
   }
 
-  getRdvs() async {
-    _updateBooleans(newloading: true, newerror: false);
-    String date = DateFormat('yMMdd').format(DateTime.now());
-    var body = {"DATE": date};
-    await getDataList(
-            urlFile: "GET_RDVS.php", nomFiche: "Rendez-vous", body: body)
-        .then((data) {
-      if (data.success) {
-        rdvs = [];
-        late RDV r;
-        for (var item in data.data) {
-          r = RDV(
-              sexe: int.parse(item['SEXE']),
-              age: int.parse(item['AGE']),
-              codeBarre: item['CODE_BARRE'],
-              consult: int.parse(item['CONSULT']) == 1,
-              dette: double.parse(item['DETTE']),
-              etatRDV: int.parse(item['ETAT_RDV']),
-              motif: item['DES_MOTIF'],
-              nom: item['NOM'],
-              prenom: item['PRENOM'],
-              typeAge: int.parse(item['TYPE_AGE']),
-              versement: double.parse(item['VERSEMENT']));
-          rdvs.add(r);
+  getRdvs({bool show = true}) async {
+    if (!load) {
+      load = true;
+      if (show) _updateBooleans(newloading: true, newerror: false);
+      String date = DateFormat('yMMdd').format(DateTime.now());
+      var body = {"DATE": date};
+      await getDataList(
+              urlFile: "GET_RDVS.php", nomFiche: "Rendez-vous", body: body)
+          .then((data) {
+        if (data.success) {
+          rdvs = [];
+          late RDV r;
+          for (var item in data.data) {
+            try {
+              r = RDV(
+                  sexe: int.parse(item['SEXE']),
+                  id: int.parse(item['ID']),
+                  age: int.parse(item['AGE']),
+                  codeBarre: item['CODE_BARRE'],
+                  heureArrivee: item['HEURE_ARRIVEE'],
+                  consult: int.parse(item['CONSULT']) == 1,
+                  dette: double.parse(item['DETTE']),
+                  etatRDV: int.parse(item['ETAT_RDV']),
+                  motif: item['DES_MOTIF'],
+                  nom: item['NOM'],
+                  prenom: item['PRENOM'],
+                  typeAge: int.parse(item['TYPE_AGE']),
+                  versement: double.parse(item['VERSEMENT']));
+              rdvs.add(r);
+            } catch (e) {
+              debugPrint(' **** error : $e  ****');
+            }
+          }
+          _updateBooleans(newloading: false, newerror: false);
+        } else {
+          if (show) _updateBooleans(newloading: false, newerror: true);
         }
-        _updateBooleans(newloading: false, newerror: false);
-      } else {
-        _updateBooleans(newloading: false, newerror: true);
+        load = false;
+      });
+    }
+  }
+
+  getRdvTimer() {
+    getRdvs(show: rdvs.isEmpty);
+    Timer.periodic(const Duration(seconds: 2), (timer) {
+      getRdvs(show: rdvs.isEmpty);
+    });
+  }
+
+  removeRdv(int idRdv) async {
+    await AwesomeDialog(
+            context: Get.context!,
+            dialogType: DialogType.question,
+            title: 'Suppression',
+            btnOkText: "Oui",
+            btnCancelText: "Non",
+            width: min(AppSizes.widthScreen, 400),
+            btnCancelOnPress: () {},
+            btnOkOnPress: () {
+              deleteRdv(idRdv);
+            },
+            showCloseIcon: true,
+            desc: 'Voulez-vous vraiment supprimer ce rendez-vous ??')
+        .show();
+  }
+
+  deleteRdv(int idRdv) async {
+    await updateDeleteData(
+        urlFile: "DELETE_RDV.php",
+        nomFiche: "Rendez-vous",
+        body: {"ID_RDV": idRdv.toString()}).then((value) {
+      if (value) {
+        getRdvs();
       }
     });
   }
@@ -80,7 +129,7 @@ class RDVController extends GetxController {
 
   _init() {
     AppSizes.setSizeScreen(Get.context);
-    getRdvs();
+    getRdvTimer();
     // chargerRdvs();
   }
 }

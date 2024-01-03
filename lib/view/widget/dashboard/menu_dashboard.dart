@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gest_clinique/core/constant/sizes.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
@@ -9,6 +8,7 @@ import '../../../core/class/user.dart';
 import '../../../core/constant/animation_asset.dart';
 import '../../../core/constant/color.dart';
 import '../../../core/constant/data.dart';
+import '../../../core/constant/sizes.dart';
 import '../../../core/constant/theme.dart';
 
 class MenuDashBoardWidget extends StatelessWidget {

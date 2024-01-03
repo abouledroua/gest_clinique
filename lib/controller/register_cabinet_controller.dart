@@ -117,7 +117,7 @@ class RegisterCabinetController extends GetxController {
   }
 
   _updateClasse() async {
-    await updateData(
+    await updateDeleteData(
             nomFiche: "Cabinet", urlFile: "UPDATE_CABINET.php", body: getBody())
         .then((value) {
       if (value) {

@@ -1,4 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -25,33 +26,40 @@ class PageAcceuil extends StatelessWidget {
       Expanded(
           child: Padding(
               padding: const EdgeInsets.all(16),
-              child: ListView(children: [
-                colorTitle(),
-                const SizedBox(height: 10),
-                const Divider(indent: 4, endIndent: 4),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Rapport',
-                          style: TextStyle(
-                              color: AppColor.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                              fontFamily: fontFamily)),
-                      GetBuilder<AcceuilController>(
-                          builder: (controller) => myDropDown(
-                              items: controller.dropRap,
-                              onChanged: (value) {
-                                controller.updateDropRap(value);
-                              },
-                              value: controller.selectedRap))
-                    ]),
-                nbRdvWidget(),
-                Row(children: [
-                  Expanded(flex: 2, child: patientRapport()),
-                  Expanded(child: sexeRapport())
-                ]),
-              ]))),
+              child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(Get.context!).copyWith(
+                      dragDevices: {
+                        PointerDeviceKind.touch,
+                        PointerDeviceKind.mouse
+                      }),
+                  child: ListView(children: [
+                    colorTitle(),
+                    const SizedBox(height: 10),
+                    const Divider(indent: 4, endIndent: 4),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Rapport',
+                              style: TextStyle(
+                                  color: AppColor.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                  fontFamily: fontFamily)),
+                          GetBuilder<AcceuilController>(
+                              builder: (controller) => myDropDown(
+                                  items: controller.dropRap,
+                                  onChanged: (value) {
+                                    controller.updateDropRap(value);
+                                  },
+                                  value: controller.selectedRap))
+                        ]),
+                    nbRdvWidget(),
+                    Row(children: [
+                      Expanded(flex: 7, child: patientRapport()),
+                      const SizedBox(width: 10),
+                      Expanded(flex: 6, child: sexeRapport())
+                    ])
+                  ])))),
       if (AppSizes.widthScreen > 1050) listRdvWidget()
     ]);
   }
