@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../class/my_data_response.dart';
 import '../class/patient.dart';
 import '../class/rdv.dart';
 import '../constant/color.dart';
@@ -144,50 +145,56 @@ Future<MyDataResponse> getDataList(
   });
 }
 
-Future<Patient?> getInfoPatient(String codeBarre) async {
-  return await getDataList(
-      urlFile: "GET_PATIENTS.php",
-      nomFiche: "Patient",
-      body: {"CODE_BARRE": codeBarre}).then((data) {
-    if (data.success) {
-      Patient? p;
-      for (var item in data.data) {
-        p = Patient(
-            adresse: item['ADRESSE'],
-            age: int.parse(item['AGE']),
-            codeBarre: item['CODE_BARRE'],
-            convention: int.parse(item['CONVENTIONNE']) == 1,
-            dateNaissance: item['DATE_NAISSANCE'],
-            email: item['EMAIL'],
-            gs: int.parse(item['GS']),
-            lieuNaissance: item['LIEU_NAISSANCE'],
-            nom: item['NOM'],
-            prcConvention: double.parse(item['POURC_CONV']),
-            prenom: item['PRENOM'],
-            profession: item['PROFESSION'],
-            codeMalade: item['CODE_MALADE'],
-            sexe: int.parse(item['SEXE']),
-            tel1: item['TEL'],
-            tel2: item['TEL2'],
-            typeAge: int.parse(item['TYPE_AGE']));
+Future<Patient?> getInfoPatient(String codeBarre) async => await getDataList(
+        urlFile: "GET_PATIENTS.php",
+        nomFiche: "Patient",
+        body: {"CODE_BARRE": codeBarre}).then((data) {
+      if (data.success) {
+        Patient? p;
+        for (var item in data.data) {
+          p = Patient(
+              adresse: item['ADRESSE'],
+              age: int.parse(item['AGE']),
+              codeBarre: item['CODE_BARRE'],
+              convention: int.parse(item['CONVENTIONNE']) == 1,
+              dateNaissance: item['DATE_NAISSANCE'],
+              email: item['EMAIL'],
+              gs: int.parse(item['GS']),
+              dette: double.parse(item['DETTE']),
+              lieuNaissance: item['LIEU_NAISSANCE'],
+              nom: item['NOM'],
+              fullname: item['NOM'] + '  ' + item['PRENOM'],
+              prcConvention: double.parse(item['POURC_CONV']),
+              prenom: item['PRENOM'],
+              profession: item['PROFESSION'],
+              codeMalade: item['CODE_MALADE'],
+              sexe: int.parse(item['SEXE']),
+              isHomme: int.parse(item['SEXE']) == 1,
+              isFemme: int.parse(item['SEXE']) == 2,
+              tel1: item['TEL'],
+              tel2: item['TEL2'],
+              typeAge: int.parse(item['TYPE_AGE']));
+        }
+        return p;
+      } else {
+        return null;
       }
-      return p;
-    } else {
-      return null;
-    }
-  });
-}
+    });
 
-Future<RDV?> getInfoRdv(int idRdv) async {
+Future<RDV?> getInfoRdv({int idRdv = 0, String codeBarre = ""}) async {
+  var body = {};
+  if (idRdv != 0) body["ID_RDV"] = idRdv.toString;
+  if (codeBarre.isNotEmpty) body["CODE_BARRE"] = codeBarre;
+
   return await getDataList(
-      urlFile: "GET_RDVS.php",
-      nomFiche: "Rendez-vous",
-      body: {"ID_RDV": idRdv.toString()}).then((data) {
+          urlFile: "GET_RDVS.php", nomFiche: "Rendez-vous", body: body)
+      .then((data) {
     if (data.success) {
       RDV? r;
       for (var item in data.data) {
         r = RDV(
             codeBarre: item['CODE_BARRE'],
+            dateRdv: item['DATE'],
             nom: item['NOM'],
             prenom: item['PRENOM'],
             age: int.parse(item['AGE']),
@@ -206,10 +213,4 @@ Future<RDV?> getInfoRdv(int idRdv) async {
       return null;
     }
   });
-}
-
-class MyDataResponse {
-  bool success;
-  dynamic data;
-  MyDataResponse({required this.success, this.data});
 }

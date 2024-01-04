@@ -13,6 +13,7 @@ import '../../../core/constant/theme.dart';
 import '../../../main.dart';
 import '../login_register/connect_widget.dart';
 import '../login_register/erreur_widget.dart';
+import '../my_button.dart';
 
 class ListRdvDashBoard extends StatelessWidget {
   const ListRdvDashBoard({super.key});
@@ -127,27 +128,20 @@ class ListRdvDashBoard extends StatelessWidget {
       ]));
 
   listOfRdvs(RDVController controller) => Column(children: [
-        Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          Tooltip(
-              message: 'Ajouter Rendez-vous',
-              child: InkWell(
-                  onTap: () {
-                    if (Get.isRegistered<FicheRdvController>()) {
-                      Get.delete<FicheRdvController>();
-                    }
-                    Get.toNamed(AppRoute.ficheRdv,
-                        arguments: {"CodeBarre": '', "idRdv": '0'});
-                  },
-                  child: Ink(child: const Icon(Icons.add)))),
-          const SizedBox(width: 10),
-          Tooltip(
-              message: 'Actualiser',
-              child: InkWell(
-                  onTap: () {
-                    controller.getRdvs();
-                  },
-                  child: Ink(child: const Icon(Icons.restart_alt_rounded))))
-        ]),
+        Center(
+            child: MyButton(
+                backGroundcolor: AppColor.white,
+                frontColor: AppColor.green,
+                smallSize: true,
+                icon: Icons.add_circle_outline_rounded,
+                text: 'Ajouter Rendez-vous',
+                onPressed: () {
+                  if (Get.isRegistered<FicheRdvController>()) {
+                    Get.delete<FicheRdvController>();
+                  }
+                  Get.toNamed(AppRoute.ficheRdv,
+                      arguments: {"CodeBarre": '', "idRdv": '0'});
+                })),
         const SizedBox(height: 6),
         Expanded(
             child: RefreshIndicator(

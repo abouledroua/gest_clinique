@@ -5,11 +5,14 @@ import 'package:lottie/lottie.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../controller/fiche_rdv_controller.dart';
+import '../../controller/list_patient_controller.dart';
 import '../../core/constant/animation_asset.dart';
 import '../../core/constant/color.dart';
+import '../../core/constant/routes.dart';
 import '../../core/constant/sizes.dart';
 import '../../core/constant/theme.dart';
 import '../../main.dart';
+import '../widget/my_button.dart';
 import '../widget/my_text_field.dart';
 import '../widget/mywidget.dart';
 
@@ -20,9 +23,8 @@ class FicheRdv extends StatelessWidget {
   Widget build(BuildContext context) {
     AppSizes.setSizeScreen(context);
     final args = Get.arguments;
-    Get.put(FicheRdvController(
-        idrdv: int.parse(args == null ? '0' : args['idRdv']),
-        codeBarre: args == null ? '' : args['CodeBarre']));
+    Get.put(
+        FicheRdvController(codeBarre: args == null ? '' : args['CodeBarre']));
     return MyWidget(
         gradient: myBackGradient,
         title: 'Fiche Rendez-vous',
@@ -41,54 +43,213 @@ class FicheRdv extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(8))),
             child: GetBuilder<FicheRdvController>(
                 builder: (controller) => Row(children: [
-                      Expanded(
-                          child: Visibility(
-                              visible: !controller.loadingPat,
-                              replacement: const Center(
-                                  child: CircularProgressIndicator.adaptive()),
-                              child: Visibility(
-                                  visible: controller.p != null,
-                                  replacement: TextButton(
-                                      onPressed: () {
-                                        controller.infoPatient('000006');
-                                      },
-                                      child: const Text('Get Patient')),
-                                  child:
-                                      const Text("Patient Sélectionné !!!")))),
+                      Expanded(child: infosSection(controller)),
                       Container(
                           margin: EdgeInsets.symmetric(
+                              horizontal: 20,
                               vertical: AppSizes.widthScreen / 10),
-                          width: 20,
                           decoration: const BoxDecoration(
                               border: Border(
                                   left: BorderSide(color: AppColor.grey)))),
-                      Expanded(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                            Expanded(child: myCalendar(controller)),
-                            const SizedBox(height: 10),
-                            Divider(
-                                color: AppColor.black,
-                                endIndent: AppSizes.widthScreen / 10,
-                                indent: AppSizes.widthScreen / 10),
-                            Text(
-                                'Date du nouveau Rendez-vous : ${DateFormat('y/MM/dd').format(controller.dateRdv)}',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: fontFamily,
-                                    fontSize: 32)),
-                            const SizedBox(height: 10),
-                            MyTextField(
-                                labelText: 'Motif de Rendez-vous',
-                                hintText: 'Motif de Rendez-vous',
-                                controller: controller.motifController,
-                                keyboardType: TextInputType.text,
-                                enabled: true)
-                          ]))
+                      Expanded(child: myCalendar(controller))
                     ]))));
   }
+
+  infosSection(FicheRdvController controller) => Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(children: [
+        Text('Information Patient',
+            style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                fontFamily: fontFamily,
+                color: AppColor.black)),
+        SizedBox(width: double.infinity, child: patientSection(controller)),
+        Divider(
+            indent: AppSizes.widthScreen / 15,
+            endIndent: AppSizes.widthScreen / 15),
+        Text('Information Rendez-vous',
+            style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                fontFamily: fontFamily,
+                color: AppColor.black)),
+        SizedBox(width: double.infinity, child: rdvSection(controller)),
+        const SizedBox(height: 20),
+        Divider(
+            indent: AppSizes.widthScreen / 15,
+            endIndent: AppSizes.widthScreen / 15),
+        const SizedBox(height: 20),
+        buttonSection(),
+        const SizedBox(height: 30)
+      ]));
+
+  buttonSection() =>
+      Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        MyButton(
+            backGroundcolor: AppColor.white,
+            frontColor: AppColor.red,
+            icon: Icons.cancel,
+            text: 'Annuler',
+            onPressed: () {}),
+        MyButton(
+            backGroundcolor: AppColor.green,
+            frontColor: AppColor.white,
+            icon: Icons.check_circle_outline,
+            text: 'Valider',
+            onPressed: () {}),
+      ]);
+
+  patientSection(FicheRdvController controller) =>
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        if (controller.loadingPat)
+          const Center(child: CircularProgressIndicator.adaptive()),
+        if (!controller.loadingPat && controller.p != null)
+          patientInfosWidget(controller),
+        if (!controller.loadingPat && controller.p == null)
+          selectPatientWidget(controller)
+      ]);
+
+  rdvSection(FicheRdvController controller) => Column(children: [
+        if (controller.loadingRdv)
+          const Center(child: CircularProgressIndicator.adaptive()),
+        if (!controller.loadingRdv && controller.r == null)
+          Text('Aucun Rdv !!!',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  fontFamily: fontFamily,
+                  color: AppColor.amber)),
+        if (!controller.loadingRdv && controller.r != null)
+          myLabel(
+              label: 'Date Ancien Rendez Vous : ',
+              color: AppColor.blue1,
+              data: controller.r!.dateRdv),
+        const SizedBox(height: 10),
+        myLabel(
+            label: 'Date nouveau Rendez-vous : ',
+            data: DateFormat('y/MM/dd').format(controller.dateRdv)),
+        const SizedBox(height: 10),
+        MyTextField(
+            labelText: 'Motif de Rendez-vous',
+            hintText: 'Motif de Rendez-vous',
+            controller: controller.motifController,
+            keyboardType: TextInputType.text,
+            enabled: true)
+      ]);
+
+  selectPatientWidget(FicheRdvController controller) => SizedBox(
+      height: 40,
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        SizedBox(
+            width: 170,
+            child: MyTextField(
+                labelText: 'CodeBarre',
+                hintText: '|||||||||||||||||',
+                controller: controller.codebarreController,
+                keyboardType: TextInputType.text,
+                onFieldSubmitted: (cb) {
+                  controller.infoPatient(cb);
+                },
+                enabled: true)),
+        MyButton(
+            backGroundcolor: AppColor.white,
+            frontColor: AppColor.purple,
+            icon: Icons.add_circle_outline_rounded,
+            text: 'Rechercher un  Patient',
+            onPressed: () {
+              if (Get.isRegistered<ListPatientController>()) {
+                Get.delete<ListPatientController>();
+              }
+              Get.toNamed(AppRoute.listPatient);
+            })
+      ]));
+
+  patientInfosWidget(FicheRdvController controller) => Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(children: [
+        Expanded(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          myLabel(
+              label: 'Nom : ',
+              data: '${controller.p!.nom} ${controller.p!.prenom}'),
+          myLabel(
+              label: 'Age : ',
+              data:
+                  '${controller.p!.age} ${controller.p!.typeAge == 1 ? 'ans' : controller.p!.typeAge == 3 ? 'jours' : 'mois'}'),
+          if (controller.p!.tel1.isNotEmpty || controller.p!.tel2.isNotEmpty)
+            myLabel(
+                label: 'Téléphone : ',
+                data: (controller.p!.tel1.isNotEmpty &&
+                        controller.p!.tel2.isNotEmpty)
+                    ? '${controller.p!.tel1}  // ${controller.p!.tel2}'
+                    : controller.p!.tel1.isNotEmpty
+                        ? controller.p!.tel1
+                        : controller.p!.tel2),
+          myLabel(label: 'Sexe : ', data: controller.p!.getSexe()),
+          if (controller.p!.getGS().isNotEmpty)
+            myLabel(label: 'Groupe Sangain : ', data: controller.p!.getGS()),
+          myLabel(
+              label: 'Dette : ',
+              dataBold: controller.p!.dette != 0,
+              color: controller.p!.dette > 0 ? AppColor.red : AppColor.black,
+              data: '${formatter.format(controller.p!.dette)} DA')
+        ])),
+        SizedBox(
+            width: 165,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: AppColor.purple)),
+                      child: TextButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(Icons.edit_document,
+                              color: AppColor.purple),
+                          label: Text('Modifier Infos',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  fontFamily: fontFamily,
+                                  color: AppColor.purple)))),
+                  const SizedBox(height: 15),
+                  Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: AppColor.green)),
+                      child: TextButton.icon(
+                          onPressed: () {},
+                          icon: Icon(Icons.payment_rounded,
+                              color: AppColor.green),
+                          label: Text('Regler Dette',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  fontFamily: fontFamily,
+                                  color: AppColor.green))))
+                ]))
+      ]));
+
+  myLabel(
+          {required String label,
+          required String data,
+          Color? color,
+          bool dataBold = false}) =>
+      Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+        Text(label,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                fontFamily: fontFamily,
+                color: AppColor.black)),
+        Text(data,
+            style: TextStyle(
+                fontWeight: dataBold ? FontWeight.bold : FontWeight.normal,
+                fontSize: 16,
+                fontFamily: fontFamily,
+                color: color ?? AppColor.black))
+      ]);
 
   myCalendar(FicheRdvController controller) => TableCalendar(
       onDaySelected: (selectedDay, focusedDay) {

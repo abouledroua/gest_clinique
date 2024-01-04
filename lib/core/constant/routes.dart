@@ -4,4 +4,5 @@ class AppRoute {
   static const String registerCabinet = "/RegisterCabinet";
   static const String dashboard = "/Dashboard";
   static const String ficheRdv = "/FicheRdv";
+  static const String listPatient = "/ListPatient";
 }

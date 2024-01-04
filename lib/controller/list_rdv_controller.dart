@@ -43,6 +43,7 @@ class ListRDVController extends GetxController {
                   consult: int.parse(item['CONSULT']) == 1,
                   dette: double.parse(item['DETTE']),
                   etatRDV: int.parse(item['ETAT_RDV']),
+                  dateRdv: item['DATE'],
                   motif: item['DES_MOTIF'],
                   nom: item['NOM'],
                   prenom: item['PRENOM'],

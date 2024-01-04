@@ -30,7 +30,7 @@ class RDVController extends GetxController {
               urlFile: "GET_RDVS.php", nomFiche: "Rendez-vous", body: body)
           .then((data) {
         if (data.success) {
-          rdvs = [];
+          List<RDV> list = [];
           late RDV r;
           for (var item in data.data) {
             try {
@@ -43,16 +43,18 @@ class RDVController extends GetxController {
                   consult: int.parse(item['CONSULT']) == 1,
                   dette: double.parse(item['DETTE']),
                   etatRDV: int.parse(item['ETAT_RDV']),
+                  dateRdv: item['DATE'],
                   motif: item['DES_MOTIF'],
                   nom: item['NOM'],
                   prenom: item['PRENOM'],
                   typeAge: int.parse(item['TYPE_AGE']),
                   versement: double.parse(item['VERSEMENT']));
-              rdvs.add(r);
+              list.add(r);
             } catch (e) {
               debugPrint(' **** error : $e  ****');
             }
           }
+          rdvs = list;
           _updateBooleans(newloading: false, newerror: false);
         } else {
           if (show) _updateBooleans(newloading: false, newerror: true);

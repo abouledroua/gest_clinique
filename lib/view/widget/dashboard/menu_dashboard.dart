@@ -4,10 +4,12 @@ import 'package:lottie/lottie.dart';
 
 import '../../../controller/acceuil_controller.dart';
 import '../../../controller/dashboard_controller.dart';
+import '../../../controller/list_patient_controller.dart';
 import '../../../core/class/user.dart';
 import '../../../core/constant/animation_asset.dart';
 import '../../../core/constant/color.dart';
 import '../../../core/constant/data.dart';
+import '../../../core/constant/routes.dart';
 import '../../../core/constant/sizes.dart';
 import '../../../core/constant/theme.dart';
 
@@ -74,8 +76,10 @@ class MenuDashBoardWidget extends StatelessWidget {
                 text: "Patients",
                 myIndex: 4,
                 onTap: () {
-                  DashBoardController controller = Get.find();
-                  controller.updateIndexPage(index: 4);
+                  if (Get.isRegistered<ListPatientController>()) {
+                    Get.delete<ListPatientController>();
+                  }
+                  Get.toNamed(AppRoute.listPatient);
                 }),
           if (AppSizes.heightScreen > 483)
             myButton(

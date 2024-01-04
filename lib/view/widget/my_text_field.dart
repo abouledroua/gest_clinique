@@ -5,6 +5,7 @@ import '../../core/constant/theme.dart';
 
 class MyTextField extends StatelessWidget {
   final String hintText, labelText;
+  final Function(String)? onFieldSubmitted, onChanged;
   final TextInputType keyboardType;
   final TextEditingController controller;
   final bool obscureText, enabled, upperCase;
@@ -15,6 +16,8 @@ class MyTextField extends StatelessWidget {
       required this.hintText,
       required this.keyboardType,
       required this.enabled,
+      this.onChanged,
+      this.onFieldSubmitted,
       this.upperCase = false,
       this.obscureText = false});
 
@@ -23,12 +26,15 @@ class MyTextField extends StatelessWidget {
       enabled: enabled,
       controller: controller,
       keyboardType: keyboardType,
-      onChanged: !upperCase
-          ? null
-          : (value) {
-              controller.value = TextEditingValue(
-                  text: value.toUpperCase(), selection: controller.selection);
-            },
+      onChanged: onChanged ??
+          (!upperCase
+              ? null
+              : (value) {
+                  controller.value = TextEditingValue(
+                      text: value.toUpperCase(),
+                      selection: controller.selection);
+                }),
+      onFieldSubmitted: onFieldSubmitted,
       textCapitalization:
           upperCase ? TextCapitalization.characters : TextCapitalization.none,
       obscureText: obscureText,

@@ -3,11 +3,14 @@ import 'package:get/get.dart';
 
 import '../core/class/patient.dart';
 import '../core/class/rdv.dart';
+import '../core/constant/color.dart';
+import '../core/constant/data.dart';
 import '../core/constant/sizes.dart';
 import '../core/data/data_controller.dart';
+import '../core/services/settingservice.dart';
 
 class FicheRdvController extends GetxController {
-  late TextEditingController motifController;
+  late TextEditingController motifController, codebarreController;
   Patient? p;
   RDV? r;
   late int idRdv;
@@ -22,13 +25,15 @@ class FicheRdvController extends GetxController {
   List<String> dropRap = [], dropRapSexe = [], dropRapPat = [];
   String? selectedRap, selectedRapSexe, selectedRapPat;
 
-  FicheRdvController({String codeBarre = "", int idrdv = 0}) {
-    idRdv = idrdv;
-    if (idRdv != 0) {
-      infoRdv();
+  FicheRdvController({String codeBarre = ""}) {
+    SettingServices c = Get.find();
+    if (codeBarre.isEmpty) {
+      codeBarre = c.sharedPrefs.getString('FICHE_RDV_CODE_BARRE') ?? '';
     }
     if (codeBarre.isNotEmpty) {
+      c.sharedPrefs.setString('FICHE_RDV_CODE_BARRE', codeBarre);
       infoPatient(codeBarre);
+      infoRdv(codeBarre);
     }
   }
 
@@ -41,13 +46,26 @@ class FicheRdvController extends GetxController {
     _updateBooleansPat(newloading: true, newerror: false);
     await getInfoPatient(codebarre).then((value) {
       p = value;
+      if (codebarreController.text.isNotEmpty) {
+        if (p == null) {
+          AppData.mySnackBar(
+              title: 'Fiche Rendez-vous',
+              message: 'Code Barre erronée !!!',
+              color: AppColor.red);
+        } else {
+          SettingServices c = Get.find();
+          c.sharedPrefs
+              .setString('FICHE_RDV_CODE_BARRE', codebarreController.text);
+        }
+        codebarreController.text = '';
+      }
       _updateBooleansPat(newloading: false, newerror: p == null);
     });
   }
 
-  infoRdv() async {
+  infoRdv(String codebarre) async {
     _updateBooleansRdv(newloading: true, newerror: false);
-    await getInfoRdv(idRdv).then((value) {
+    await getInfoRdv(codeBarre: codebarre).then((value) {
       r = value;
       _updateBooleansRdv(newloading: false, newerror: p == null);
     });
@@ -89,6 +107,7 @@ class FicheRdvController extends GetxController {
 
   _init() {
     AppSizes.setSizeScreen(Get.context);
+    codebarreController = TextEditingController();
     motifController = TextEditingController();
     dateRdv = DateTime.now();
     selectedRap = defaultRap;
@@ -103,7 +122,10 @@ class FicheRdvController extends GetxController {
 
   @override
   void onClose() {
+    codebarreController.dispose();
     motifController.dispose();
+    SettingServices c = Get.find();
+    c.sharedPrefs.setString('FICHE_RDV_CODE_BARRE', '');
     super.onClose();
   }
 }
