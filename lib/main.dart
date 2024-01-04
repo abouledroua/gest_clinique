@@ -39,14 +39,6 @@ Future initialApp() async {
 NumberFormat formatter =
     NumberFormat.decimalPatternDigits(locale: 'fr_fr', decimalDigits: 0);
 
-Gradient? myBackGradient = const LinearGradient(
-    begin: Alignment.bottomRight,
-    end: Alignment.topLeft,
-    colors: [
-      Color.fromARGB(255, 22, 175, 101),
-      Color.fromARGB(255, 154, 206, 182)
-    ]);
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

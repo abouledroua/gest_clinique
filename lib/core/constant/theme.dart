@@ -45,3 +45,20 @@ final List<Color> consultGradColor = [
   const Color.fromARGB(255, 96, 242, 103).withOpacity(0.6),
   const Color.fromARGB(255, 177, 222, 179).withOpacity(0.4),
 ];
+
+final List<Color> femmeGradColor = [
+  const Color.fromARGB(255, 232, 150, 150).withOpacity(0.6),
+  const Color.fromARGB(255, 231, 219, 219).withOpacity(0.4),
+];
+final List<Color> hommeGradColor = [
+  const Color.fromARGB(255, 128, 189, 233).withOpacity(0.6),
+  const Color.fromARGB(255, 199, 215, 223).withOpacity(0.4),
+];
+
+Gradient? myBackGradient = const LinearGradient(
+    begin: Alignment.bottomRight,
+    end: Alignment.topLeft,
+    colors: [
+      Color.fromARGB(255, 22, 175, 101),
+      Color.fromARGB(255, 154, 206, 182)
+    ]);

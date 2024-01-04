@@ -12,6 +12,7 @@ import '../../core/constant/sizes.dart';
 import '../../core/constant/theme.dart';
 import '../../main.dart';
 import '../widget/login_register/connect_widget.dart';
+import '../widget/login_register/empty_list_widget.dart';
 import '../widget/login_register/erreur_widget.dart';
 import '../widget/my_button.dart';
 import '../widget/my_text_field.dart';
@@ -73,14 +74,17 @@ class ListPatientPage extends StatelessWidget {
                           PointerDeviceKind.touch,
                           PointerDeviceKind.mouse
                         }),
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        primary: false,
-                        itemCount: controller.showList.length,
-                        itemBuilder: (context, i) {
-                          Patient item = controller.showList[i];
-                          return myTile(item);
-                        }))))
+                    child: Visibility(
+                      visible: controller.showList.isNotEmpty,
+                      replacement:
+                          const EmptyListWidget(text: 'Aucun Patient !!!'),
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          primary: false,
+                          itemCount: controller.showList.length,
+                          itemBuilder: (context, i) =>
+                              myTile(controller.showList[i])),
+                    ))))
       ]);
 
   header(PatientController controller) => Padding(
@@ -114,36 +118,49 @@ class ListPatientPage extends StatelessWidget {
       ]));
 
   myTile(Patient item) => Container(
-      margin: const EdgeInsets.only(bottom: 4),
+      margin: const EdgeInsets.only(bottom: 6),
       padding: const EdgeInsets.only(right: 6),
       child: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
-                  colors:
-                      item.dette == 0 ? consultGradColor : absentGradColor)),
+                  colors: item.isFemme ? femmeGradColor : hommeGradColor)),
           child: Row(children: [
             Expanded(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                  Text(item.fullname,
+                  Text('${item.fullname}  (${item.codeBarre})',
                       textAlign: TextAlign.start,
                       style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
-                          fontSize: 13)),
+                          fontSize: 16)),
                   Text(
                       'Age : ${item.age} ${item.typeAge == 1 ? 'ans' : item.typeAge == 3 ? 'jours' : 'mois'}',
                       textAlign: TextAlign.start,
                       style:
-                          const TextStyle(color: Colors.black, fontSize: 11)),
+                          const TextStyle(color: Colors.black, fontSize: 13)),
+                  Text('Sexe : ${item.getSexe()}',
+                      textAlign: TextAlign.start,
+                      style:
+                          const TextStyle(color: Colors.black, fontSize: 13)),
+                  if (item.tel1.isNotEmpty || item.tel2.isNotEmpty)
+                    Text(
+                        'Téléphone : ${item.tel1.isNotEmpty && item.tel2.isNotEmpty ? '${item.tel1} // ${item.tel2}' : item.tel1.isNotEmpty ? item.tel1 : item.tel2}',
+                        textAlign: TextAlign.start,
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 13)),
+                  Text('Code Malade : ${item.codeMalade}',
+                      textAlign: TextAlign.start,
+                      style:
+                          const TextStyle(color: Colors.black, fontSize: 13)),
                   if (item.dette != 0)
                     Text('Dette : ${formatter.format(item.dette)} DA',
                         textAlign: TextAlign.start,
-                        style: const TextStyle(color: Colors.red, fontSize: 12))
+                        style: const TextStyle(color: Colors.red, fontSize: 14))
                 ])),
             Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
               Tooltip(
@@ -155,7 +172,7 @@ class ListPatientPage extends StatelessWidget {
                       child: Ink(
                           child: Icon(Icons.delete_outline_rounded,
                               color: AppColor.red)))),
-              const SizedBox(height: 2),
+              const SizedBox(height: 6),
               Tooltip(
                   message: 'Modifier les Informations',
                   child: InkWell(

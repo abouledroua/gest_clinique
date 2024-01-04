@@ -6,7 +6,7 @@ import '../../controller/patient_controller.dart';
 import '../../controller/rdv_controller.dart';
 import '../../core/constant/data.dart';
 import '../../core/constant/sizes.dart';
-import '../../main.dart';
+import '../../core/constant/theme.dart';
 import '../widget/dashboard/header_dashboard_widget.dart';
 import '../widget/dashboard/menu_dashboard.dart';
 import '../widget/dashboard/workspace_dashboard.dart';
