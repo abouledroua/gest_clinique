@@ -5,6 +5,7 @@ class User {
       isHomme = false,
       isFemme = false;
   static String name = "",
+      photo = "",
       username = "",
       cabinet = "",
       phone = "",

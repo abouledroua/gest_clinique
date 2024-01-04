@@ -132,32 +132,54 @@ class LoginWidget extends StatelessWidget {
             child: GetBuilder<LoginController>(
                 builder: (controller) => Visibility(
                     visible: !controller.loading,
-                    replacement: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const CircularProgressIndicator.adaptive(),
-                          const SizedBox(width: 10),
-                          Text('Chargement en cours ...',
+                    replacement: Padding(
+                        padding: const EdgeInsets.all(6),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const CircularProgressIndicator.adaptive(),
+                              const SizedBox(width: 10),
+                              Text('Chargement en cours ...',
+                                  style: TextStyle(
+                                      fontSize: 11, fontFamily: fontFamily))
+                            ])),
+                    child: Visibility(
+                      visible: !controller.error,
+                      replacement: InkWell(
+                          onTap: () {
+                            controller.getOrganismes();
+                          },
+                          child: Ink(
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                Text('Erreur de Chargement !!!',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColor.red,
+                                        fontSize: 12,
+                                        fontFamily: fontFamily)),
+                                const SizedBox(width: 10),
+                                Icon(Icons.refresh, color: AppColor.red)
+                              ]))),
+                      child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                              padding: const EdgeInsets.all(8),
                               style: TextStyle(
-                                  fontSize: 11, fontFamily: fontFamily))
-                        ]),
-                    child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                            padding: const EdgeInsets.all(8),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                color: AppColor.black,
-                                fontFamily: fontFamily),
-                            underline: null,
-                            value: controller.selectedOrg,
-                            items: controller.orgs
-                                .map((item) => DropdownMenuItem(
-                                    value: item, child: Text(item)))
-                                .toList(),
-                            onChanged: (String? value) {
-                              controller.updateDrop(value ?? "");
-                            }))))),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                  color: AppColor.black,
+                                  fontFamily: fontFamily),
+                              underline: null,
+                              value: controller.selectedOrg,
+                              items: controller.orgs
+                                  .map((item) => DropdownMenuItem(
+                                      value: item, child: Text(item)))
+                                  .toList(),
+                              onChanged: (String? value) {
+                                controller.updateDrop(value ?? "");
+                              })),
+                    )))),
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Expanded(
               child: Text("Mon Cabinet n'apparaît pas dans la liste !!!, ",

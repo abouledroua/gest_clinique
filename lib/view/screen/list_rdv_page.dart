@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../controller/acceuil_controller.dart';
 import '../../controller/dashboard_controller.dart';
+import '../../controller/fiche_rdv_controller.dart';
 import '../../controller/rdv_controller.dart';
 import '../../core/class/user.dart';
 import '../../core/constant/animation_asset.dart';
@@ -14,133 +14,29 @@ import '../../core/constant/sizes.dart';
 import '../../core/constant/theme.dart';
 import '../widget/dashboard/list_rdv_dashboard.dart';
 
-class PageAcceuil extends StatelessWidget {
-  const PageAcceuil({super.key});
+class ListRdvPage extends StatelessWidget {
+  final int idRdv;
+  const ListRdvPage({super.key, this.idRdv = 0});
 
   @override
   Widget build(BuildContext context) {
     AppSizes.setSizeScreen(context);
-    Get.put(AcceuilController());
-    return Row(children: [
-      Expanded(
-          child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(Get.context!).copyWith(
-                      dragDevices: {
-                        PointerDeviceKind.touch,
-                        PointerDeviceKind.mouse
-                      }),
-                  child: ListView(children: [
-                    colorTitle(),
-                    const SizedBox(height: 10),
-                    const Divider(indent: 4, endIndent: 4),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Rapport',
-                              style: TextStyle(
-                                  color: AppColor.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                  fontFamily: fontFamily)),
-                          GetBuilder<AcceuilController>(
-                              builder: (controller) => myDropDown(
-                                  items: controller.dropRap,
-                                  onChanged: (value) {
-                                    controller.updateDropRap(value);
-                                  },
-                                  value: controller.selectedRap))
-                        ]),
-                    nbRdvWidget(),
-                    Row(children: [
-                      Expanded(flex: 7, child: patientRapport()),
-                      const SizedBox(width: 10),
-                      Expanded(flex: 6, child: sexeRapport())
-                    ])
-                  ])))),
-      if (AppSizes.widthScreen > 1050) listRdvWidget()
-    ]);
+    Get.put(FicheRdvController());
+    return Padding(
+        padding: const EdgeInsets.all(16),
+        child: ScrollConfiguration(
+            behavior: ScrollConfiguration.of(Get.context!).copyWith(
+                dragDevices: {
+                  PointerDeviceKind.touch,
+                  PointerDeviceKind.mouse
+                }),
+            child: ListView(children: [
+              colorTitle(),
+              const SizedBox(height: 10),
+              const Divider(indent: 4, endIndent: 4),
+              nbRdvWidget()
+            ])));
   }
-
-  sexeRapport() => Padding(
-      padding: const EdgeInsets.all(20),
-      child: ListView(primary: false, shrinkWrap: true, children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text('Sexe',
-              style: TextStyle(
-                  color: AppColor.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
-                  fontFamily: fontFamily)),
-          GetBuilder<AcceuilController>(
-              builder: (controller) => myDropDown(
-                  items: controller.dropRapSexe,
-                  onChanged: (value) {
-                    controller.updateDropRapSexe(value);
-                  },
-                  value: controller.selectedRapSexe))
-        ]),
-        SizedBox(
-            height: 200,
-            child: Stack(children: [
-              mySexeChart(),
-              Center(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                    GetBuilder<RDVController>(
-                        builder: (controller) => Text(
-                            controller.rdvs.length.toString(),
-                            style: TextStyle(
-                                color: AppColor.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 32,
-                                fontFamily: fontFamily))),
-                    Text('Total',
-                        style: TextStyle(
-                            color: AppColor.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            fontFamily: fontFamily))
-                  ])),
-              Padding(
-                  padding: const EdgeInsets.only(left: 18.0),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(children: [
-                          Container(
-                              width: 20,
-                              color: AppColor.blue1,
-                              child: const Text('    ')),
-                          const SizedBox(width: 10),
-                          Text('Homme',
-                              style: TextStyle(
-                                  color: AppColor.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  fontFamily: fontFamily))
-                        ]),
-                        const SizedBox(height: 10),
-                        Row(children: [
-                          Container(
-                              width: 20,
-                              color: AppColor.pink,
-                              child: const Text('    ')),
-                          const SizedBox(width: 10),
-                          Text('Femme',
-                              style: TextStyle(
-                                  color: AppColor.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  fontFamily: fontFamily))
-                        ])
-                      ]))
-            ]))
-      ]));
 
   mySexeChart() => GetBuilder<RDVController>(
       builder: (controller) => PieChart(
@@ -168,41 +64,6 @@ class PageAcceuil extends StatelessWidget {
                     '${(controller.getNbRdvs(sexe: 2) * 100 / controller.rdvs.length).toStringAsFixed(0)}%',
                 color: AppColor.pink)
           ])));
-
-  patientRapport() => Padding(
-      padding: const EdgeInsets.all(20),
-      child: ListView(primary: false, shrinkWrap: true, children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text('Patients',
-              style: TextStyle(
-                  color: AppColor.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
-                  fontFamily: fontFamily)),
-          GetBuilder<AcceuilController>(
-              builder: (controller) => myDropDown(
-                  items: controller.dropRapPat,
-                  onChanged: (value) {
-                    controller.updateDropRapPat(value);
-                  },
-                  value: controller.selectedRapPat))
-        ]),
-        SizedBox(
-            height: 200,
-            child: LineChart(LineChartData(minY: 0, maxY: 10, lineBarsData: [
-              LineChartBarData(
-                  barWidth: 2,
-                  color: AppColor.blue1,
-                  isCurved: true,
-                  spots: const [
-                    FlSpot(1, 3),
-                    FlSpot(2, 2),
-                    FlSpot(3, 5),
-                    FlSpot(4, 9),
-                    FlSpot(6, 6)
-                  ])
-            ])))
-      ]));
 
   nbRdvWidget() => GetBuilder<RDVController>(
       builder: (controller) => Wrap(children: [

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../controller/dashboard_controller.dart';
 import '../../../core/constant/color.dart';
 import '../../screen/acceuil_page.dart';
+import '../../screen/list_rdv_page.dart';
 
 class WorkSpaceDashBoard extends StatelessWidget {
   const WorkSpaceDashBoard({super.key});
@@ -17,7 +18,7 @@ class WorkSpaceDashBoard extends StatelessWidget {
               : controller.indexPage == 2
                   ? const Text('Consultation')
                   : controller.indexPage == 3
-                      ? const Text('Rendez-vous')
+                      ? const ListRdvPage()
                       : controller.indexPage == 4
                           ? const Text('Patient')
                           : const Text('Parametres')));

@@ -10,7 +10,7 @@ import '../core/class/rdv.dart';
 import '../core/constant/sizes.dart';
 import '../core/data/data_controller.dart';
 
-class RDVController extends GetxController {
+class ListRDVController extends GetxController {
   bool loading = false, error = false, load = false;
   List<RDV> rdvs = [];
 
@@ -130,5 +130,6 @@ class RDVController extends GetxController {
   _init() {
     AppSizes.setSizeScreen(Get.context);
     getRdvTimer();
+    // chargerRdvs();
   }
 }

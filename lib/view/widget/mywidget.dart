@@ -1,26 +1,21 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../core/constant/color.dart';
+import '../../core/constant/theme.dart';
 
 class MyWidget extends StatelessWidget {
   final Widget child;
-  final bool blurBackground;
   final String title;
   final Gradient? gradient;
   final List<Widget>? actions;
   final String? backgroudImage;
-  final Color? color;
   final Widget? drawer, leading, floatingActionButton;
 
   const MyWidget(
       {super.key,
       required this.child,
       this.backgroudImage,
-      this.blurBackground = false,
-      this.color,
       this.gradient,
       this.title = "",
       this.drawer,
@@ -35,40 +30,36 @@ class MyWidget extends StatelessWidget {
           Positioned.fill(
               child:
                   Image(image: AssetImage(backgroudImage!), fit: BoxFit.fill)),
-        Scaffold(
-            backgroundColor: color ??
-                (backgroudImage != null ? Colors.transparent : AppColor.white),
-            appBar: title == ""
-                ? null
-                : AppBar(
-                    iconTheme: const IconThemeData(color: AppColor.black),
-                    elevation: 0,
-                    actions: actions,
-                    centerTitle: true,
-                    backgroundColor:
-                        color != null ? AppColor.white : Colors.transparent,
-                    leading: leading ??
-                        (Navigator.canPop(context)
-                            ? IconButton(
-                                onPressed: () {
-                                  Get.back();
-                                },
-                                icon: const Icon(Icons.arrow_back))
-                            : null),
-                    title: FittedBox(
-                        child: Text(title,
-                            style: Theme.of(context).textTheme.displayLarge))),
-            floatingActionButton: floatingActionButton,
-            drawer: drawer,
-            resizeToAvoidBottomInset: true,
-            body: blurBackground
-                ? BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
-                    child: child)
-                : gradient != null
-                    ? Container(
-                        decoration: BoxDecoration(gradient: gradient),
-                        child: child)
-                    : child)
+        Container(
+            decoration: BoxDecoration(gradient: gradient),
+            child: Scaffold(
+                backgroundColor: Colors.transparent,
+                appBar: title == ""
+                    ? null
+                    : AppBar(
+                        iconTheme: const IconThemeData(color: AppColor.black),
+                        elevation: 0,
+                        actions: actions,
+                        centerTitle: true,
+                        backgroundColor: Colors.transparent,
+                        leading: leading ??
+                            (Navigator.canPop(context)
+                                ? IconButton(
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                    icon: const Icon(Icons.arrow_back))
+                                : null),
+                        title: FittedBox(
+                            child: Text(title,
+                                style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: fontFamily,
+                                    color: AppColor.black)))),
+                floatingActionButton: floatingActionButton,
+                drawer: drawer,
+                resizeToAvoidBottomInset: true,
+                body: child))
       ]));
 }

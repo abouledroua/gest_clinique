@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../class/patient.dart';
+import '../class/rdv.dart';
 import '../constant/color.dart';
 import '../constant/data.dart';
 
@@ -139,6 +141,70 @@ Future<MyDataResponse> getDataList(
     debugPrint("erreur get$nomFiche: $error");
     resp = MyDataResponse(success: false);
     return resp;
+  });
+}
+
+Future<Patient?> getInfoPatient(String codeBarre) async {
+  return await getDataList(
+      urlFile: "GET_PATIENTS.php",
+      nomFiche: "Patient",
+      body: {"CODE_BARRE": codeBarre}).then((data) {
+    if (data.success) {
+      Patient? p;
+      for (var item in data.data) {
+        p = Patient(
+            adresse: item['ADRESSE'],
+            age: int.parse(item['AGE']),
+            codeBarre: item['CODE_BARRE'],
+            convention: int.parse(item['CONVENTIONNE']) == 1,
+            dateNaissance: item['DATE_NAISSANCE'],
+            email: item['EMAIL'],
+            gs: int.parse(item['GS']),
+            lieuNaissance: item['LIEU_NAISSANCE'],
+            nom: item['NOM'],
+            prcConvention: double.parse(item['POURC_CONV']),
+            prenom: item['PRENOM'],
+            profession: item['PROFESSION'],
+            codeMalade: item['CODE_MALADE'],
+            sexe: int.parse(item['SEXE']),
+            tel1: item['TEL'],
+            tel2: item['TEL2'],
+            typeAge: int.parse(item['TYPE_AGE']));
+      }
+      return p;
+    } else {
+      return null;
+    }
+  });
+}
+
+Future<RDV?> getInfoRdv(int idRdv) async {
+  return await getDataList(
+      urlFile: "GET_RDVS.php",
+      nomFiche: "Rendez-vous",
+      body: {"ID_RDV": idRdv.toString()}).then((data) {
+    if (data.success) {
+      RDV? r;
+      for (var item in data.data) {
+        r = RDV(
+            codeBarre: item['CODE_BARRE'],
+            nom: item['NOM'],
+            prenom: item['PRENOM'],
+            age: int.parse(item['AGE']),
+            typeAge: int.parse(item['TYPE_AGE']),
+            motif: item['DES_MOTIF'],
+            etatRDV: int.parse(item['ETAT_RDV']),
+            heureArrivee: item['HEURE_ARRIVEE'],
+            id: int.parse(item['ID']),
+            consult: int.parse(item['CONSULT']) == 1,
+            dette: double.parse(item['DETTE']),
+            versement: double.parse(item['VERSEMENT']),
+            sexe: int.parse(item['SEXE']));
+      }
+      return r;
+    } else {
+      return null;
+    }
   });
 }
 

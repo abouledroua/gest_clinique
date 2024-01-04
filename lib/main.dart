@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,7 @@ void main() async {
 
 Future initialApp() async {
   await Get.putAsync(() => SettingServices().init());
+  initializeDateFormatting();
   if (AppData.isAndroidAppMobile) {
     SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
@@ -31,11 +33,19 @@ Future initialApp() async {
       : ((await getApplicationDocumentsDirectory()).path);
   await FastCachedImageConfig.init(
       subDir: AppData.storageLocation,
-      clearCacheAfter: const Duration(days: 15));
+      clearCacheAfter: const Duration(days: 30));
 }
 
 NumberFormat formatter =
     NumberFormat.decimalPatternDigits(locale: 'fr_fr', decimalDigits: 0);
+
+Gradient? myBackGradient = const LinearGradient(
+    begin: Alignment.bottomRight,
+    end: Alignment.topLeft,
+    colors: [
+      Color.fromARGB(255, 22, 175, 101),
+      Color.fromARGB(255, 154, 206, 182)
+    ]);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

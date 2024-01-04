@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 import '../core/class/patient.dart';
 import '../core/constant/sizes.dart';
@@ -18,10 +17,7 @@ class PatientController extends GetxController {
 
   getPatients() async {
     _updateBooleans(newloading: true, newerror: false);
-    String date = DateFormat('yMMdd').format(DateTime.now());
-    var body = {"DATE": date};
-    await getDataList(
-            urlFile: "GET_PATIENTS.php", nomFiche: "Rendez-vous", body: body)
+    await getDataList(urlFile: "GET_PATIENTS.php", nomFiche: "Patient")
         .then((data) {
       if (data.success) {
         patients = [];

@@ -22,7 +22,7 @@ class LoginController extends GetxController {
   List<String> orgs = [];
   List<int> orgsId = [];
   bool valider = false,
-      connectEmail = true,
+      connectEmail = false,
       conect = false,
       valUser = false,
       valEmail = false,
@@ -134,6 +134,7 @@ class LoginController extends GetxController {
           c.sharedPrefs.setInt('SEXE', sexe);
           c.sharedPrefs.setInt('TYPE', type);
           c.sharedPrefs.setInt('ID_USER', idUser);
+          c.sharedPrefs.setInt('INDEX_DASHBOAD', 1);
           c.sharedPrefs.setBool('CONNECTED', true);
 
           _updateValider(newValider: false, newInscr: true);

@@ -142,19 +142,54 @@ class RegisterUserWidget extends StatelessWidget {
         GetBuilder<RegisterUserController>(
             builder: (controller) => Visibility(
                 visible: !controller.loading,
-                replacement:
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  const CircularProgressIndicator.adaptive(),
-                  const SizedBox(width: 10),
-                  Text('Chargement en cours...',
-                      style: TextStyle(fontSize: 11, fontFamily: fontFamily))
-                ]),
-                child: myDropDown(
-                    items: controller.orgs,
-                    value: controller.selectedOrg,
-                    onChanged: (String? value) {
-                      controller.updateDropOrg(value ?? "");
-                    }))),
+                replacement: Container(
+                    height: chpHeight,
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 221, 240, 221),
+                        border: Border.all(color: AppColor.black),
+                        borderRadius: BorderRadius.circular(3)),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const CircularProgressIndicator.adaptive(),
+                          const SizedBox(width: 10),
+                          Text('Chargement en cours...',
+                              style: TextStyle(
+                                  fontSize: 11, fontFamily: fontFamily))
+                        ])),
+                child: Visibility(
+                    visible: !controller.error,
+                    replacement: InkWell(
+                        onTap: () {
+                          controller.getOrganismes();
+                        },
+                        child: Ink(
+                            child: Container(
+                                height: chpHeight,
+                                decoration: BoxDecoration(
+                                    color: const Color.fromARGB(
+                                        255, 221, 240, 221),
+                                    border: Border.all(color: AppColor.black),
+                                    borderRadius: BorderRadius.circular(3)),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('Erreur de Chargement !!!',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: AppColor.red,
+                                              fontSize: 12,
+                                              fontFamily: fontFamily)),
+                                      const SizedBox(width: 10),
+                                      Icon(Icons.refresh, color: AppColor.red)
+                                    ])))),
+                    child: myDropDown(
+                        items: controller.orgs,
+                        value: controller.selectedOrg,
+                        onChanged: (String? value) {
+                          controller.updateDropOrg(value ?? "");
+                        })))),
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Text("Mon Organisme n'apparaît pas dans la liste !!!, ",
               style: TextStyle(fontSize: 9, fontFamily: fontFamily)),

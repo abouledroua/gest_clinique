@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../controller/dashboard_controller.dart';
+import '../../../core/class/user.dart';
 import '../../../core/constant/animation_asset.dart';
 import '../../../core/constant/color.dart';
 import '../../../core/constant/data.dart';
@@ -42,7 +43,12 @@ class HeaderDashBoardWidget extends StatelessWidget {
   }
 
   headerIcons() => Row(children: [
-        Image.asset(AppImageAsset.noPhoto),
+        User.photo.isEmpty
+            ? Visibility(
+                visible: User.sexe == 1,
+                replacement: Lottie.asset(AppAnimationAsset.nurse),
+                child: Lottie.asset(AppAnimationAsset.doctor))
+            : Image.asset(AppImageAsset.noPhoto),
         const SizedBox(width: 10),
         Tooltip(
             message: 'Déconnecter',

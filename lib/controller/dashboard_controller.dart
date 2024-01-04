@@ -18,6 +18,8 @@ class DashBoardController extends GetxController {
 
   updateIndexPage({required int index}) {
     indexPage = index;
+    SettingServices c = Get.find();
+    c.sharedPrefs.setInt('INDEX_DASHBOAD', index);
     update();
   }
 
@@ -45,6 +47,8 @@ class DashBoardController extends GetxController {
 
   _loadUserData() {
     SettingServices c = Get.find();
+    indexPage = c.sharedPrefs.getInt('INDEX_DASHBOAD') ?? 1;
+
     User.email = c.sharedPrefs.getString('EMAIL') ?? "";
     User.username = c.sharedPrefs.getString('USERNAME') ?? "";
     User.name = c.sharedPrefs.getString('NAME') ?? "";
@@ -59,5 +63,6 @@ class DashBoardController extends GetxController {
     User.sexe = c.sharedPrefs.getInt('SEXE') ?? 0;
     User.isFemme = (User.sexe == 2);
     User.isHomme = (User.type == 1);
+    update();
   }
 }

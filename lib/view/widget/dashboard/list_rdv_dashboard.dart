@@ -4,9 +4,11 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../controller/dashboard_controller.dart';
+import '../../../controller/fiche_rdv_controller.dart';
 import '../../../controller/rdv_controller.dart';
 import '../../../core/class/rdv.dart';
 import '../../../core/constant/color.dart';
+import '../../../core/constant/routes.dart';
 import '../../../core/constant/theme.dart';
 import '../../../main.dart';
 import '../login_register/connect_widget.dart';
@@ -129,7 +131,14 @@ class ListRdvDashBoard extends StatelessWidget {
           Tooltip(
               message: 'Ajouter Rendez-vous',
               child: InkWell(
-                  onTap: () {}, child: Ink(child: const Icon(Icons.add)))),
+                  onTap: () {
+                    if (Get.isRegistered<FicheRdvController>()) {
+                      Get.delete<FicheRdvController>();
+                    }
+                    Get.toNamed(AppRoute.ficheRdv,
+                        arguments: {"CodeBarre": '', "idRdv": '0'});
+                  },
+                  child: Ink(child: const Icon(Icons.add)))),
           const SizedBox(width: 10),
           Tooltip(
               message: 'Actualiser',
@@ -217,12 +226,13 @@ class ListRdvDashBoard extends StatelessWidget {
                                                     color: Colors.red,
                                                     fontSize: 12))
                                         ])),
-                                    if (!item.consult)
-                                      Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
+                                    Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          if (!item.consult)
                                             const SizedBox(height: 2),
+                                          if (!item.consult)
                                             Tooltip(
                                                 message:
                                                     'Supprimer Rendez-vous',
@@ -237,16 +247,33 @@ class ListRdvDashBoard extends StatelessWidget {
                                                                 .delete_outline_rounded,
                                                             color: AppColor
                                                                 .red)))),
+                                          if (!item.consult)
                                             const SizedBox(height: 2),
+                                          if (!item.consult)
                                             Tooltip(
                                                 message:
                                                     'Modifier le Rendez-vous',
                                                 child: InkWell(
-                                                    onTap: () {},
+                                                    onTap: () {
+                                                      if (Get.isRegistered<
+                                                          FicheRdvController>()) {
+                                                        Get.delete<
+                                                            FicheRdvController>();
+                                                      }
+                                                      Get.toNamed(
+                                                          AppRoute.ficheRdv,
+                                                          arguments: {
+                                                            "CodeBarre":
+                                                                item.codeBarre,
+                                                            "idRdv": item.id
+                                                                .toString()
+                                                          });
+                                                    },
                                                     child: Ink(
                                                         child: const Icon(Icons
                                                             .edit_calendar_outlined)))),
-                                            const SizedBox(height: 2),
+                                          const SizedBox(height: 2),
+                                          if (!item.consult)
                                             Tooltip(
                                                 message:
                                                     'Imprimer le Rendez-vous',
@@ -255,8 +282,30 @@ class ListRdvDashBoard extends StatelessWidget {
                                                     child: Ink(
                                                         child: const Icon(Icons
                                                             .print_outlined)))),
-                                            const SizedBox(height: 2),
-                                          ])
+                                          if (item.consult)
+                                            Tooltip(
+                                                message:
+                                                    'Prendre un Rendez-vous',
+                                                child: InkWell(
+                                                    onTap: () {
+                                                      if (Get.isRegistered<
+                                                          FicheRdvController>()) {
+                                                        Get.delete<
+                                                            FicheRdvController>();
+                                                      }
+                                                      Get.toNamed(
+                                                          AppRoute.ficheRdv,
+                                                          arguments: {
+                                                            "CodeBarre":
+                                                                item.codeBarre,
+                                                            "idRdv": '0'
+                                                          });
+                                                    },
+                                                    child: Ink(
+                                                        child: const Icon(Icons
+                                                            .calendar_today_outlined)))),
+                                          const SizedBox(height: 2),
+                                        ])
                                   ])));
                         }))))
       ]);
