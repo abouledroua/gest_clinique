@@ -6,6 +6,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../controller/fiche_rdv_controller.dart';
 import '../../controller/list_patient_controller.dart';
+import '../../core/class/patient.dart';
 import '../../core/constant/animation_asset.dart';
 import '../../core/constant/color.dart';
 import '../../core/constant/routes.dart';
@@ -84,21 +85,31 @@ class FicheRdv extends StatelessWidget {
         const SizedBox(height: 30)
       ]));
 
-  buttonSection() =>
-      Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        MyButton(
-            backGroundcolor: AppColor.white,
-            frontColor: AppColor.red,
-            icon: Icons.cancel,
-            text: 'Annuler',
-            onPressed: () {}),
-        MyButton(
-            backGroundcolor: AppColor.green,
-            frontColor: AppColor.white,
-            icon: Icons.check_circle_outline,
-            text: 'Valider',
-            onPressed: () {}),
-      ]);
+  buttonSection() => GetBuilder<FicheRdvController>(
+      builder: (controller) =>
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            MyButton(
+                backGroundcolor: AppColor.white,
+                frontColor: AppColor.red,
+                icon: Icons.cancel,
+                text: 'Annuler',
+                onPressed: () {
+                  if (controller.p == null) {
+                    Get.back();
+                  } else {
+                    controller.p = null;
+                    controller.update();
+                  }
+                }),
+            MyButton(
+                backGroundcolor: AppColor.green,
+                frontColor: AppColor.white,
+                icon: Icons.check_circle_outline,
+                text: 'Valider',
+                onPressed: () {
+                  controller.saveClasse();
+                })
+          ]));
 
   patientSection(FicheRdvController controller) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -149,7 +160,7 @@ class FicheRdv extends StatelessWidget {
                 controller: controller.codebarreController,
                 keyboardType: TextInputType.text,
                 onFieldSubmitted: (cb) {
-                  controller.infoPatient(cb);
+                  controller.chargerInfo(cb);
                 },
                 enabled: true)),
         MyButton(
@@ -157,11 +168,17 @@ class FicheRdv extends StatelessWidget {
             frontColor: AppColor.purple,
             icon: Icons.add_circle_outline_rounded,
             text: 'Rechercher un  Patient',
-            onPressed: () {
+            onPressed: () async {
               if (Get.isRegistered<ListPatientController>()) {
                 Get.delete<ListPatientController>();
               }
-              Get.toNamed(AppRoute.listPatient);
+              await Get.toNamed(AppRoute.listPatient,
+                  arguments: {"SELECT": '1'})?.then((value) {
+                if (value != null) {
+                  Patient p = value;
+                  controller.chargerInfo(p.codeBarre);
+                }
+              });
             })
       ]));
 
@@ -240,13 +257,13 @@ class FicheRdv extends StatelessWidget {
         Text(label,
             style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 16,
+                fontSize: 18,
                 fontFamily: fontFamily,
                 color: AppColor.black)),
         Text(data,
             style: TextStyle(
                 fontWeight: dataBold ? FontWeight.bold : FontWeight.normal,
-                fontSize: 16,
+                fontSize: 20,
                 fontFamily: fontFamily,
                 color: color ?? AppColor.black))
       ]);
@@ -256,9 +273,8 @@ class FicheRdv extends StatelessWidget {
         debugPrint('$selectedDay, $focusedDay');
         controller.updateDateRdv(selectedDay);
       },
-      selectedDayPredicate: (day) =>
-          isSameDay(day, controller.dateRdv) &&
-          (day.weekday != DateTime.friday),
+      selectedDayPredicate: (day) => isSameDay(day, controller.dateRdv),
+      //  && (day.weekday != DateTime.friday),
       onHeaderTapped: (focusedDay) {
         // 1. show date picker
         // 2. update the focusedDay state with the selected date (from date picker)

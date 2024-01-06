@@ -18,11 +18,15 @@ import '../widget/my_button.dart';
 import '../widget/my_text_field.dart';
 import '../widget/mywidget.dart';
 
+late bool select;
+
 class ListPatientPage extends StatelessWidget {
   const ListPatientPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final args = Get.arguments;
+    select = (args == null) ? false : (args['SELECT'] == "1");
     AppSizes.setSizeScreen(context);
     Get.put(ListPatientController());
     return MyWidget(
@@ -100,6 +104,11 @@ class ListPatientPage extends StatelessWidget {
                   hintText: 'Nom ou Prénom',
                   controller: listController.queryController,
                   keyboardType: TextInputType.name,
+                  onFieldSubmitted: (p0) {
+                    ListPatientController listController = Get.find();
+                    controller.queryName = listController.queryController.text;
+                    controller.filterList();
+                  },
                   enabled: true),
             ))),
         const SizedBox(width: 10),
@@ -117,76 +126,90 @@ class ListPatientPage extends StatelessWidget {
                 }))
       ]));
 
-  myTile(Patient item) => Container(
-      margin: const EdgeInsets.only(bottom: 6),
-      padding: const EdgeInsets.only(right: 6),
-      child: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: item.isFemme ? femmeGradColor : hommeGradColor)),
-          child: Row(children: [
-            Expanded(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                  Text('${item.fullname}  (${item.codeBarre})',
-                      textAlign: TextAlign.start,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize: 16)),
-                  Text(
-                      'Age : ${item.age} ${item.typeAge == 1 ? 'ans' : item.typeAge == 3 ? 'jours' : 'mois'}',
-                      textAlign: TextAlign.start,
-                      style:
-                          const TextStyle(color: Colors.black, fontSize: 13)),
-                  Text('Sexe : ${item.getSexe()}',
-                      textAlign: TextAlign.start,
-                      style:
-                          const TextStyle(color: Colors.black, fontSize: 13)),
-                  if (item.tel1.isNotEmpty || item.tel2.isNotEmpty)
-                    Text(
-                        'Téléphone : ${item.tel1.isNotEmpty && item.tel2.isNotEmpty ? '${item.tel1} // ${item.tel2}' : item.tel1.isNotEmpty ? item.tel1 : item.tel2}',
-                        textAlign: TextAlign.start,
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 13)),
-                  Text('Code Malade : ${item.codeMalade}',
-                      textAlign: TextAlign.start,
-                      style:
-                          const TextStyle(color: Colors.black, fontSize: 13)),
-                  if (item.dette != 0)
-                    Text('Dette : ${formatter.format(item.dette)} DA',
-                        textAlign: TextAlign.start,
-                        style: const TextStyle(color: Colors.red, fontSize: 14))
-                ])),
-            Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-              Tooltip(
-                  message: 'Supprimer Patient',
-                  child: InkWell(
-                      onTap: () {
-                        // controller.removeRdv(item.id);
-                      },
-                      child: Ink(
-                          child: Icon(Icons.delete_outline_rounded,
-                              color: AppColor.red)))),
-              const SizedBox(height: 6),
-              Tooltip(
-                  message: 'Modifier les Informations',
-                  child: InkWell(
-                      onTap: () {
-                        // if (Get.isRegistered<    FicheRdvController>()) {
-                        //   Get.delete<     FicheRdvController>();
-                        // }
-                        // Get.toNamed(         AppRoute.ficheRdv,
-                        //     arguments: {       "CodeBarre":     item.codeBarre,
-                        //       "idRdv":   item.id.toString()            });
-                      },
-                      child: Ink(
-                          child: const Icon(Icons.edit_calendar_outlined)))),
-              const SizedBox(height: 2),
-            ])
-          ])));
+  myTile(Patient item) => InkWell(
+        onTap: !select
+            ? null
+            : () {
+                Get.back(result: item);
+              },
+        child: Ink(
+          child: Container(
+              margin: const EdgeInsets.only(bottom: 6),
+              padding: const EdgeInsets.only(right: 6),
+              child: Container(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          colors:
+                              item.isFemme ? femmeGradColor : hommeGradColor)),
+                  child: Row(children: [
+                    Expanded(
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                          Text('${item.fullname}  (${item.codeBarre})',
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 16)),
+                          Text(
+                              'Age : ${item.age} ${item.typeAge == 1 ? 'ans' : item.typeAge == 3 ? 'jours' : 'mois'}',
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 13)),
+                          Text('Sexe : ${item.getSexe()}',
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 13)),
+                          if (item.tel1.isNotEmpty || item.tel2.isNotEmpty)
+                            Text(
+                                'Téléphone : ${item.tel1.isNotEmpty && item.tel2.isNotEmpty ? '${item.tel1} // ${item.tel2}' : item.tel1.isNotEmpty ? item.tel1 : item.tel2}',
+                                textAlign: TextAlign.start,
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 13)),
+                          Text('Code Malade : ${item.codeMalade}',
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 13)),
+                          if (item.dette != 0)
+                            Text('Dette : ${formatter.format(item.dette)} DA',
+                                textAlign: TextAlign.start,
+                                style: const TextStyle(
+                                    color: Colors.red, fontSize: 14))
+                        ])),
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Tooltip(
+                              message: 'Supprimer Patient',
+                              child: InkWell(
+                                  onTap: () {
+                                    // controller.removeRdv(item.id);
+                                  },
+                                  child: Ink(
+                                      child: Icon(Icons.delete_outline_rounded,
+                                          color: AppColor.red)))),
+                          const SizedBox(height: 6),
+                          Tooltip(
+                              message: 'Modifier les Informations',
+                              child: InkWell(
+                                  onTap: () {
+                                    // if (Get.isRegistered<    FicheRdvController>()) {
+                                    //   Get.delete<     FicheRdvController>();
+                                    // }
+                                    // Get.toNamed(         AppRoute.ficheRdv,
+                                    //     arguments: {       "CodeBarre":     item.codeBarre,
+                                    //       "idRdv":   item.id.toString()            });
+                                  },
+                                  child: Ink(
+                                      child: const Icon(
+                                          Icons.edit_calendar_outlined)))),
+                          const SizedBox(height: 2),
+                        ])
+                  ]))),
+        ),
+      );
 }

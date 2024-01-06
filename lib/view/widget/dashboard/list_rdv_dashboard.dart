@@ -134,7 +134,7 @@ class ListRdvDashBoard extends StatelessWidget {
                 frontColor: AppColor.green,
                 smallSize: true,
                 icon: Icons.add_circle_outline_rounded,
-                text: 'Ajouter Rendez-vous',
+                text: 'Ajouter un Rendez-vous',
                 onPressed: () {
                   if (Get.isRegistered<FicheRdvController>()) {
                     Get.delete<FicheRdvController>();

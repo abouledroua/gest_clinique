@@ -148,7 +148,7 @@ class PageAcceuil extends StatelessWidget {
           swapAnimationDuration: const Duration(seconds: 2),
           PieChartData(centerSpaceRadius: 50, sections: [
             PieChartSectionData(
-                value: controller.getNbRdvs(sexe: 1),
+                value: controller.getNbRdvs(sexe: 1) + 0.00,
                 title:
                     '${(controller.getNbRdvs(sexe: 1) * 100 / controller.rdvs.length).toStringAsFixed(0)}%',
                 titleStyle: TextStyle(
@@ -158,7 +158,7 @@ class PageAcceuil extends StatelessWidget {
                     fontFamily: fontFamily),
                 color: AppColor.blue1),
             PieChartSectionData(
-                value: controller.getNbRdvs(sexe: 2),
+                value: controller.getNbRdvs(sexe: 2) + 0.00,
                 titleStyle: TextStyle(
                     color: AppColor.black,
                     fontWeight: FontWeight.bold,
