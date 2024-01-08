@@ -70,50 +70,67 @@ class ListPatientPage extends StatelessWidget {
   listOfPatients(PatientController controller) => Column(children: [
         header(controller),
         Expanded(
-            child: RefreshIndicator(
-                onRefresh: () => controller.getPatients(),
-                child: ScrollConfiguration(
-                    behavior: ScrollConfiguration.of(Get.context!).copyWith(
-                        dragDevices: {
-                          PointerDeviceKind.touch,
-                          PointerDeviceKind.mouse
-                        }),
-                    child: Visibility(
-                      visible: controller.showList.isNotEmpty,
-                      replacement:
-                          const EmptyListWidget(text: 'Aucun Patient !!!'),
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          primary: false,
-                          itemCount: controller.showList.length,
-                          itemBuilder: (context, i) =>
-                              myTile(controller.showList[i])),
-                    ))))
+            child: Visibility(
+                visible: AppSizes.widthScreen < 600,
+                replacement: myTable(controller),
+                child: myListTile(controller)))
       ]);
+
+  myTable(PatientController controller) => DataTable(
+        columns: [
+          DataColumn(label: Text('Nom')),
+          DataColumn(label: Text('Prenom')),
+        ],
+        rows: [
+          DataRow(cells: [
+            DataCell(Text('aaa')),
+            DataCell(Text('bbb')),
+          ]),
+          DataRow(cells: [
+            DataCell(Text('ccc')),
+            DataCell(Text('ddd')),
+          ]),
+        ],
+      );
+
+  myListTile(PatientController controller) => RefreshIndicator(
+      onRefresh: () => controller.getPatients(),
+      child: ScrollConfiguration(
+          behavior: ScrollConfiguration.of(Get.context!).copyWith(
+              dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse}),
+          child: Visibility(
+            visible: controller.showList.isNotEmpty,
+            replacement: const EmptyListWidget(text: 'Aucun Patient !!!'),
+            child: ListView.builder(
+                shrinkWrap: true,
+                primary: false,
+                itemCount: controller.showList.length,
+                itemBuilder: (context, i) => myTile(controller.showList[i])),
+          )));
 
   header(PatientController controller) => Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         SizedBox(
-            height: 30,
+            height: 40,
             width: AppSizes.widthScreen / 5,
             child: Expanded(
                 child: GetBuilder<ListPatientController>(
-              builder: (listController) => MyTextField(
-                  labelText: 'Recherche',
-                  hintText: 'Nom ou Prénom',
-                  controller: listController.queryController,
-                  keyboardType: TextInputType.name,
-                  onFieldSubmitted: (p0) {
-                    ListPatientController listController = Get.find();
-                    controller.queryName = listController.queryController.text;
-                    controller.filterList();
-                  },
-                  enabled: true),
-            ))),
+                    builder: (listController) => MyTextField(
+                        labelText: 'Recherche',
+                        hintText: 'Nom ou Prénom',
+                        enabled: true,
+                        controller: listController.queryController,
+                        keyboardType: TextInputType.name,
+                        onFieldSubmitted: (p0) {
+                          ListPatientController listController = Get.find();
+                          controller.queryName =
+                              listController.queryController.text;
+                          controller.filterList();
+                        })))),
         const SizedBox(width: 10),
         SizedBox(
-            height: 30,
+            height: 40,
             child: MyButton(
                 backGroundcolor: AppColor.white,
                 frontColor: AppColor.black,

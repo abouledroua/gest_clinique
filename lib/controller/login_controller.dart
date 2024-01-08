@@ -63,30 +63,29 @@ class LoginController extends GetxController {
           title: 'Fiche Login',
           message: "Veuillez remplir les champs oligatoire !!!!");
     } else {
-      if (selectedOrg == defaultOrg) {
-        AppData.mySnackBar(
-            color: AppColor.red,
-            title: 'Fiche Login',
-            message: "Veuillez choisir un organisme !!!");
+      // if (selectedOrg == defaultOrg) {
+      //   AppData.mySnackBar(
+      //       color: AppColor.red,
+      //       title: 'Fiche Login',
+      //       message: "Veuillez choisir un organisme !!!");
+      // } else {
+      if (connectEmail) {
+        usernameController.text = "";
       } else {
-        if (connectEmail) {
-          usernameController.text = "";
-        } else {
-          emailController.text = "";
-        }
-        _updateValider(newValider: true, newInscr: false);
-        _existUser();
+        emailController.text = "";
       }
+      _updateValider(newValider: true, newInscr: false);
+      _existUser();
+      // }
     }
   }
 
   _existUser() async {
-    int idCabinet = orgsId[orgs.indexOf(selectedOrg)];
+    // int idCabinet = orgsId[orgs.indexOf(selectedOrg)];
     await existData(urlFile: "EXIST_USER_LOGIN.php", nomFiche: 'Login', body: {
       "USERNAME": usernameController.text,
       "EMAIL": emailController.text,
-      "PASSWORD": passController.text,
-      "ID_CABINET": idCabinet.toString(),
+      "PASSWORD": passController.text
     }).then((value) {
       if (value.success) {
         int idUser = 0, type = 0, sexe = 0;
@@ -103,7 +102,7 @@ class LoginController extends GetxController {
           usernameController.text = "";
           emailController.text = "";
           passController.text = "";
-          selectedOrg = orgs[0];
+          // selectedOrg = orgs[0];
           _updateValider(newValider: false);
           AppData.mySnackBar(
               title: 'Fiche Utilisateur',
@@ -120,8 +119,8 @@ class LoginController extends GetxController {
           User.sexe = sexe;
           User.isFemme = (User.sexe == 2);
           User.isHomme = (User.type == 1);
-          User.cabinet = selectedOrg;
-          User.idCabinet = idCabinet;
+          // User.cabinet = selectedOrg;
+          // User.idCabinet = idCabinet;
           User.idUser = idUser;
 
           SettingServices c = Get.find();
@@ -129,8 +128,8 @@ class LoginController extends GetxController {
           c.sharedPrefs.setString('EMAIL', emailController.text);
           c.sharedPrefs.setString('NAME', name);
           c.sharedPrefs.setString('PASSWORD', passController.text);
-          c.sharedPrefs.setString('CABINET', selectedOrg);
-          c.sharedPrefs.setInt('ID_CABINET', idCabinet);
+          // c.sharedPrefs.setString('CABINET', selectedOrg);
+          // c.sharedPrefs.setInt('ID_CABINET', idCabinet);
           c.sharedPrefs.setInt('SEXE', sexe);
           c.sharedPrefs.setInt('TYPE', type);
           c.sharedPrefs.setInt('ID_USER', idUser);
@@ -157,39 +156,39 @@ class LoginController extends GetxController {
     Get.offAllNamed(AppRoute.dashboard);
   }
 
-  _updateBooleans({required newloading, required newerror}) {
-    loading = newloading;
-    error = newerror;
-    update();
-  }
+  // _updateBooleans({required newloading, required newerror}) {
+  //   loading = newloading;
+  //   error = newerror;
+  //   update();
+  // }
 
-  getOrganismes() async {
-    _updateBooleans(newloading: true, newerror: false);
-    await getDataList(urlFile: "GET_CABINETS.php", nomFiche: "Organisation")
-        .then((data) {
-      if (data.success) {
-        orgs = [defaultOrg];
-        orgsId = [0];
-        String s;
-        var responsebody = data.data;
-        for (var m in responsebody) {
-          s = m['DESIGNATION'] +
-              ' (' +
-              AppData.getWilayaName(indexWilaya: int.parse(m['WILAYA']) - 1) +
-              ')';
-          orgs.add(s);
-          orgsId.add(int.parse(m['ID_CABINET']));
-        }
-        _updateBooleans(newloading: false, newerror: false);
-      } else {
-        _updateBooleans(newloading: false, newerror: true);
-      }
-    });
-  }
+  // getOrganismes() async {
+  //   _updateBooleans(newloading: true, newerror: false);
+  //   await getDataList(urlFile: "GET_CABINETS.php", nomFiche: "Organisation")
+  //       .then((data) {
+  //     if (data.success) {
+  //       orgs = [defaultOrg];
+  //       orgsId = [0];
+  //       String s;
+  //       var responsebody = data.data;
+  //       for (var m in responsebody) {
+  //         s = m['DESIGNATION'] +
+  //             ' (' +
+  //             AppData.getWilayaName(indexWilaya: int.parse(m['WILAYA']) - 1) +
+  //             ')';
+  //         orgs.add(s);
+  //         orgsId.add(int.parse(m['ID_CABINET']));
+  //       }
+  //       _updateBooleans(newloading: false, newerror: false);
+  //     } else {
+  //       _updateBooleans(newloading: false, newerror: true);
+  //     }
+  //   });
+  // }
 
   _init() {
     AppSizes.setSizeScreen(Get.context);
-    getOrganismes();
+    // getOrganismes();
 
     usernameController = TextEditingController();
     passController = TextEditingController();

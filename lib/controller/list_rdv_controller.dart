@@ -11,7 +11,7 @@ import '../core/constant/sizes.dart';
 import '../core/data/data_controller.dart';
 
 class ListRDVController extends GetxController {
-  bool loading = false, error = false, load = false;
+  bool loading = false, error = true, load = false;
   List<RDV> rdvs = [];
 
   _updateBooleans({required newloading, required newerror}) {
@@ -64,9 +64,9 @@ class ListRDVController extends GetxController {
   }
 
   getRdvTimer() {
-    getRdvs(show: rdvs.isEmpty);
+    getRdvs(show: error);
     Timer.periodic(const Duration(seconds: 2), (timer) {
-      getRdvs(show: rdvs.isEmpty);
+      getRdvs(show: error);
     });
   }
 

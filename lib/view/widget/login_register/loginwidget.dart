@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../controller/login_controller.dart';
-import '../../../controller/register_cabinet_controller.dart';
 import '../../../controller/register_user_controller.dart';
 import '../../../core/constant/animation_asset.dart';
 import '../../../core/constant/color.dart';
@@ -123,83 +122,27 @@ class LoginWidget extends StatelessWidget {
                     keyboardType: TextInputType.visiblePassword,
                     enabled: true))),
         const SizedBox(height: 5),
-        Container(
-            height: chpHeight,
-            decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 221, 240, 221),
-                border: Border.all(),
-                borderRadius: BorderRadius.circular(3)),
-            child: GetBuilder<LoginController>(
-                builder: (controller) => Visibility(
-                    visible: !controller.loading,
-                    replacement: Padding(
-                        padding: const EdgeInsets.all(6),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const CircularProgressIndicator.adaptive(),
-                              const SizedBox(width: 10),
-                              Text('Chargement en cours ...',
-                                  style: TextStyle(
-                                      fontSize: 11, fontFamily: fontFamily))
-                            ])),
-                    child: Visibility(
-                      visible: !controller.error,
-                      replacement: InkWell(
-                          onTap: () {
-                            controller.getOrganismes();
-                          },
-                          child: Ink(
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                Text('Erreur de Chargement !!!',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColor.red,
-                                        fontSize: 12,
-                                        fontFamily: fontFamily)),
-                                const SizedBox(width: 10),
-                                Icon(Icons.refresh, color: AppColor.red)
-                              ]))),
-                      child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                              padding: const EdgeInsets.all(8),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                  color: AppColor.black,
-                                  fontFamily: fontFamily),
-                              underline: null,
-                              value: controller.selectedOrg,
-                              items: controller.orgs
-                                  .map((item) => DropdownMenuItem(
-                                      value: item, child: Text(item)))
-                                  .toList(),
-                              onChanged: (String? value) {
-                                controller.updateDrop(value ?? "");
-                              })),
-                    )))),
-        Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          Expanded(
-              child: Text("Mon Cabinet n'apparaît pas dans la liste !!!, ",
-                  textAlign: TextAlign.end,
-                  style: TextStyle(fontSize: 9, fontFamily: fontFamily))),
-          InkWell(
-              onTap: () {
-                if (Get.isRegistered<RegisterCabinetController>()) {
-                  Get.delete<RegisterCabinetController>();
-                }
-                Get.toNamed(AppRoute.registerCabinet);
-              },
-              child: Ink(
-                  child: Text(" Ajouter",
-                      style: TextStyle(
-                          fontSize: 10,
-                          fontFamily: fontFamily,
-                          color: AppColor.secondary,
-                          fontWeight: FontWeight.bold))))
-        ]),
+        // comboCabinet(),
+        // Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+        //   Expanded(
+        //       child: Text("Mon Cabinet n'apparaît pas dans la liste !!!, ",
+        //           textAlign: TextAlign.end,
+        //           style: TextStyle(fontSize: 9, fontFamily: fontFamily))),
+        //   InkWell(
+        //       onTap: () {
+        //         if (Get.isRegistered<RegisterCabinetController>()) {
+        //           Get.delete<RegisterCabinetController>();
+        //         }
+        //         Get.toNamed(AppRoute.registerCabinet);
+        //       },
+        //       child: Ink(
+        //           child: Text(" Ajouter",
+        //               style: TextStyle(
+        //                   fontSize: 10,
+        //                   fontFamily: fontFamily,
+        //                   color: AppColor.secondary,
+        //                   fontWeight: FontWeight.bold))))
+        // ]),
         const SizedBox(height: 10),
         Container(
             decoration: BoxDecoration(
@@ -216,4 +159,61 @@ class LoginWidget extends StatelessWidget {
                         fontFamily: fontFamily)))),
         const SizedBox(height: 5)
       ]);
+
+  comboCabinet() => Container(
+      height: chpHeight,
+      decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 221, 240, 221),
+          border: Border.all(),
+          borderRadius: BorderRadius.circular(3)),
+      child: GetBuilder<LoginController>(
+          builder: (controller) => Visibility(
+              visible: !controller.loading,
+              replacement: Padding(
+                  padding: const EdgeInsets.all(6),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const CircularProgressIndicator.adaptive(),
+                        const SizedBox(width: 10),
+                        Text('Chargement en cours ...',
+                            style:
+                                TextStyle(fontSize: 11, fontFamily: fontFamily))
+                      ])),
+              child: Visibility(
+                  visible: !controller.error,
+                  replacement: InkWell(
+                      onTap: () {
+                        // controller.getOrganismes();
+                      },
+                      child: Ink(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                            Text('Erreur de Chargement !!!',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColor.red,
+                                    fontSize: 12,
+                                    fontFamily: fontFamily)),
+                            const SizedBox(width: 10),
+                            Icon(Icons.refresh, color: AppColor.red)
+                          ]))),
+                  child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                          padding: const EdgeInsets.all(8),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              color: AppColor.black,
+                              fontFamily: fontFamily),
+                          underline: null,
+                          value: controller.selectedOrg,
+                          items: controller.orgs
+                              .map((item) => DropdownMenuItem(
+                                  value: item, child: Text(item)))
+                              .toList(),
+                          onChanged: (String? value) {
+                            controller.updateDrop(value ?? "");
+                          }))))));
 }

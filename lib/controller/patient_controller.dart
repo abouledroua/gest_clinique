@@ -8,7 +8,7 @@ import '../core/constant/sizes.dart';
 import '../core/data/data_controller.dart';
 
 class PatientController extends GetxController {
-  bool loading = false, error = false, load = false;
+  bool loading = false, error = true, load = false;
   List<Patient> patients = [], showList = [];
   String queryName = "";
 
@@ -67,9 +67,9 @@ class PatientController extends GetxController {
   }
 
   getPatientTimer() {
-    getPatients(show: patients.isEmpty);
+    getPatients(show: error);
     Timer.periodic(const Duration(seconds: 2), (timer) {
-      getPatients(show: patients.isEmpty);
+      getPatients(show: error);
     });
   }
 

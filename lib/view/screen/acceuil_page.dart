@@ -1,10 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:gest_clinique/main.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../controller/acceuil_controller.dart';
+import '../../controller/acceuil_rapport_patient_controller.dart';
+import '../../controller/acceuil_sexe_chart_controller.dart';
 import '../../controller/dashboard_controller.dart';
 import '../../controller/rdv_controller.dart';
 import '../../core/class/user.dart';
@@ -13,6 +16,8 @@ import '../../core/constant/color.dart';
 import '../../core/constant/sizes.dart';
 import '../../core/constant/theme.dart';
 import '../widget/dashboard/list_rdv_dashboard.dart';
+import '../widget/acceuil/patient_rapport_line_chart.dart';
+import '../widget/login_register/connect_widget.dart';
 
 class PageAcceuil extends StatelessWidget {
   const PageAcceuil({super.key});
@@ -21,6 +26,8 @@ class PageAcceuil extends StatelessWidget {
   Widget build(BuildContext context) {
     AppSizes.setSizeScreen(context);
     Get.put(AcceuilController());
+    Get.put(AcceuilRapportPatientController());
+    Get.put(AcceuilSexeChartController());
     return Row(children: [
       Expanded(
           child: Padding(
@@ -35,23 +42,25 @@ class PageAcceuil extends StatelessWidget {
                     colorTitle(),
                     const SizedBox(height: 10),
                     const Divider(indent: 4, endIndent: 4),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Rapport',
-                              style: TextStyle(
-                                  color: AppColor.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                  fontFamily: fontFamily)),
-                          GetBuilder<AcceuilController>(
-                              builder: (controller) => myDropDown(
-                                  items: controller.dropRap,
-                                  onChanged: (value) {
-                                    controller.updateDropRap(value);
-                                  },
-                                  value: controller.selectedRap))
-                        ]),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Rapport',
+                                  style: TextStyle(
+                                      color: AppColor.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                      fontFamily: fontFamily)),
+                              GetBuilder<AcceuilController>(
+                                  builder: (controller) => myDropDown(
+                                      items: controller.dropRap,
+                                      value: controller.selectedRap,
+                                      onChanged: (value) {
+                                        controller.updateDropRap(value);
+                                      }))
+                            ])),
                     nbRdvWidget(),
                     Row(children: [
                       Expanded(flex: 7, child: patientRapport()),
@@ -73,101 +82,106 @@ class PageAcceuil extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
                   fontFamily: fontFamily)),
-          GetBuilder<AcceuilController>(
-              builder: (controller) => myDropDown(
-                  items: controller.dropRapSexe,
-                  onChanged: (value) {
-                    controller.updateDropRapSexe(value);
-                  },
-                  value: controller.selectedRapSexe))
+          GetBuilder<AcceuilSexeChartController>(
+              builder: (controller) => Visibility(
+                  visible: !controller.loadingSexeList,
+                  replacement: const ConnectWidget(),
+                  child: myDropDown(
+                      items: controller.dropRapSexe,
+                      value: controller.selectedRapSexe,
+                      onChanged: (value) {
+                        controller.updateDropRapSexe(value);
+                      })))
         ]),
         SizedBox(
             height: 200,
             child: Stack(children: [
               mySexeChart(),
               Center(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                    GetBuilder<RDVController>(
-                        builder: (controller) => Text(
-                            controller.rdvs.length.toString(),
-                            style: TextStyle(
-                                color: AppColor.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 32,
-                                fontFamily: fontFamily))),
-                    Text('Total',
-                        style: TextStyle(
-                            color: AppColor.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            fontFamily: fontFamily))
-                  ])),
-              Padding(
-                  padding: const EdgeInsets.only(left: 18.0),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(children: [
-                          Container(
-                              width: 20,
-                              color: AppColor.blue1,
-                              child: const Text('    ')),
-                          const SizedBox(width: 10),
-                          Text('Homme',
-                              style: TextStyle(
-                                  color: AppColor.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  fontFamily: fontFamily))
-                        ]),
-                        const SizedBox(height: 10),
-                        Row(children: [
-                          Container(
-                              width: 20,
-                              color: AppColor.pink,
-                              child: const Text('    ')),
-                          const SizedBox(width: 10),
-                          Text('Femme',
-                              style: TextStyle(
-                                  color: AppColor.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  fontFamily: fontFamily))
-                        ])
-                      ]))
+                  child: GetBuilder<AcceuilSexeChartController>(
+                      builder: (controller) => Visibility(
+                          visible: !controller.loadingSexeData,
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(formatter.format(controller.nbTotalSexe),
+                                    style: TextStyle(
+                                        color: AppColor.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 32,
+                                        fontFamily: fontFamily)),
+                                Text('Total',
+                                    style: TextStyle(
+                                        color: AppColor.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        fontFamily: fontFamily))
+                              ])))),
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(children: [
+                      Container(
+                          width: 20,
+                          color: AppColor.blue1,
+                          child: const Text('    ')),
+                      const SizedBox(width: 10),
+                      Text('Homme',
+                          style: TextStyle(
+                              color: AppColor.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              fontFamily: fontFamily))
+                    ]),
+                    const SizedBox(height: 10),
+                    Row(children: [
+                      Container(
+                          width: 20,
+                          color: AppColor.pink,
+                          child: const Text('    ')),
+                      const SizedBox(width: 10),
+                      Text('Femme',
+                          style: TextStyle(
+                              color: AppColor.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              fontFamily: fontFamily))
+                    ])
+                  ])
             ]))
       ]));
 
-  mySexeChart() => GetBuilder<RDVController>(
-      builder: (controller) => PieChart(
-          swapAnimationCurve: Curves.bounceInOut,
-          swapAnimationDuration: const Duration(seconds: 2),
-          PieChartData(centerSpaceRadius: 50, sections: [
-            PieChartSectionData(
-                value: controller.getNbRdvs(sexe: 1) + 0.00,
-                title:
-                    '${(controller.getNbRdvs(sexe: 1) * 100 / controller.rdvs.length).toStringAsFixed(0)}%',
-                titleStyle: TextStyle(
-                    color: AppColor.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    fontFamily: fontFamily),
-                color: AppColor.blue1),
-            PieChartSectionData(
-                value: controller.getNbRdvs(sexe: 2) + 0.00,
-                titleStyle: TextStyle(
-                    color: AppColor.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    fontFamily: fontFamily),
-                title:
-                    '${(controller.getNbRdvs(sexe: 2) * 100 / controller.rdvs.length).toStringAsFixed(0)}%',
-                color: AppColor.pink)
-          ])));
+  mySexeChart() => GetBuilder<AcceuilSexeChartController>(
+      builder: (controller) => Visibility(
+          visible: !controller.loadingSexeData,
+          replacement: const Center(child: ConnectWidget()),
+          child: PieChart(
+              swapAnimationCurve: Curves.bounceInOut,
+              swapAnimationDuration: const Duration(seconds: 2),
+              PieChartData(centerSpaceRadius: 50, sections: [
+                PieChartSectionData(
+                    value: controller.nbHomme,
+                    title:
+                        '${(controller.nbHomme * 100 / controller.nbTotalSexe).toStringAsFixed(0)}%',
+                    titleStyle: TextStyle(
+                        color: AppColor.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        fontFamily: fontFamily),
+                    color: AppColor.blue1),
+                PieChartSectionData(
+                    value: controller.nbFemme,
+                    titleStyle: TextStyle(
+                        color: AppColor.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        fontFamily: fontFamily),
+                    title:
+                        '${(controller.nbFemme * 100 / controller.nbTotalSexe).toStringAsFixed(0)}%',
+                    color: AppColor.pink)
+              ]))));
 
   patientRapport() => Padding(
       padding: const EdgeInsets.all(20),
@@ -179,29 +193,22 @@ class PageAcceuil extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
                   fontFamily: fontFamily)),
-          GetBuilder<AcceuilController>(
+          GetBuilder<AcceuilRapportPatientController>(
               builder: (controller) => myDropDown(
                   items: controller.dropRapPat,
+                  value: controller.selectedRapPat,
                   onChanged: (value) {
                     controller.updateDropRapPat(value);
-                  },
-                  value: controller.selectedRapPat))
+                  }))
         ]),
+        const SizedBox(height: 10),
         SizedBox(
-            height: 200,
-            child: LineChart(LineChartData(minY: 0, maxY: 10, lineBarsData: [
-              LineChartBarData(
-                  barWidth: 2,
-                  color: AppColor.blue1,
-                  isCurved: true,
-                  spots: const [
-                    FlSpot(1, 3),
-                    FlSpot(2, 2),
-                    FlSpot(3, 5),
-                    FlSpot(4, 9),
-                    FlSpot(6, 6)
-                  ])
-            ])))
+            height: 300,
+            child: GetBuilder<AcceuilRapportPatientController>(
+                builder: (controller) => Visibility(
+                    visible: !controller.loading,
+                    replacement: const ConnectWidget(),
+                    child: PatientRappportLineChart())))
       ]));
 
   nbRdvWidget() => GetBuilder<RDVController>(

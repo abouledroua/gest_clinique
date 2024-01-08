@@ -103,7 +103,7 @@ class RegisterUserController extends GetxController {
       "EMAIL": emailController.text,
       "SEXE": sexe.toString(),
       "TYPE": fct.toString(),
-      "ID_CABINET": fct.toString(),
+      // "ID_CABINET": fct.toString(),
       "FONCTION": "1"
     };
     return body;

@@ -138,8 +138,8 @@ class RegisterCabinetController extends GetxController {
 
   _goBack() {
     if (Get.isRegistered<LoginController>()) {
-      LoginController controller = Get.find();
-      controller.getOrganismes();
+      // LoginController controller = Get.find();
+      // controller.getOrganismes();
     }
     if (Get.isRegistered<RegisterUserController>()) {
       RegisterUserController controller = Get.find();
